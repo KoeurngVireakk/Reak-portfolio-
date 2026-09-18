@@ -36,8 +36,8 @@ export function Hero() {
           </motion.div>
 
           <motion.p className="hero-intro" variants={heroItemVariants}>
-            Final-year Information Technology student focused on backend systems, secure application
-            design, and practical product engineering.
+            Final-year Information Technology student building practical software across
+            full-stack development, backend systems, application security, and IT infrastructure.
           </motion.p>
 
           <motion.div className="hero-actions" variants={heroItemVariants}>
@@ -71,11 +71,12 @@ export function Hero() {
           </motion.div>
 
           <motion.div className="hero-focus" variants={heroItemVariants}>
-            <span>Primary focus</span>
+            <span>Core disciplines</span>
             <ul>
               <li>Full-stack engineering</li>
               <li>Backend systems</li>
               <li>Application security</li>
+              <li>IT & network foundations</li>
             </ul>
           </motion.div>
         </motion.div>

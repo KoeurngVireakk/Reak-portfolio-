@@ -76,7 +76,7 @@ function BrowserProductUI({ project, index }: { project: Project; index: number 
         <div className="app-card-hero">
           <div className="hero-status-strip">
             <span className="app-module-badge">{project.categories[0]} Engine</span>
-            <span className="app-telemetry-pill">200 OK · 14ms</span>
+            <span className="app-telemetry-pill">API connected</span>
           </div>
           <h4>{project.name}</h4>
           <p>{project.tagline}</p>
@@ -88,8 +88,8 @@ function BrowserProductUI({ project, index }: { project: Project; index: number 
         <div className="app-sidebar-widget">
           <span className="widget-title">Pipeline Status</span>
           <div className="widget-metric">
-            <strong>99.8%</strong>
-            <small>Contract verified</small>
+            <strong>Active</strong>
+            <small>Workflow connected</small>
           </div>
           <div className="widget-bar"><i style={{ width: "88%" }} /></div>
         </div>
@@ -105,14 +105,14 @@ function DesktopProductUI({ project }: { project: Project }) {
         <div className="viewfinder-lens">
           <div className="lens-crosshair" />
           <div className="lens-bbox">
-            <span className="bbox-label">InsightFace // 99.4% Match</span>
+            <span className="bbox-label">InsightFace // Recognition active</span>
             <div className="bbox-corners" />
           </div>
           <div className="lens-scanline" />
         </div>
         <div className="lens-telemetry">
-          <span>FPS: 60.0 · ONNX Runtime</span>
-          <span>DET: RetinaFace / 10ms</span>
+          <span>Local inference · ONNX Runtime</span>
+          <span>Detection pipeline active</span>
         </div>
       </div>
       <div className="desktop-attendance-sidebar">
@@ -143,7 +143,7 @@ function PhoneDashboardProductUI({ project }: { project: Project }) {
       <div className="phone-screen-top">
         <span className="phone-clock">09:41</span>
         <div className="phone-island" />
-        <span className="phone-signals">5G · 98%</span>
+        <span className="phone-signals">Demo · Online</span>
       </div>
       <div className="phone-app-header">
         <div className="phone-brand-title">
@@ -159,7 +159,7 @@ function PhoneDashboardProductUI({ project }: { project: Project }) {
         <div className="phone-card-info">
           <h5>Handwoven Heritage Collection</h5>
           <div className="phone-price-row">
-            <span className="phone-price">$48.00</span>
+            <span className="phone-price">Sample Item</span>
             <span className="phone-role-pill">Verified RBAC</span>
           </div>
         </div>
@@ -179,44 +179,44 @@ function DashboardProductUI({ project }: { project: Project }) {
     <div className="product-view-dashboard" aria-hidden="true">
       <div className="dash-kpi-row">
         <div className="dash-kpi-tile">
-          <span>Active Portfolios</span>
-          <strong>348</strong>
-          <small>{project.shortName} Live Metric</small>
+          <span>Workflow State</span>
+          <strong>Synchronized</strong>
+          <small>{project.shortName} Role Access</small>
         </div>
         <div className="dash-kpi-tile">
-          <span>Disbursed Volume</span>
-          <strong>$142,500</strong>
-          <small>Branch Battambang</small>
+          <span>Data Authority</span>
+          <strong>Active</strong>
+          <small>Transactional Services</small>
         </div>
         <div className="dash-kpi-tile">
-          <span>Approval Rate</span>
-          <strong>94.2%</strong>
-          <small>Audited / Flyway</small>
+          <span>Approval Pipeline</span>
+          <strong>Operational</strong>
+          <small>Audited Transitions</small>
         </div>
       </div>
       <div className="dash-table-card">
         <div className="table-header-strip">
-          <span>Borrower</span>
-          <span>Principal</span>
-          <span>Tenure</span>
+          <span>Record</span>
+          <span>Tier</span>
+          <span>Verification</span>
           <span>Status</span>
         </div>
         <div className="table-row">
-          <strong>Sokha Chea</strong>
-          <span>$5,000</span>
-          <span>24 mo</span>
+          <strong>Record 01</strong>
+          <span>Standard</span>
+          <span>Validated</span>
           <span className="table-badge approved">Approved</span>
         </div>
         <div className="table-row">
-          <strong>Vanna Meas</strong>
-          <span>$12,000</span>
-          <span>36 mo</span>
+          <strong>Record 02</strong>
+          <span>Commercial</span>
+          <span>Compliance</span>
           <span className="table-badge pending">In Review</span>
         </div>
         <div className="table-row">
-          <strong>Borey Rath</strong>
-          <span>$3,500</span>
-          <span>12 mo</span>
+          <strong>Record 03</strong>
+          <span>Operational</span>
+          <span>Authorized</span>
           <span className="table-badge approved">Disbursed</span>
         </div>
       </div>
@@ -251,17 +251,17 @@ function PosProductUI({ project }: { project: Project }) {
       </div>
       <div className="pos-receipt-tape">
         <div className="tape-header">
-          <span>{project.shortName} TAPE #1042</span>
-          <small>TERMINAL 01</small>
+          <span>{project.shortName} DEMO REGISTER</span>
+          <small>REGISTER TAPE</small>
         </div>
         <div className="tape-items">
-          <div><span>2x Espresso Roast</span><b>$5.00</b></div>
-          <div><span>1x Butter Croissant</span><b>$2.75</b></div>
+          <div><span>Catalog Item A</span><b>Order Line 1</b></div>
+          <div><span>Catalog Item B</span><b>Order Line 2</b></div>
         </div>
         <div className="tape-tally">
-          <div><span>Subtotal</span><span>$7.75</span></div>
-          <div><span>Tax (10%)</span><span>$0.78</span></div>
-          <div className="tape-total"><strong>TOTAL</strong><strong>$8.53</strong></div>
+          <div><span>Subtotal</span><span>Sample Line</span></div>
+          <div><span>State</span><span>Ready</span></div>
+          <div className="tape-total"><strong>LEDGER</strong><strong>BALANCED</strong></div>
         </div>
         <div className="pos-checkout-btn">
           <span>{project.status.toUpperCase()}</span>

@@ -37,23 +37,109 @@ export type Project = {
   media?: ProjectMedia;
 };
 
+export const professionalIdentity = {
+  primary: "Information Technology Student",
+  secondary: "Full-Stack Developer",
+  directions: [
+    "Backend Engineering",
+    "Full-Stack Development",
+    "Application Security",
+    "IT Support & Operations",
+  ],
+};
+
+export const education = {
+  degree: "Bachelor of Science in Information Technology",
+  institution: "Build Bright University",
+  campus: "Battambang Campus",
+  period: "2023 — Present",
+  status: "Final year",
+  focus:
+    "Software engineering, database architecture, networking fundamentals, cybersecurity, and practical IT systems.",
+};
+
+export const languages = [
+  { language: "Khmer", proficiency: "Native / Excellent" },
+  { language: "English", proficiency: "Developing working proficiency" },
+];
+
+export const workingPrinciples = [
+  {
+    title: "Responsible",
+    description: "Accountable execution across transactional integrity, business logic, and reliable states.",
+  },
+  {
+    title: "Research-Driven",
+    description: "Methodical technical investigation before adopting patterns, packages, or architectural boundaries.",
+  },
+  {
+    title: "Collaborative",
+    description: "Clear communication, Git workflows, clean documentation, and respectful cross-team coordination.",
+  },
+  {
+    title: "Independent Learning",
+    description: "Continuous hands-on self-study across modern ecosystems, official docs, and system diagnostics.",
+  },
+];
+
+export const itFoundations = [
+  {
+    domain: "NETWORK",
+    title: "LAN & Networking Fundamentals",
+    description: "Network topography, IP addressing, and connectivity diagnostics.",
+    skills: [
+      "IP Addressing & Subnetting",
+      "DNS & DHCP Configuration",
+      "LAN Switching & Basic Routing",
+      "Router & Access Point Setup",
+      "Connectivity Diagnostics (ping, traceroute)",
+    ],
+  },
+  {
+    domain: "SYSTEMS",
+    title: "Operating Systems & Administration",
+    description: "Workstation and server environments across Windows and Linux platforms.",
+    skills: [
+      "Windows Client & Server Environments",
+      "Linux Fundamentals (Ubuntu, Kali)",
+      "Service & Process Management",
+      "User Accounts & NTFS/POSIX Permissions",
+      "Task Scheduler & System Services",
+    ],
+  },
+  {
+    domain: "SUPPORT",
+    title: "Hardware, Peripherals & Workplace IT",
+    description: "Component assembly, peripheral integration, and user support diagnostics.",
+    skills: [
+      "Hardware Assembly & Component Diagnostics",
+      "OS & Application Installation",
+      "Network Printer & Scanner Configuration",
+      "Workplace Email Client Setup (IMAP/SMTP/Exchange)",
+      "First-Line Hardware & Software Support",
+    ],
+  },
+];
+
 export const profile = {
   name: "Koeurng Vireak",
   shortName: "Vireak",
   role: "Information Technology Student · Full-Stack Developer",
   tagline:
-    "I build practical systems across frontend, backend, databases, mobile, applied AI, and application security.",
+    "Final-year Information Technology student building practical software across full-stack development, backend systems, application security, and IT infrastructure.",
   email: "koeurngvireak@bb.bbu.edu.kh",
   location: "Battambang, Cambodia",
   github: "https://github.com/KoeurngVireakk",
   avatar: avatarPhoto,
   avatarWebp: avatarPhotoWebp,
+  resumeUrl: undefined as string | undefined, // Safe: only activated when verified public file exists
 };
 
 export const facts = [
-  { label: "Education", value: "Final-year B.IT" },
-  { label: "Primary work", value: "Full-stack systems" },
-  { label: "Based in", value: "Battambang, Cambodia" },
+  { label: "Education", value: "B.IT (Final Year)" },
+  { label: "Institution", value: "Build Bright University" },
+  { label: "Primary focus", value: "Backend & Full-Stack" },
+  { label: "Location", value: "Battambang, Cambodia" },
 ];
 
 export const focusAreas = [
@@ -263,24 +349,31 @@ export const projects: Project[] = [
 
 export const journey = [
   {
-    date: "2025–2026",
-    title: "Final-Year Bachelor of Information Technology",
+    date: "2023 — Present",
+    title: "Bachelor of Science in Information Technology",
     organization: "Build Bright University · Battambang Campus",
     description:
-      "Focused on full-stack systems, software engineering, databases, networking, cybersecurity, and final-year portfolio projects.",
+      "Academic foundation covering software engineering, relational database architecture, LAN networking, cybersecurity, and practical IT systems.",
+  },
+  {
+    date: "2025 — 2026",
+    title: "Applied Project Engineering",
+    organization: "Academic & Personal Systems",
+    description:
+      "Built multi-tier applications across React, Spring Boot, Laravel, ASP.NET Core, Flutter, Python, relational databases, and local computer-vision workflows.",
   },
   {
     date: "2026",
-    title: "Production-minded project engineering",
-    organization: "Personal + university projects",
+    title: "Production-Minded Engineering",
+    organization: "Hardening, Migrations & CI/CD",
     description:
-      "Expanded beyond CRUD into RBAC, migrations, testing, CI/CD, PWA behavior, security hardening, server-authoritative business logic, and deployment preparation.",
+      "Expanded beyond CRUD into role-based authorization, database migrations with Flyway, test automation, CI/CD pipelines, PWA caching, and containerized deployment.",
   },
   {
-    date: "Current focus",
-    title: "Backend, full-stack, and security-oriented roles",
-    organization: "Internship / junior opportunities",
+    date: "Current",
+    title: "Internship & Junior Direction",
+    organization: "Backend, Full-Stack, AppSec & IT Support",
     description:
-      "Building stronger evidence through deployable projects, documented architecture, secure engineering practices, and real project case studies.",
+      "Actively seeking internship and junior engineering opportunities to contribute reliable code, disciplined architecture habits, and foundational IT troubleshooting.",
   },
 ];

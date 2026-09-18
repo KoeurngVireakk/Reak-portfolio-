@@ -1,7 +1,15 @@
 import { useRef, useState, type KeyboardEvent } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Check, FileText } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import { focusAreas, profile } from "../../data/portfolio";
+import {
+  education,
+  focusAreas,
+  itFoundations,
+  languages,
+  professionalIdentity,
+  profile,
+  workingPrinciples,
+} from "../../data/portfolio";
 import { motionTokens, revealSoft } from "../../lib/motion";
 import { SectionHeading } from "../SectionHeading";
 import { GitHubIcon } from "../GitHubIcon";
@@ -35,8 +43,8 @@ export function About() {
         <Container>
           <SectionHeading
             eyebrow="Profile"
-            title="Engineering the whole system, not only the interface."
-            description="I care about the connection between product UI, APIs, data, authorization, testing, and delivery."
+            title="Engineering the whole system, grounded in IT foundations."
+            description="A balanced technical profile combining practical full-stack development, backend reliability, application security, and essential IT infrastructure competencies."
           />
 
           <div className="about-layout">
@@ -45,23 +53,29 @@ export function About() {
               <span>SECURE.</span>
               <span>VERIFY.</span>
             </Reveal>
+
             <Reveal className="about-statement">
               <blockquote className="about-editorial-quote">
                 &ldquo;Clean architecture matters more than flashy demos — verifiable systems built from database transactions to responsive client states.&rdquo;
               </blockquote>
+
               <p className="statement-lead">
-                I&apos;m <strong>Koeurng Vireak</strong>, a final-year Bachelor of Information Technology
-                student at Build Bright University in Battambang.
+                I&apos;m <strong>Koeurng Vireak</strong>, a final-year Bachelor of Science in Information
+                Technology student at Build Bright University in Battambang, Cambodia.
               </p>
+
               <p>
-                My strongest work is in practical full-stack systems: React frontends, Spring Boot and
-                Laravel APIs, ASP.NET Core applications, relational databases, Flutter, local computer
-                vision, authentication, role-based access control, testing, and deployment preparation.
+                My technical path pairs structured Information Technology foundations with active software
+                engineering. Across academic systems and personal projects, I design and implement full-stack
+                solutions using Spring Boot, React, ASP.NET Core, Laravel, Flutter, and relational persistence.
               </p>
+
               <p>
-                I&apos;m especially interested in backend engineering, application security, and projects
-                where architectural integrity and reliability are prioritized.
+                Beyond interface design, my strongest focus is in backend services, role-based authorization,
+                defensive application security, and practical IT infrastructure—including LAN networking,
+                operating system administration, and workplace troubleshooting.
               </p>
+
               <div className="inline-links">
                 <a href={profile.github} rel="noreferrer" target="_blank">
                   <GitHubIcon size={16} /> GitHub profile <ArrowUpRight size={14} />
@@ -69,24 +83,51 @@ export function About() {
                 <a href={`mailto:${profile.email}`}>
                   Email me <ArrowUpRight size={14} />
                 </a>
+                {profile.resumeUrl ? (
+                  <a href={profile.resumeUrl} download>
+                    <FileText size={15} /> Download CV <ArrowUpRight size={14} />
+                  </a>
+                ) : null}
               </div>
             </Reveal>
 
-            <Reveal className="about-notes" delay={0.08}>
-              <div>
+            <Reveal className="about-notes recruiter-dossier" delay={0.08}>
+              <div className="dossier-kicker">
+                <span>RECRUITER SCAN // 30-SEC PROFILE</span>
+              </div>
+
+              <div className="dossier-entry">
                 <span>Education</span>
-                <strong>Bachelor of Information Technology</strong>
-                <p>Build Bright University · Battambang Campus</p>
+                <strong>{education.degree}</strong>
+                <p>{education.institution} · {education.status} ({education.period})</p>
               </div>
-              <div>
-                <span>Current direction</span>
-                <strong>Backend, full-stack, and security-oriented roles</strong>
-                <p>Internship and junior opportunities</p>
+
+              <div className="dossier-entry">
+                <span>Career Direction</span>
+                <strong>{professionalIdentity.directions.slice(0, 2).join(" · ")}</strong>
+                <p>{professionalIdentity.directions.slice(2).join(" · ")}</p>
               </div>
-              <div>
-                <span>Working principle</span>
-                <strong>Finish · secure · verify</strong>
-                <p>Build evidence that can be explained in an interview.</p>
+
+              <div className="dossier-entry">
+                <span>Location</span>
+                <strong>{profile.location}</strong>
+                <p>Available for internship & junior engineering opportunities</p>
+              </div>
+
+              <div className="dossier-entry">
+                <span>Languages</span>
+                <strong>
+                  {languages[0].language}: {languages[0].proficiency}
+                </strong>
+                <p>
+                  {languages[1].language}: {languages[1].proficiency}
+                </p>
+              </div>
+
+              <div className="dossier-entry">
+                <span>Working Style</span>
+                <strong>{workingPrinciples[0].title} · {workingPrinciples[1].title}</strong>
+                <p>{workingPrinciples[2].title} & {workingPrinciples[3].title.toLowerCase()}</p>
               </div>
             </Reveal>
           </div>
@@ -96,9 +137,9 @@ export function About() {
       <section className="section section-anchor capabilities-section" id="capabilities" tabIndex={-1}>
         <Container>
           <SectionHeading
-            eyebrow="Capabilities"
+            eyebrow="Capabilities & Foundations"
             title="Technical range, grounded in project evidence."
-            description="No percentages or inflated proficiency scores—only the technologies and engineering decisions demonstrated across real projects."
+            description="Software engineering architecture paired with essential IT infrastructure and support competencies."
           />
 
           <div className="capabilities-layout">
@@ -147,6 +188,7 @@ export function About() {
                 </motion.button>
               ))}
             </div>
+
             <Reveal className="architecture-explorer-wrap" delay={0.08}>
               <ArchitectureExplorer
                 activeIndex={activeCapability}
@@ -154,6 +196,39 @@ export function About() {
               />
             </Reveal>
           </div>
+
+          <Reveal className="it-foundations-wrap" delay={0.08}>
+            <div className="it-foundations-panel">
+              <div className="it-foundations-header">
+                <div>
+                  <span className="it-foundations-kicker">INFRASTRUCTURE & WORKPLACE IT DOMAIN</span>
+                  <h3>Foundational IT, Network & System Competencies</h3>
+                  <p>Practical laboratory and academic training supporting production-minded development.</p>
+                </div>
+                <span className="it-foundations-badge">ACADEMIC & PRACTICAL TRAINING</span>
+              </div>
+
+              <div className="it-foundations-grid">
+                {itFoundations.map((foundation) => (
+                  <div className="it-foundation-card" key={foundation.domain}>
+                    <div className="foundation-card-head">
+                      <span className="foundation-domain-tag">DOMAIN // {foundation.domain}</span>
+                      <h4>{foundation.title}</h4>
+                      <p>{foundation.description}</p>
+                    </div>
+                    <ul className="foundation-skills-list" aria-label={`${foundation.title} competencies`}>
+                      {foundation.skills.map((skill) => (
+                        <li key={skill}>
+                          <Check size={13} aria-hidden="true" />
+                          <span>{skill}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
 
           <Reveal delay={0.08}><TechnologyRail /></Reveal>
         </Container>

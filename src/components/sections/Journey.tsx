@@ -17,14 +17,9 @@ export function Journey() {
   const progress = useSpring(scrollYProgress, springSoft);
 
   useMotionValueEvent(progress, "change", (latest) => {
-    if (reduceMotion) return;
-    if (latest < 0.38) {
-      setActiveMilestone(0);
-    } else if (latest < 0.74) {
-      setActiveMilestone(1);
-    } else {
-      setActiveMilestone(2);
-    }
+    if (reduceMotion || journey.length === 0) return;
+    const index = Math.min(journey.length - 1, Math.floor(latest * journey.length));
+    setActiveMilestone(index);
   });
 
   return (

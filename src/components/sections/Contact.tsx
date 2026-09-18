@@ -71,7 +71,7 @@ export function Contact() {
             <h2>Let&apos;s build software that holds up beyond the demo.</h2>
             <p>
               I&apos;m open to internship and junior opportunities where I can contribute to real
-              software while growing in backend engineering, full-stack development, and application security.
+              software while growing in backend engineering, full-stack development, application security, and IT operations.
             </p>
           </div>
 
