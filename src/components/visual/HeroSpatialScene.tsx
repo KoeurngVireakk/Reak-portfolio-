@@ -1,8 +1,9 @@
-import type { PointerEvent } from "react";
+import { useRef, type PointerEvent } from "react";
 import { Mail, MapPin } from "lucide-react";
 import {
   motion,
   useMotionValue,
+  useInView,
   useReducedMotion,
   useScroll,
   useSpring,
@@ -10,7 +11,7 @@ import {
 } from "motion/react";
 import { profile } from "../../data/portfolio";
 import { heroSceneReveal, springSpatial } from "../../lib/motion";
-import { useFinePointer } from "../../lib/pointer";
+import { useDocumentVisible, useFinePointer } from "../../lib/pointer";
 import { Tilt } from "../motion/Tilt";
 import { ArchitectureFlow } from "./ArchitectureFlow";
 
@@ -22,8 +23,12 @@ const depthLabels = [
 ];
 
 export function HeroSpatialScene() {
+  const sceneRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const finePointer = useFinePointer();
+  const documentVisible = useDocumentVisible();
+  const inView = useInView(sceneRef, { amount: 0.08 });
+  const sceneActive = !reduceMotion && documentVisible && inView;
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, springSpatial);
@@ -39,7 +44,7 @@ export function HeroSpatialScene() {
   const sceneOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.66]);
 
   function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
-    if (reduceMotion || !finePointer) return;
+    if (!sceneActive || !finePointer) return;
     const bounds = event.currentTarget.getBoundingClientRect();
     pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 18);
     pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 18);
@@ -58,9 +63,11 @@ export function HeroSpatialScene() {
       <motion.div
         className="hero-spatial-scene"
         animate="visible"
+        data-scene-active={sceneActive}
         initial={reduceMotion ? false : "hidden"}
         onPointerLeave={resetPointer}
         onPointerMove={handlePointerMove}
+        ref={sceneRef}
         variants={heroSceneReveal}
       >
         <motion.div className="scene-layer scene-grid" style={{ x: gridX, y: gridY }} aria-hidden="true" />
@@ -76,6 +83,7 @@ export function HeroSpatialScene() {
 
         <div className="scene-coordinate scene-coordinate-top" aria-hidden="true">SYSTEM / PORTRAIT / 04</div>
         <div className="scene-coordinate scene-coordinate-side" aria-hidden="true">11.5564° N · 104.9282° E</div>
+        <div className="scene-status" aria-hidden="true"><i /> Architecture online</div>
 
         <div className="portrait-plane">
           <Tilt className="portrait-tilt" maxTilt={2.4}>

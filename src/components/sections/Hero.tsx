@@ -13,7 +13,7 @@ export function Hero() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="hero section-anchor" id="home">
+    <section className="hero section-anchor" id="home" tabIndex={-1}>
       <CursorSpotlight />
       <Container className="hero-layout">
         <motion.div

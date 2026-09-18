@@ -1,0 +1,79 @@
+/* React 19.3 View Transitions and motion fallbacks */
+
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-old(root) {
+  display: none;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(site-header) {
+  display: none;
+}
+
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+::view-transition-group(.filter-indicator-transition) {
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+::view-transition-old(.filter-indicator-transition),
+::view-transition-new(.filter-indicator-transition) {
+  height: 100%;
+  animation: none;
+}
+
+::view-transition-old(.project-filter-exit) {
+  animation: 150ms var(--ease-leave) both v5-project-exit;
+}
+
+::view-transition-new(.project-filter-enter) {
+  animation: 280ms var(--ease-arrive) 80ms both v5-project-enter;
+}
+
+::view-transition-group(.project-filter-move) {
+  animation-duration: 360ms;
+  animation-timing-function: var(--ease-arrive);
+}
+
+@keyframes v5-project-enter {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes v5-project-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-6px) scale(0.99); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+
+  .contact-orbit > i,
+  .portrait-scan {
+    animation: none !important;
+  }
+
+  .about-manifesto span,
+  .button svg,
+  .header-contact svg,
+  .text-link svg,
+  .inline-links a svg,
+  .project-footer a svg,
+  .contact-details a > svg:last-child {
+    transform: none !important;
+  }
+}

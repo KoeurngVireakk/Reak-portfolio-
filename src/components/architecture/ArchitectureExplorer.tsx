@@ -6,11 +6,19 @@ const layers = [
 ];
 
 export function ArchitectureExplorer({ activeIndex }: { activeIndex: number }) {
+  const activeLayer = layers[activeIndex] ?? layers[0];
+
   return (
-    <div className="architecture-explorer" role="img" aria-label={`Active capability layer: ${layers[activeIndex]?.label}`}>
+    <div
+      aria-labelledby={`capability-tab-${activeIndex}`}
+      className="architecture-explorer"
+      id="capability-architecture-panel"
+      role="tabpanel"
+      tabIndex={0}
+    >
       <div className="architecture-explorer-heading">
         <span>System architecture</span>
-        <strong>{layers[activeIndex]?.label}</strong>
+        <strong>{activeLayer.label}</strong>
       </div>
       <div className="architecture-explorer-map">
         {layers.map((layer, index) => (
@@ -21,6 +29,9 @@ export function ArchitectureExplorer({ activeIndex }: { activeIndex: number }) {
           </div>
         ))}
       </div>
+      <p className="sr-only" aria-live="polite">
+        {activeLayer.label}: {activeLayer.detail}.
+      </p>
       <p className="architecture-explorer-note">Focus a capability to trace its place in the system.</p>
     </div>
   );

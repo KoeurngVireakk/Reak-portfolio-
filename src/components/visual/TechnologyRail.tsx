@@ -1,3 +1,6 @@
+import { useRef, useState } from "react";
+import { Pause, Play } from "lucide-react";
+import { useInView, useReducedMotion } from "motion/react";
 import {
   siCloudflare,
   siDocker,
@@ -48,14 +51,32 @@ function TechnologyItems({ duplicate = false }: { duplicate?: boolean }) {
 }
 
 export function TechnologyRail() {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const inView = useInView(railRef, { amount: 0.1 });
+  const playing = !reduceMotion && !paused && inView;
+
   return (
-    <div className="technology-rail-wrap">
+    <div className="technology-rail-wrap" ref={railRef}>
       <div className="technology-rail-label">
-        <span>Working stack</span>
-        <span>Selected technologies used across real projects</span>
+        <div>
+          <span>Working stack</span>
+          <span>Selected technologies used across real projects</span>
+        </div>
+        <button
+          aria-label={paused ? "Resume technology rail" : "Pause technology rail"}
+          aria-pressed={paused}
+          className="technology-rail-control"
+          onClick={() => setPaused((current) => !current)}
+          type="button"
+        >
+          {paused ? <Play size={14} /> : <Pause size={14} />}
+          <span>{paused ? "Resume" : "Pause"}</span>
+        </button>
       </div>
       <div className="technology-rail-viewport">
-        <div className="technology-rail-track">
+        <div className={`technology-rail-track ${playing ? "is-playing" : "is-paused"}`}>
           <TechnologyItems />
           <TechnologyItems duplicate />
         </div>

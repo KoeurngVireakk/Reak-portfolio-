@@ -11,11 +11,15 @@ export function Contact() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="section section-anchor contact-section" id="contact">
+    <section className="section section-anchor contact-section" id="contact" tabIndex={-1}>
       <Container>
         <Reveal className="contact-panel">
           <div>
             <span className="contact-index">Contact</span>
+            <div className="contact-orbit" aria-hidden="true">
+              <i /><i /><i />
+              <span>UI</span><span>API</span><span>DATA</span><span>SEC</span><b>KV</b>
+            </div>
             <ArchitectureFlow className="contact-system-flow" label="Engineering system resolving to contact" nodes={["UI", "API", "Data", "Contact"]} />
             <h2>Let&apos;s build software that holds up beyond the demo.</h2>
             <p>

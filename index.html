@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#020503" />
     <meta name="color-scheme" content="dark light" />
+    <script>
+      (() => {
+        const stored = localStorage.getItem("portfolio-theme");
+        const theme = stored === "dark" || stored === "light"
+          ? stored
+          : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
     <meta
       name="description"
       content="Portfolio of Koeurng Vireak, a final-year Information Technology student focused on full-stack engineering, backend systems, secure application design, mobile development, and applied AI."

@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { focusAreas, profile } from "../../data/portfolio";
+import { motionTokens, revealSoft } from "../../lib/motion";
 import { SectionHeading } from "../SectionHeading";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
@@ -10,18 +12,32 @@ import { TechnologyRail } from "../visual/TechnologyRail";
 
 export function About() {
   const [activeCapability, setActiveCapability] = useState(0);
+  const capabilityTabs = useRef<Array<HTMLButtonElement | null>>([]);
+  const reduceMotion = useReducedMotion();
+
+  function handleCapabilityKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+
+    const nextIndex = event.key === "Home"
+      ? 0
+      : event.key === "End"
+        ? focusAreas.length - 1
+        : (index + (event.key === "ArrowDown" ? 1 : -1) + focusAreas.length) % focusAreas.length;
+
+    setActiveCapability(nextIndex);
+    capabilityTabs.current[nextIndex]?.focus();
+  }
 
   return (
     <>
-      <section className="section section-anchor about-section" id="about">
+      <section className="section section-anchor about-section" id="about" tabIndex={-1}>
         <Container>
-          <Reveal>
-            <SectionHeading
-              eyebrow="Profile"
-              title="Engineering the whole system, not only the interface."
-              description="I care about the connection between product UI, APIs, data, authorization, testing, and delivery."
-            />
-          </Reveal>
+          <SectionHeading
+            eyebrow="Profile"
+            title="Engineering the whole system, not only the interface."
+            description="I care about the connection between product UI, APIs, data, authorization, testing, and delivery."
+          />
 
           <div className="about-layout">
             <Reveal className="about-manifesto" aria-hidden="true">
@@ -74,27 +90,44 @@ export function About() {
         </Container>
       </section>
 
-      <section className="section section-anchor capabilities-section" id="capabilities">
+      <section className="section section-anchor capabilities-section" id="capabilities" tabIndex={-1}>
         <Container>
-          <Reveal>
-            <SectionHeading
-              eyebrow="Capabilities"
-              title="Technical range, grounded in project evidence."
-              description="No percentages or inflated proficiency scores—only the technologies and engineering decisions demonstrated across real projects."
-            />
-          </Reveal>
+          <SectionHeading
+            eyebrow="Capabilities"
+            title="Technical range, grounded in project evidence."
+            description="No percentages or inflated proficiency scores—only the technologies and engineering decisions demonstrated across real projects."
+          />
 
           <div className="capabilities-layout">
-            <div className="capability-list">
+            <div
+              className="capability-list"
+              role="tablist"
+              aria-label="Engineering capabilities"
+              aria-orientation="vertical"
+            >
               {focusAreas.map((area, index) => (
-                <Reveal
+                <motion.button
+                  aria-controls="capability-architecture-panel"
+                  aria-selected={activeCapability === index}
                   className={`capability-row ${activeCapability === index ? "is-active" : ""}`}
                   data-active={activeCapability === index}
-                  delay={index * 0.04}
+                  id={`capability-tab-${index}`}
+                  initial={reduceMotion ? false : "hidden"}
                   key={area.title}
                   onFocus={() => setActiveCapability(index)}
+                  onKeyDown={(event) => handleCapabilityKeyDown(event, index)}
                   onMouseEnter={() => setActiveCapability(index)}
-                  tabIndex={0}
+                  onClick={() => setActiveCapability(index)}
+                  ref={(element) => {
+                    capabilityTabs.current[index] = element;
+                  }}
+                  role="tab"
+                  tabIndex={activeCapability === index ? 0 : -1}
+                  transition={{ ...motionTokens.revealSoft, delay: reduceMotion ? 0 : index * 0.04 }}
+                  variants={revealSoft}
+                  viewport={{ once: true, amount: 0.25 }}
+                  whileInView="visible"
+                  type="button"
                 >
                   <span className="capability-number">{String(index + 1).padStart(2, "0")}</span>
                   <div className="capability-copy">
@@ -108,7 +141,7 @@ export function About() {
                       ))}
                     </ul>
                   </div>
-                </Reveal>
+                </motion.button>
               ))}
             </div>
             <Reveal className="architecture-explorer-wrap" delay={0.08}>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { interactionMotion, motionTokens } from "../../lib/motion";
@@ -13,10 +13,18 @@ const navItems = [
 
 function navigateToSection(id: string) {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  document.getElementById(id)?.scrollIntoView({
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  target.focus({ preventScroll: true });
+  target.scrollIntoView({
     behavior: reduceMotion ? "auto" : "smooth",
     block: "start",
   });
+
+  if (window.location.hash !== `#${id}`) {
+    window.history.pushState(null, "", `#${id}`);
+  }
 }
 
 type SiteHeaderProps = {
@@ -29,6 +37,8 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const reduceMotion = useReducedMotion();
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const sections = ["home", ...navItems.map((item) => item.id)]
@@ -59,20 +69,31 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setMobileOpen(false);
+      if (event.key === "Escape" && mobileOpen) {
+        setMobileOpen(false);
+        window.requestAnimationFrame(() => menuButtonRef.current?.focus());
+      }
     }
 
     function onResize() {
       if (window.innerWidth > 900) setMobileOpen(false);
     }
 
+    function onPointerDown(event: PointerEvent) {
+      if (mobileOpen && !headerRef.current?.contains(event.target as Node)) {
+        setMobileOpen(false);
+      }
+    }
+
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("resize", onResize);
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointerdown", onPointerDown);
     };
-  }, []);
+  }, [mobileOpen]);
 
   function handleNavigation(id: string) {
     navigateToSection(id);
@@ -80,7 +101,11 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
   }
 
   return (
-    <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
+    <header
+      className={`site-header ${scrolled ? "is-scrolled" : ""}`}
+      ref={headerRef}
+      style={{ viewTransitionName: "site-header" }}
+    >
       <a
         className="brand"
         href="#home"
@@ -153,6 +178,7 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
           aria-expanded={mobileOpen}
           aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
           onClick={() => setMobileOpen((value) => !value)}
+          ref={menuButtonRef}
         >
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -170,18 +196,21 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
             transition={motionTokens.quick}
           >
             {navItems.map((item, index) => (
-              <a
+              <motion.a
+                animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
                 href={`#${item.id}`}
+                initial={reduceMotion ? false : { opacity: 0, x: -8 }}
                 key={item.id}
                 aria-current={activeSection === item.id ? "location" : undefined}
                 onClick={(event) => {
                   event.preventDefault();
                   handleNavigation(item.id);
                 }}
+                transition={{ ...motionTokens.quick, delay: index * 0.035 }}
               >
                 <span>{String(index + 1).padStart(2, "0")}</span>
                 {item.label}
-              </a>
+              </motion.a>
             ))}
           </motion.nav>
         ) : null}

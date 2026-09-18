@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "motion/react";
 import { SiteFooter } from "./components/layout/SiteFooter";
 import { SiteHeader } from "./components/navigation/SiteHeader";
@@ -7,12 +7,17 @@ import { Contact } from "./components/sections/Contact";
 import { Hero } from "./components/sections/Hero";
 import { Journey } from "./components/sections/Journey";
 import { Projects } from "./components/sections/Projects";
+import { SectionTransition } from "./components/visual/SectionTransition";
+import { SystemRail } from "./components/visual/SystemRail";
 import { springSoft } from "./lib/motion";
 
 type Theme = "dark" | "light";
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "dark";
+
+  const documentTheme = document.documentElement.dataset.theme;
+  if (documentTheme === "dark" || documentTheme === "light") return documentTheme;
 
   const storedTheme = window.localStorage.getItem("portfolio-theme");
   if (storedTheme === "dark" || storedTheme === "light") return storedTheme;
@@ -49,16 +54,26 @@ function App() {
         Skip to content
       </a>
 
+      <SystemRail />
+
       <SiteHeader
         theme={theme}
-        onToggleTheme={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+        onToggleTheme={() => {
+          startTransition(() => {
+            setTheme((current) => (current === "dark" ? "light" : "dark"));
+          });
+        }}
       />
 
       <main id="main">
         <Hero />
+        <SectionTransition from="Identity" to="System" />
         <About />
+        <SectionTransition from="System" to="Proof" />
         <Projects />
+        <SectionTransition from="Proof" to="Trajectory" />
         <Journey />
+        <SectionTransition from="Trajectory" to="Contact" />
         <Contact />
       </main>
 

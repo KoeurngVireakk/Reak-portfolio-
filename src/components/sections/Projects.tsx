@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import {
+  ViewTransition,
+  startTransition,
+  useEffect,
+  useMemo,
+  useState,
+  type CSSProperties,
+} from "react";
 import { ArrowUpRight, Check, LockKeyhole } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { projects, type Project, type ProjectCategory } from "../../data/portfolio";
@@ -6,8 +13,8 @@ import { motionTokens, projectDepth, projectTransition } from "../../lib/motion"
 import { ProjectMedia } from "../projects/ProjectMedia";
 import { SectionHeading } from "../SectionHeading";
 import { Container } from "../layout/Container";
-import { ScrollReveal } from "../motion/ScrollReveal";
 import { Reveal } from "../ui/Reveal";
+import { useMediaQuery } from "../../lib/pointer";
 
 const categories: Array<"All" | ProjectCategory> = [
   "All",
@@ -17,6 +24,14 @@ const categories: Array<"All" | ProjectCategory> = [
   "AI/CV",
   "Security",
 ];
+
+type ProjectFilter = (typeof categories)[number];
+
+function getCategoryFromUrl(): ProjectFilter {
+  if (typeof window === "undefined") return "All";
+  const requested = new URL(window.location.href).searchParams.get("work");
+  return categories.find((category) => category.toLowerCase() === requested?.toLowerCase()) ?? "All";
+}
 
 function projectId(project: Project) {
   return `project-${project.shortName.toLowerCase()}`;
@@ -119,9 +134,10 @@ type FeaturedChapterProps = {
   project: Project;
   index: number;
   onEnter: (project: Project) => void;
+  showMedia: boolean;
 };
 
-function FeaturedChapter({ project, index, onEnter }: FeaturedChapterProps) {
+function FeaturedChapter({ project, index, onEnter, showMedia }: FeaturedChapterProps) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -139,25 +155,20 @@ function FeaturedChapter({ project, index, onEnter }: FeaturedChapterProps) {
         {String(index + 1).padStart(2, "0")}
       </span>
       <ProjectHeader project={project} />
-      <div className="featured-mobile-media">
-        <ProjectMedia compact index={index} project={project} />
-      </div>
+      {showMedia ? (
+        <div className="featured-mobile-media">
+          <ProjectMedia compact index={index} project={project} />
+        </div>
+      ) : null}
       <ProjectNarrative project={project} />
     </motion.article>
   );
 }
 
 function SecondaryProject({ project, index }: { project: Project; index: number }) {
-  const reduceMotion = useReducedMotion();
-
   return (
-    <motion.article
+    <article
       className="secondary-project"
-      layout={!reduceMotion}
-      initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={reduceMotion ? undefined : { opacity: 0, y: 12 }}
-      transition={{ ...projectTransition, delay: reduceMotion ? 0 : Math.min(index * 0.04, 0.12) }}
       style={projectAccent(project)}
     >
       <ProjectHeader project={project} />
@@ -165,13 +176,14 @@ function SecondaryProject({ project, index }: { project: Project; index: number 
         <ProjectMedia compact index={index} project={project} />
         <ProjectNarrative project={project} />
       </div>
-    </motion.article>
+    </article>
   );
 }
 
 export function Projects() {
-  const [activeCategory, setActiveCategory] = useState<(typeof categories)[number]>("All");
+  const [activeCategory, setActiveCategory] = useState<ProjectFilter>(getCategoryFromUrl);
   const reduceMotion = useReducedMotion();
+  const desktopStory = useMediaQuery("(min-width: 901px)");
 
   const filteredProjects = useMemo(
     () => activeCategory === "All"
@@ -195,16 +207,34 @@ export function Projects() {
     setActiveFeaturedName(featuredProjects[0]?.name ?? "");
   }, [activeCategory, featuredProjects]);
 
+  useEffect(() => {
+    const restoreFilter = () => {
+      startTransition(() => setActiveCategory(getCategoryFromUrl()));
+    };
+
+    window.addEventListener("popstate", restoreFilter);
+    return () => window.removeEventListener("popstate", restoreFilter);
+  }, []);
+
+  function selectCategory(category: ProjectFilter) {
+    if (category === activeCategory) return;
+
+    const url = new URL(window.location.href);
+    if (category === "All") url.searchParams.delete("work");
+    else url.searchParams.set("work", category);
+    window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
+
+    startTransition(() => setActiveCategory(category));
+  }
+
   return (
-    <section className="section section-anchor projects-section" id="projects">
+    <section className="section section-anchor projects-section" id="projects" tabIndex={-1}>
       <Container>
-        <ScrollReveal>
-          <SectionHeading
-            eyebrow="Selected work"
-            title="Engineering stories, not a wall of project cards."
-            description="Move through the featured systems to see the problem, architecture, security decisions, testing evidence, and honest current status behind each build."
-          />
-        </ScrollReveal>
+        <SectionHeading
+          eyebrow="Selected work"
+          title="Engineering stories, not a wall of project cards."
+          description="Move through the featured systems to see the problem, architecture, security decisions, testing evidence, and honest current status behind each build."
+        />
 
         <Reveal className="project-filter-wrap">
           <div className="project-filters" aria-label="Filter projects" role="group">
@@ -216,14 +246,17 @@ export function Projects() {
                   aria-pressed={active}
                   className={active ? "active" : ""}
                   key={category}
-                  onClick={() => setActiveCategory(category)}
+                  onClick={() => selectCategory(category)}
                 >
                   {category}
                   {active ? (
-                    <motion.span
-                      className="filter-indicator"
-                      layoutId={reduceMotion ? undefined : "filter-indicator"}
-                    />
+                    <ViewTransition
+                      default="none"
+                      name="project-filter-indicator"
+                      share={reduceMotion ? "none" : "filter-indicator-transition"}
+                    >
+                      <span className="filter-indicator" />
+                    </ViewTransition>
                   ) : null}
                 </button>
               );
@@ -233,50 +266,61 @@ export function Projects() {
         </Reveal>
 
         {featuredProjects.length > 0 ? (
-          <div className="featured-story">
-            <div className="featured-visual-column">
-              <div className="featured-visual-sticky">
-                <AnimatePresence initial={false} mode="wait">
-                  {activeFeatured ? (
-                    <motion.div
-                      key={activeFeatured.name}
-                      initial={reduceMotion ? false : projectDepth.enter}
-                      animate={projectDepth.center}
-                      exit={reduceMotion ? undefined : projectDepth.exit}
-                      transition={projectTransition}
-                      style={projectAccent(activeFeatured)}
-                    >
-                      <ProjectMedia
-                        index={projects.indexOf(activeFeatured)}
-                        project={activeFeatured}
-                      />
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
+          <div className={`featured-story ${desktopStory ? "is-desktop-story" : "is-mobile-story"}`}>
+            {desktopStory ? (
+              <div className="featured-visual-column">
+                <div className="featured-visual-sticky">
+                  <AnimatePresence initial={false} mode="wait">
+                    {activeFeatured ? (
+                      <motion.div
+                        key={activeFeatured.name}
+                        initial={reduceMotion ? false : projectDepth.enter}
+                        animate={projectDepth.center}
+                        exit={reduceMotion ? undefined : projectDepth.exit}
+                        transition={projectTransition}
+                        style={projectAccent(activeFeatured)}
+                      >
+                        <ProjectMedia
+                          index={projects.indexOf(activeFeatured)}
+                          project={activeFeatured}
+                        />
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
 
-                <nav className="featured-progress" aria-label="Featured projects">
-                  {featuredProjects.map((project, index) => (
-                    <a
-                      aria-current={activeFeatured?.name === project.name ? "location" : undefined}
-                      href={`#${projectId(project)}`}
-                      key={project.name}
-                    >
-                      <span>{String(index + 1).padStart(2, "0")}</span>
-                      {project.shortName}
-                    </a>
-                  ))}
-                </nav>
+                  <nav className="featured-progress" aria-label="Featured projects">
+                    {featuredProjects.map((project, index) => (
+                      <a
+                        aria-current={activeFeatured?.name === project.name ? "location" : undefined}
+                        href={`#${projectId(project)}`}
+                        key={project.name}
+                      >
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        {project.shortName}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
               </div>
-            </div>
+            ) : null}
 
             <div className="featured-chapters">
               {featuredProjects.map((project) => (
-                <FeaturedChapter
-                  index={projects.indexOf(project)}
+                <ViewTransition
+                  enter={reduceMotion ? "none" : "project-filter-enter"}
+                  exit={reduceMotion ? "none" : "project-filter-exit"}
                   key={project.name}
-                  onEnter={(current) => setActiveFeaturedName(current.name)}
-                  project={project}
-                />
+                  update={reduceMotion ? "none" : "project-filter-move"}
+                >
+                  <FeaturedChapter
+                    index={projects.indexOf(project)}
+                    onEnter={(current) => {
+                      if (desktopStory) setActiveFeaturedName(current.name);
+                    }}
+                    project={project}
+                    showMedia={!desktopStory}
+                  />
+                </ViewTransition>
               ))}
             </div>
           </div>
@@ -288,17 +332,21 @@ export function Projects() {
               <span>Additional systems</span>
               <h3 id="additional-projects-title">More engineering work</h3>
             </div>
-            <motion.div layout={!reduceMotion}>
-              <AnimatePresence initial={false} mode="popLayout">
-                {secondaryProjects.map((project) => (
-                  <SecondaryProject
-                    index={projects.indexOf(project)}
+            <div>
+              {secondaryProjects.map((project) => (
+                  <ViewTransition
+                    enter={reduceMotion ? "none" : "project-filter-enter"}
+                    exit={reduceMotion ? "none" : "project-filter-exit"}
                     key={project.name}
-                    project={project}
-                  />
+                    update={reduceMotion ? "none" : "project-filter-move"}
+                  >
+                    <SecondaryProject
+                      index={projects.indexOf(project)}
+                      project={project}
+                    />
+                  </ViewTransition>
                 ))}
-              </AnimatePresence>
-            </motion.div>
+            </div>
           </section>
         ) : null}
       </Container>
