@@ -1,14 +1,16 @@
 # Koeurng Vireak Portfolio
 
-A recruiter-focused developer portfolio built from Vireak's real projects and technical background.
+A recruiter-focused developer portfolio built from Vireak's real projects and technical background. Portfolio V3 adds a restrained spatial layer without changing the evidence-first content model.
 
 ## Design goals
 
 - Product-first presentation inspired by modern technical portfolios, without copying another developer's branding or claims.
 - No fabricated years of experience, clients, or proficiency percentages.
-- Evidence-driven project cards: architecture, security decisions, testing, project status, and public GitHub links where available.
+- Evidence-driven project stories: architecture, security decisions, testing, project status, and public GitHub links where available.
 - Responsive, accessible, editorial dark-first UI with an intentional light mode and `prefers-reduced-motion` support.
 - Evidence-led project case studies covering problem, solution, role, architecture, security, testing, and status.
+- CSS-perspective product frames and subtle pointer interactions with complete static fallbacks.
+- Native-scroll featured-project storytelling with a simpler mobile composition.
 - Data-driven content in `src/data/portfolio.ts` so the portfolio can be updated without rewriting UI components.
 
 ## Stack
@@ -27,7 +29,7 @@ A recruiter-focused developer portfolio built from Vireak's real projects and te
 2. Recruiter-focused profile facts
 3. About
 4. Capabilities / technology evidence
-5. Filterable engineering case studies
+5. Sticky, filterable engineering case studies
 6. Education + engineering journey
 7. Contact
 
@@ -65,6 +67,8 @@ src/data/portfolio.ts
 ```
 
 Update your name, role, contact details, skill areas, projects, and journey there.
+
+Each project also has a `presentation` value that selects its browser, desktop, phone/dashboard, dashboard, or POS frame. Add verified screenshots through the optional `media` field; the UI keeps an explicitly labeled placeholder until those assets exist.
 
 ## Before publishing
 

@@ -24,5 +24,5 @@
 - Density: comfortable
 - Motion: Silk restrained
 - Imagery/data role: real portrait and project evidence first; screenshots only when supplied
-- Signature move: editorial case-study rows with numbered architecture rails and inspectable evidence
+- Signature move: native-scroll sticky project stories paired with project-specific CSS perspective frames
 - Locked: 2026-09-18

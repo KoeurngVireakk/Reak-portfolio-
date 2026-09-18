@@ -1,7 +1,7 @@
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { profile } from "../../data/portfolio";
-import { motionTokens } from "../../lib/motion";
+import { interactionMotion, motionTokens } from "../../lib/motion";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
@@ -52,8 +52,8 @@ export function Contact() {
             className="button button-primary contact-button"
             href={`mailto:${profile.email}`}
             transition={motionTokens.spring}
-            whileHover={reduceMotion ? undefined : { y: -2 }}
-            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            whileHover={reduceMotion ? undefined : interactionMotion.lift}
+            whileTap={reduceMotion ? undefined : interactionMotion.press}
           >
             Start a conversation <ArrowUpRight size={16} />
           </motion.a>

@@ -1,5 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
-import { focusAreas, profile } from "../../data/portfolio";
+import { focusAreas, profile, technologyRail } from "../../data/portfolio";
 import { SectionHeading } from "../SectionHeading";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
@@ -78,18 +78,35 @@ export function About() {
             {focusAreas.map((area, index) => (
               <Reveal className="capability-row" delay={index * 0.04} key={area.title}>
                 <span className="capability-number">{String(index + 1).padStart(2, "0")}</span>
-                <div>
+                <div className="capability-copy">
                   <h3>{area.title}</h3>
                   <p>{area.description}</p>
                 </div>
-                <ul aria-label={`${area.title} technologies`}>
-                  {area.technologies.map((technology) => (
-                    <li key={technology}>{technology}</li>
-                  ))}
-                </ul>
+                <div className="capability-evidence">
+                  <div className="capability-path" aria-hidden="true">
+                    <span>Input</span><i /><span>System</span><i /><span>Outcome</span>
+                  </div>
+                  <ul aria-label={`${area.title} technologies`}>
+                    {area.technologies.map((technology) => (
+                      <li key={technology}>{technology}</li>
+                    ))}
+                  </ul>
+                </div>
               </Reveal>
             ))}
           </div>
+
+          <Reveal className="technology-rail-wrap" delay={0.08}>
+            <div className="technology-rail-label">
+              <span>Working stack</span>
+              <span>Selected technologies used across real projects</span>
+            </div>
+            <ul className="technology-rail" aria-label="Technology stack">
+              {technologyRail.map((technology) => (
+                <li key={technology}>{technology}</li>
+              ))}
+            </ul>
+          </Reveal>
         </Container>
       </section>
     </>

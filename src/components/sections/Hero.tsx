@@ -1,24 +1,34 @@
 import { ArrowDown, ArrowUpRight, Mail, MapPin } from "lucide-react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
 import { facts, profile } from "../../data/portfolio";
-import { heroItemVariants, motionTokens, staggerVariants } from "../../lib/motion";
+import { heroDepth, heroItemVariants, interactionMotion, motionTokens, staggerSlow } from "../../lib/motion";
+import { CursorSpotlight } from "../motion/CursorSpotlight";
+import { Magnetic } from "../motion/Magnetic";
+import { Parallax } from "../motion/Parallax";
+import { Tilt } from "../motion/Tilt";
+
+const depthLabels = [
+  { label: "React", className: "depth-label-react" },
+  { label: "Spring Boot", className: "depth-label-spring" },
+  { label: "Backend engineering", className: "depth-label-backend" },
+  { label: "Application security", className: "depth-label-security" },
+  { label: "Final-year IT", className: "depth-label-student" },
+];
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll();
-  const portraitY = useTransform(scrollYProgress, [0, 0.22], [0, reduceMotion ? 0 : 30]);
-  const portraitScale = useTransform(scrollYProgress, [0, 0.22], [1, reduceMotion ? 1 : 0.975]);
 
   return (
     <section className="hero section-anchor" id="home">
+      <CursorSpotlight />
       <Container className="hero-layout">
         <motion.div
           className="hero-copy"
           animate="visible"
           initial={reduceMotion ? false : "hidden"}
-          variants={staggerVariants}
+          variants={staggerSlow}
         >
           <motion.div className="availability" variants={heroItemVariants}>
             <span aria-hidden="true" />
@@ -40,26 +50,30 @@ export function Hero() {
           </motion.p>
 
           <motion.div className="hero-actions" variants={heroItemVariants}>
-            <motion.a
-              className="button button-primary"
-              href="#projects"
-              transition={motionTokens.spring}
-              whileHover={reduceMotion ? undefined : { y: -2 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            >
-              View projects <ArrowDown size={16} />
-            </motion.a>
-            <motion.a
-              className="button button-secondary"
-              href={profile.github}
-              rel="noreferrer"
-              target="_blank"
-              transition={motionTokens.spring}
-              whileHover={reduceMotion ? undefined : { y: -2 }}
-              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-            >
-              <GitHubIcon size={16} /> GitHub
-            </motion.a>
+            <Magnetic>
+              <motion.a
+                className="button button-primary"
+                href="#projects"
+                transition={motionTokens.springInteractive}
+                whileHover={reduceMotion ? undefined : interactionMotion.lift}
+                whileTap={reduceMotion ? undefined : interactionMotion.press}
+              >
+                View projects <ArrowDown size={16} />
+              </motion.a>
+            </Magnetic>
+            <Magnetic>
+              <motion.a
+                className="button button-secondary"
+                href={profile.github}
+                rel="noreferrer"
+                target="_blank"
+                transition={motionTokens.springInteractive}
+                whileHover={reduceMotion ? undefined : interactionMotion.lift}
+                whileTap={reduceMotion ? undefined : interactionMotion.press}
+              >
+                <GitHubIcon size={16} /> GitHub
+              </motion.a>
+            </Magnetic>
             <a className="text-link" href={`mailto:${profile.email}`}>
               Contact <ArrowUpRight size={15} />
             </a>
@@ -77,34 +91,57 @@ export function Hero() {
 
         <motion.div
           className="portrait-column"
-          style={{ y: portraitY, scale: portraitScale }}
-          initial={reduceMotion ? false : { opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ ...motionTokens.silk, delay: reduceMotion ? 0 : 0.16 }}
+          initial={reduceMotion ? false : "hidden"}
+          animate="visible"
+          variants={heroDepth}
         >
-          <div className="portrait-frame">
-            <div className="portrait-index" aria-hidden="true">
-              <span>PROFILE / 01</span>
-              <span>2026</span>
+          <Parallax className="hero-visual-parallax" distance={18}>
+            <div className="hero-visual-shell">
+              <Tilt className="portrait-tilt" maxTilt={3}>
+                <div className="portrait-frame">
+                  <div className="portrait-index" aria-hidden="true">
+                    <span>PROFILE / SYSTEMS</span>
+                    <span>2026</span>
+                  </div>
+                  <img
+                    className="portrait"
+                    src={profile.avatar}
+                    alt="Portrait of Koeurng Vireak"
+                    decoding="async"
+                    fetchPriority="high"
+                    height="520"
+                    width="520"
+                  />
+                  <div className="portrait-caption">
+                    <span>
+                      <MapPin size={14} /> {profile.location}
+                    </span>
+                    <a href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}>
+                      <Mail size={14} /> Email
+                    </a>
+                  </div>
+                </div>
+              </Tilt>
+
+              <div className="hero-depth-labels" aria-hidden="true">
+                {depthLabels.map((item, index) => (
+                  <motion.span
+                    className={item.className}
+                    initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ ...motionTokens.revealSoft, delay: reduceMotion ? 0 : 0.32 + index * 0.06 }}
+                    key={item.label}
+                  >
+                    {item.label}
+                  </motion.span>
+                ))}
+              </div>
+
+              <div className="hero-system-axis" aria-hidden="true">
+                <span>UI</span><i /><span>API</span><i /><span>DATA</span><i /><span>SEC</span>
+              </div>
             </div>
-            <img
-              className="portrait"
-              src={profile.avatar}
-              alt="Portrait of Koeurng Vireak"
-              decoding="async"
-              fetchPriority="high"
-              height="520"
-              width="520"
-            />
-            <div className="portrait-caption">
-              <span>
-                <MapPin size={14} /> {profile.location}
-              </span>
-              <a href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}>
-                <Mail size={14} /> Email
-              </a>
-            </div>
-          </div>
+          </Parallax>
         </motion.div>
       </Container>
 

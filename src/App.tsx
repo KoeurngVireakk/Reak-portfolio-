@@ -7,6 +7,7 @@ import { Contact } from "./components/sections/Contact";
 import { Hero } from "./components/sections/Hero";
 import { Journey } from "./components/sections/Journey";
 import { Projects } from "./components/sections/Projects";
+import { springSoft } from "./lib/motion";
 
 type Theme = "dark" | "light";
 
@@ -23,9 +24,9 @@ function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const { scrollYProgress } = useScroll();
   const progressScale = useSpring(scrollYProgress, {
-    stiffness: 130,
-    damping: 28,
-    mass: 0.24,
+    stiffness: springSoft.stiffness,
+    damping: springSoft.damping,
+    mass: springSoft.mass,
   });
 
   useEffect(() => {

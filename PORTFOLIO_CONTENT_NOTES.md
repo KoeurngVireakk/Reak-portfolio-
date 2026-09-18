@@ -55,7 +55,7 @@ Positioned as a role-based ASP.NET Core sales/inventory system. Repository is cu
 ## Before deployment
 
 1. Capture real screenshots for the top 3–4 projects.
-2. Add the screenshots to `public/projects/` and update the project visual component to use them.
+2. Add screenshots to `public/projects/` and populate each project's optional `media.assets` field. The `presentation` field already selects the correct browser, desktop, mobile/dashboard, dashboard, or POS frame.
 3. Add a real CV only after final review.
 4. Add LinkedIn only if/when a verified public URL is ready.
 5. Deploy and run Lighthouse checks for performance, accessibility, best practices, and SEO.

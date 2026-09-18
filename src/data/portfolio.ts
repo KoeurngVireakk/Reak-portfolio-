@@ -1,4 +1,5 @@
 export type ProjectCategory = "Web" | "Backend" | "Mobile" | "AI/CV" | "Security";
+export type ProjectPresentation = "browser" | "phone-dashboard" | "desktop" | "dashboard" | "pos";
 
 export type ProjectMediaAsset = {
   src: string;
@@ -28,6 +29,7 @@ export type Project = {
   repository?: string;
   repositoryLabel?: string;
   featured?: boolean;
+  presentation: ProjectPresentation;
   media?: ProjectMedia;
 };
 
@@ -76,6 +78,22 @@ export const focusAreas = [
   },
 ];
 
+export const technologyRail = [
+  "React",
+  "TypeScript",
+  "Spring Boot",
+  "Java",
+  "Laravel",
+  "ASP.NET Core",
+  "Flutter",
+  "Firebase",
+  "MySQL",
+  "SQL Server",
+  "Python",
+  "Docker",
+  "Cloudflare",
+];
+
 export const projects: Project[] = [
   {
     name: "Koupreng E-Invitation",
@@ -99,6 +117,7 @@ export const projects: Project[] = [
     security: "JWT authentication with permission and production-hardening work tracked as part of readiness.",
     testing: "Unit, backend, Playwright, build, and static-analysis foundations.",
     status: "Production-readiness phase",
+    presentation: "browser",
     featured: true,
   },
   {
@@ -123,6 +142,7 @@ export const projects: Project[] = [
     security: "Deny-by-default Firestore rules, role claims, and server-authoritative business mutations.",
     testing: "Flutter, Functions, Firestore and Storage rules, plus emulator integration tests.",
     status: "University demo · private repository",
+    presentation: "phone-dashboard",
     repositoryLabel: "Private repository",
     featured: true,
   },
@@ -148,6 +168,7 @@ export const projects: Project[] = [
     security: "Biometric recognition stays local; the project includes privacy guidance and local storage.",
     testing: "Doctor scripts, setup checks, demo mode, and automated tests are included.",
     status: "Public repository",
+    presentation: "desktop",
     repository: "https://github.com/KoeurngVireakk/face_attendance_recognition",
     featured: true,
   },
@@ -172,6 +193,7 @@ export const projects: Project[] = [
     ],
     security: "Authenticated admin and payment data are deliberately excluded from offline caching.",
     status: "Public repository",
+    presentation: "browser",
     repository: "https://github.com/KoeurngVireakk/e-menu-saas",
     featured: true,
   },
@@ -197,6 +219,7 @@ export const projects: Project[] = [
     security: "Spring Security enforces role boundaries across operational responsibilities.",
     testing: "CI verifies the application against an isolated MySQL service.",
     status: "Private repository",
+    presentation: "dashboard",
     repositoryLabel: "Private repository",
   },
   {
@@ -221,6 +244,7 @@ export const projects: Project[] = [
     security: "Login rate limiting, antiforgery protection, secure headers, and centralized authorization.",
     testing: "GitHub Actions builds styles, verifies formatting, runs tests, and publishes artifacts.",
     status: "Private repository",
+    presentation: "pos",
     repositoryLabel: "Private repository",
   },
 ];

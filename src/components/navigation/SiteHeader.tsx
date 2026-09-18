@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Menu, Moon, Sun, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { motionTokens } from "../../lib/motion";
+import { interactionMotion, motionTokens } from "../../lib/motion";
 
 const navItems = [
   { id: "about", label: "About" },
@@ -27,6 +27,7 @@ type SiteHeaderProps = {
 export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
   const [activeSection, setActiveSection] = useState("home");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -47,6 +48,13 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const updateScrollState = () => setScrolled(window.scrollY > 24);
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollState);
   }, []);
 
   useEffect(() => {
@@ -72,7 +80,7 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
   }
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
       <a
         className="brand"
         href="#home"
@@ -121,7 +129,7 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
           aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
           onClick={onToggleTheme}
           transition={motionTokens.spring}
-          whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+          whileTap={reduceMotion ? undefined : interactionMotion.iconPress}
         >
           <AnimatePresence initial={false} mode="wait">
             <motion.span
