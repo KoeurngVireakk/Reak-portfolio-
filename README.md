@@ -1,6 +1,6 @@
 # Koeurng Vireak Portfolio
 
-A recruiter-focused developer portfolio built from Vireak's real projects and technical background. Portfolio V4 adds cinematic spatial engineering without changing the evidence-first content model.
+A recruiter-focused developer portfolio built from Vireak's real projects and technical background. Portfolio V5 evolves the experience into a systems field manual: cinematic where spatial context helps, quiet where recruiters need to read, and evidence-first throughout.
 
 ## Design goals
 
@@ -13,6 +13,10 @@ A recruiter-focused developer portfolio built from Vireak's real projects and te
 - CSS-perspective product frames and subtle pointer interactions with complete static fallbacks.
 - Interactive capability architecture and a licensed monochrome technology rail.
 - Native-scroll featured-project storytelling with a simpler mobile composition.
+- React 19.3 View Transitions for project-filter state changes, with reduced-motion fallbacks.
+- URL-backed project filters, keyboard-operable capability tabs, and an explicit pause control for continuous motion.
+- A fixed wide-screen system rail and inter-section architecture handoffs that make the page read as one connected system.
+- Offscreen and hidden-document animation pausing to protect mobile battery and rendering time.
 - Data-driven content in `src/data/portfolio.ts` so the portfolio can be updated without rewriting UI components.
 
 ## Stack
@@ -74,6 +78,8 @@ Update your name, role, contact details, skill areas, projects, and journey ther
 Each project also has a `presentation` value that selects its browser, desktop, phone/dashboard, dashboard, or POS frame, plus a restrained `accent` used by its product scene. Add verified screenshots through the optional `media` field; the UI keeps an explicitly labeled placeholder until those assets exist.
 
 The visual system and rationale are documented in `DESIGN.md`.
+
+The V5 CSS is split by responsibility: `src/styles/core.css` preserves the proven V4 foundation, while `v5-foundation.css`, `v5-sections.css`, and `v5-motion.css` hold the new system, section, and transition layers.
 
 ## Before publishing
 

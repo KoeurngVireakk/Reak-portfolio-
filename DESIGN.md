@@ -1,10 +1,10 @@
-# Portfolio V4 design system
+# Portfolio V5 design system
 
 ## Direction
 
-**Cinematic Spatial Engineering** combines editorial hierarchy, product evidence, and system architecture. The signature visual is a connected `UI → API → Data → Security` language that begins in the portrait scene, activates in capabilities, frames project evidence, and resolves into contact.
+**Systems Field Manual** is the V5 expression of Cinematic Spatial Engineering. It combines editorial hierarchy, product evidence, and system architecture. The connected `UI → API → Data → Security` language begins in the portrait scene, activates in capabilities, frames project evidence, tracks progress at the viewport edge, and resolves into contact.
 
-The interface spends visual intensity in the hero and product scenes. Reading sections stay quiet, spacious, and recruiter-friendly.
+The interface spends visual intensity in the hero, capability model, project proof, and contact resolution. Reading sections stay quiet, spacious, and recruiter-friendly. Section connectors make each transition feel causal rather than decorative.
 
 ## Color and light
 
@@ -44,11 +44,29 @@ Mockups use restrained perspective, screen illumination, edge reflections, and l
 
 ## Motion
 
-Motion categories are ambient, editorial reveal, interaction, navigation, project transition, scroll-linked depth, and spatial spring. Animations use transform and opacity, retain native scrolling, and never block content. `prefers-reduced-motion` removes parallax, pulses, scanning, continuous rails, and spatial transforms while preserving the complete composition.
+Motion categories are ambient, editorial reveal, interaction, navigation, project transition, scroll-linked progress, and spatial spring. Animations use transform and opacity, retain native scrolling, and never block content. Section titles reveal as a single staggered semantic unit. Project filtering uses React 19.3 View Transitions; physical scroll changes continue to use Motion springs.
+
+Continuous motion pauses when offscreen, when the document is hidden, when the user invokes the rail control, or when `prefers-reduced-motion` is active. Reduced motion removes parallax, pulses, scanning, continuous rails, view-transition choreography, and spatial transforms while preserving the complete composition.
+
+## Transition system
+
+- Same-page navigation moves focus to the destination and uses native smooth scrolling only when motion is allowed.
+- Project-filter state is reflected in `?work=` and participates in browser history.
+- A shared filter indicator provides continuity between filter states.
+- Project entries and exits use short opacity/transform transitions; no long-lived page snapshot is kept.
+- Theme changes use React scheduling without animating every page pixel.
 
 ## Accessibility
 
-Semantic landmarks and headings are preserved. Controls meet 44 px touch targets, focus remains visible, capability focus mirrors pointer activation, content never depends on hover, and the system flow includes a readable accessible label. Dark and light modes maintain semantic contrast roles.
+Semantic landmarks and headings are preserved. Controls meet 44 px touch targets, focus remains visible, capability selection uses a vertical ARIA tab pattern with arrow-key navigation, and same-page links restore programmatic focus. The technology rail has a visible pause/resume control. Content never depends on hover, and the system flow includes a readable accessible label. Dark and light modes maintain semantic contrast roles.
+
+## Performance policy
+
+- Spatial scenes use CSS transforms and existing Motion primitives; no WebGL runtime is shipped.
+- Desktop and mobile project media are mutually mounted rather than duplicated and hidden.
+- Media-query and visibility subscriptions are shared through external stores.
+- Below-fold sections use `content-visibility: auto`; project images are lazy-loaded with fixed dimensions.
+- Hero and rail loops stop when they cannot contribute to the current viewport.
 
 ## Breakpoints
 
