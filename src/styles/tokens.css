@@ -10,6 +10,7 @@
   --surface: #0a0d0b;
   --surface-raised: #101512;
   --surface-overlay: #141b18;
+  --card: #101512;
   --chrome: #141b18;
   --foreground: #eff3f1;
   --muted: #a1a6a3;
@@ -59,6 +60,7 @@ html[data-theme="light"] {
   --surface: #fdfcf9;
   --surface-raised: #ffffff;
   --surface-overlay: #f0eee7;
+  --card: #ffffff;
   --chrome: #eae7df;
   --foreground: #151a17;
   --muted: #4e5953;

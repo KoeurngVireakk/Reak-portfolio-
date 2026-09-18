@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
 } from "react";
@@ -310,6 +311,7 @@ export function Projects() {
   const [inspectingProject, setInspectingProject] = useState<Project | null>(initialInspector.project);
   const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>(initialInspector.tab);
   const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
+  const isHistoryPushedRef = useRef(false);
 
   const filteredProjects = useMemo(
     () => activeCategory === "All"
@@ -336,6 +338,8 @@ export function Projects() {
   // Handle URL restoration and popstate
   useEffect(() => {
     const handlePopState = () => {
+      isHistoryPushedRef.current = false;
+
       // 1. Work category
       const { category, invalid } = getCategoryFromUrl();
       if (invalid) {
@@ -380,14 +384,20 @@ export function Projects() {
       setTriggerElement(trigger ?? null);
       setInspectingProject(project);
       setActiveInspectorTab(tab);
+      isHistoryPushedRef.current = true;
       updateInspectorUrl(project, tab, false);
     },
     [],
   );
 
   const closeInspector = useCallback(() => {
-    updateInspectorUrl(null, undefined, false);
-    setInspectingProject(null);
+    if (isHistoryPushedRef.current) {
+      isHistoryPushedRef.current = false;
+      window.history.back();
+    } else {
+      updateInspectorUrl(null, undefined, true);
+      setInspectingProject(null);
+    }
   }, []);
 
   const handleSelectTab = useCallback(
@@ -403,6 +413,7 @@ export function Projects() {
   const handleSelectProject = useCallback(
     (project: Project) => {
       setInspectingProject(project);
+      isHistoryPushedRef.current = true;
       updateInspectorUrl(project, activeInspectorTab, false);
     },
     [activeInspectorTab],

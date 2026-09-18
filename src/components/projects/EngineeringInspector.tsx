@@ -8,9 +8,9 @@ import {
 import {
   ArrowUpRight,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Code2,
-  ExternalLink,
-  LockKeyhole,
   ShieldCheck,
   TestTube2,
   X,
@@ -53,6 +53,49 @@ export function getAvailableTabs(project: Project): Array<{ id: InspectorTab; la
   return tabs;
 }
 
+function getSecurityCategory(measure: string): string {
+  const m = measure.toLowerCase();
+  if (m.includes("jwt") || m.includes("token") || m.includes("auth") || m.includes("login") || m.includes("password")) {
+    return "Authentication";
+  }
+  if (m.includes("role") || m.includes("rbac") || m.includes("permission") || m.includes("claim") || m.includes("access")) {
+    return "Authorization";
+  }
+  if (m.includes("biometric") || m.includes("face") || m.includes("onnx") || m.includes("camera") || m.includes("local") || m.includes("privacy")) {
+    return "Privacy";
+  }
+  if (m.includes("cors") || m.includes("sanitiz") || m.includes("validat") || m.includes("sql") || m.includes("csrf") || m.includes("boundary")) {
+    return "Data Boundary";
+  }
+  if (m.includes("rate limit") || m.includes("pwa") || m.includes("container") || m.includes("offline") || m.includes("delivery") || m.includes("cache")) {
+    return "Runtime / Delivery";
+  }
+  return "Hardening";
+}
+
+function getTestingCategory(practice: string): string {
+  const p = practice.toLowerCase();
+  if (p.includes("playwright") || p.includes("e2e") || p.includes("end-to-end") || p.includes("workflow")) {
+    return "E2E Testing";
+  }
+  if (p.includes("unit") || p.includes("assertion") || p.includes("component test")) {
+    return "Unit Testing";
+  }
+  if (p.includes("integration") || p.includes("transaction") || p.includes("database") || p.includes("service") || p.includes("flow")) {
+    return "Integration";
+  }
+  if (p.includes("ci") || p.includes("github actions") || p.includes("build") || p.includes("pipeline") || p.includes("static analysis")) {
+    return "CI & Build";
+  }
+  if (p.includes("doctor") || p.includes("diagnostic") || p.includes("health") || p.includes("pre-flight")) {
+    return "Diagnostics";
+  }
+  if (p.includes("device") || p.includes("emulator") || p.includes("responsive") || p.includes("pwa")) {
+    return "Device Verification";
+  }
+  return "Verification";
+}
+
 export function EngineeringInspector({
   project,
   activeTab,
@@ -75,20 +118,23 @@ export function EngineeringInspector({
   }, [project, triggerElement]);
 
   const handleClose = useCallback(() => {
-    document.documentElement.classList.remove("inspector-open");
-    document.body.style.overflow = "";
     onClose();
-    // Restore focus to triggering button
     setTimeout(() => {
       returnFocusRef.current?.focus();
     }, 50);
   }, [onClose]);
 
-  // Lock body scroll and set up Escape / Focus Trap
+  // Lock body scroll with scrollbar shift compensation and setup Escape / Focus Trap
   useEffect(() => {
     if (!project) return;
 
     const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
     document.body.style.overflow = "hidden";
     document.documentElement.classList.add("inspector-open");
 
@@ -132,6 +178,7 @@ export function EngineeringInspector({
     return () => {
       clearTimeout(timer);
       document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
       document.documentElement.classList.remove("inspector-open");
       window.removeEventListener("keydown", handleKeyDown);
     };
@@ -144,6 +191,8 @@ export function EngineeringInspector({
   const currentTabId = tabs.some((tab) => tab.id === activeTab) ? activeTab : tabs[0].id;
   const projectIndex = projects.findIndex((p) => p.slug === project.slug);
   const currentNumber = String(projectIndex + 1).padStart(2, "0");
+  const prevProject = projects[(projectIndex - 1 + projects.length) % projects.length];
+  const nextProject = projects[(projectIndex + 1) % projects.length];
 
   const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -195,7 +244,7 @@ export function EngineeringInspector({
         initial={reduceMotion ? { opacity: 0 } : { x: "100%", opacity: 1 }}
         animate={reduceMotion ? { opacity: 1 } : { x: 0, opacity: 1 }}
         ref={panelRef}
-        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Panel Header */}
         <div className="inspector-header">
@@ -203,9 +252,10 @@ export function EngineeringInspector({
             <div className="inspector-identity">
               <span className="inspector-badge">
                 <span className="inspector-badge-dot" aria-hidden="true" />
-                SYSTEM INSPECTOR // {currentNumber}
+                SYSTEM DOSSIER // {currentNumber}
               </span>
               <span className="inspector-shortname">{project.shortName}</span>
+              <span className="inspector-status-pill">{project.status}</span>
             </div>
 
             <button
@@ -224,13 +274,16 @@ export function EngineeringInspector({
             <h2 id="inspector-heading" className="inspector-title">
               {project.name}
             </h2>
+            <p className="inspector-role-kicker">{project.role}</p>
             <p className="inspector-tagline">{project.tagline}</p>
           </div>
 
           {/* Quick Project Switcher Index */}
           <div className="inspector-nav-bar" aria-label="Quick project index">
             <span className="inspector-nav-kicker">INDEX:</span>
-            <div className="inspector-nav-links">
+
+            {/* Desktop 6-project button row */}
+            <div className="inspector-nav-links desktop-only-flex">
               {projects.map((p, idx) => {
                 const isSelected = p.slug === project.slug;
                 return (
@@ -247,6 +300,29 @@ export function EngineeringInspector({
                   </button>
                 );
               })}
+            </div>
+
+            {/* Mobile Thumb Stepper */}
+            <div className="inspector-mobile-stepper mobile-only-flex">
+              <button
+                type="button"
+                className="stepper-btn"
+                onClick={() => onSelectProject(prevProject)}
+                aria-label={`Previous project: ${prevProject.name}`}
+              >
+                <ChevronLeft size={16} aria-hidden="true" />
+              </button>
+              <span className="stepper-status">
+                {currentNumber} / {String(projects.length).padStart(2, "0")} · {project.shortName}
+              </span>
+              <button
+                type="button"
+                className="stepper-btn"
+                onClick={() => onSelectProject(nextProject)}
+                aria-label={`Next project: ${nextProject.name}`}
+              >
+                <ChevronRight size={16} aria-hidden="true" />
+              </button>
             </div>
           </div>
 
@@ -308,15 +384,22 @@ export function EngineeringInspector({
                 <div className="tab-pane tab-overview">
                   <div className="pane-summary-grid">
                     <div className="summary-field">
-                      <span className="field-label">ENGINEERING ROLE</span>
+                      <span className="field-label">PROJECT ROLE</span>
                       <strong>{project.role}</strong>
                     </div>
                     <div className="summary-field">
-                      <span className="field-label">SYSTEM STATUS</span>
-                      <div className="status-indicator">
-                        <span className="status-dot" aria-hidden="true" />
-                        <strong>{project.status}</strong>
-                      </div>
+                      <span className="field-label">CURRENT STATUS</span>
+                      <strong className="field-status-value">{project.status}</strong>
+                    </div>
+                    <div className="summary-field">
+                      <span className="field-label">CATEGORIES</span>
+                      <strong>{project.categories.join(" · ")}</strong>
+                    </div>
+                    <div className="summary-field">
+                      <span className="field-label">PRIMARY ACCENT</span>
+                      <strong className="field-accent-tag" style={{ color: project.accent }}>
+                        {project.accent}
+                      </strong>
                     </div>
                   </div>
 
@@ -389,8 +472,8 @@ export function EngineeringInspector({
                   ) : (
                     <div className="pane-repo-action">
                       <span className="inspector-private-note">
-                        <LockKeyhole size={14} aria-hidden="true" />
-                        {project.repositoryLabel ?? "Academic / University system codebase"}
+                        <Code2 size={15} aria-hidden="true" />
+                        <span>{project.repositoryLabel ?? "Academic / Case Study Repository"}</span>
                       </span>
                     </div>
                   )}
@@ -401,11 +484,10 @@ export function EngineeringInspector({
               {currentTabId === "architecture" && (
                 <div className="tab-pane tab-architecture">
                   <div className="pane-intro">
-                    <span className="pane-kicker">MULTI-TIER TOPOLOGY</span>
-                    <h3>Structured System Pipeline</h3>
+                    <span className="pane-kicker">SYSTEM DESIGN</span>
+                    <h3>Multi-Tier Topology</h3>
                     <p>
-                      Each tier enforces strict operational boundaries from client presentation to
-                      relational persistence.
+                      Functional partition boundaries from client interfaces down to relational storage.
                     </p>
                   </div>
 
@@ -413,33 +495,18 @@ export function EngineeringInspector({
                     <div className="architecture-tier-pipeline">
                       {project.architectureTiers.map((tier, idx) => (
                         <div className="architecture-tier-card" key={tier.tier}>
-                          <div className="tier-card-header">
-                            <div className="tier-badge-wrap">
-                              <span className="tier-step">0{idx + 1}</span>
-                              <span className="tier-name">{tier.tier}</span>
-                            </div>
-                            <span className="tier-tech-chip">{tier.technology}</span>
+                          <div className="tier-header">
+                            <span className="tier-badge">TIER 0{idx + 1}</span>
+                            <h4 className="tier-name">{tier.tier}</h4>
+                            <span className="tier-tech">{tier.technology}</span>
                           </div>
-                          <p className="tier-detail-text">{tier.detail}</p>
-                          {idx < (project.architectureTiers?.length ?? 0) - 1 && (
-                            <div className="tier-pipeline-connector" aria-hidden="true">
-                              <div className="connector-stem" />
-                              <div className="connector-arrow">↓</div>
-                            </div>
-                          )}
+                          <p className="tier-detail">{tier.detail}</p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="architecture-fallback">
+                    <div className="architecture-fallback-block">
                       <p>{project.architecture}</p>
-                    </div>
-                  )}
-
-                  {project.challenges && project.challenges.length > 0 && (
-                    <div className="pane-sub-block">
-                      <h4>Architectural Challenge</h4>
-                      <p className="sub-block-text">{project.challenges[0]}</p>
                     </div>
                   )}
                 </div>
@@ -459,15 +526,20 @@ export function EngineeringInspector({
 
                   {project.securityDetails && project.securityDetails.length > 0 ? (
                     <ul className="inspector-security-list">
-                      {project.securityDetails.map((measure, idx) => (
-                        <li className="security-measure-item" key={idx}>
-                          <ShieldCheck size={16} className="security-icon" aria-hidden="true" />
-                          <div className="security-measure-copy">
-                            <strong>Policy 0{idx + 1}</strong>
-                            <p>{measure}</p>
-                          </div>
-                        </li>
-                      ))}
+                      {project.securityDetails.map((measure, idx) => {
+                        const category = getSecurityCategory(measure);
+                        return (
+                          <li className="security-measure-item" key={idx}>
+                            <ShieldCheck size={16} className="security-icon" aria-hidden="true" />
+                            <div className="security-measure-copy">
+                              <div className="measure-category-row">
+                                <span className="measure-category-badge">{category}</span>
+                              </div>
+                              <p>{measure}</p>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   ) : project.security ? (
                     <div className="security-single-summary">
@@ -492,15 +564,20 @@ export function EngineeringInspector({
 
                   {project.testingDetails && project.testingDetails.length > 0 ? (
                     <ul className="inspector-testing-list">
-                      {project.testingDetails.map((practice, idx) => (
-                        <li className="testing-practice-item" key={idx}>
-                          <TestTube2 size={16} className="testing-icon" aria-hidden="true" />
-                          <div className="testing-practice-copy">
-                            <strong>Verification 0{idx + 1}</strong>
-                            <p>{practice}</p>
-                          </div>
-                        </li>
-                      ))}
+                      {project.testingDetails.map((practice, idx) => {
+                        const category = getTestingCategory(practice);
+                        return (
+                          <li className="testing-practice-item" key={idx}>
+                            <TestTube2 size={16} className="testing-icon" aria-hidden="true" />
+                            <div className="testing-practice-copy">
+                              <div className="practice-category-row">
+                                <span className="practice-category-badge">{category}</span>
+                              </div>
+                              <p>{practice}</p>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   ) : project.testing ? (
                     <div className="testing-single-summary">
@@ -515,17 +592,17 @@ export function EngineeringInspector({
               {currentTabId === "decisions" && (
                 <div className="tab-pane tab-decisions">
                   <div className="pane-intro">
-                    <span className="pane-kicker">ENGINEERING TRADE-OFFS</span>
-                    <h3>Technical Decisions & Rationale</h3>
+                    <span className="pane-kicker">ARCHITECTURAL RATIONALE</span>
+                    <h3>Key Engineering Decisions</h3>
                     <p>
-                      Deliberate architectural choices and the concrete reasons behind them.
+                      Deliberate system choices, technical reasons, and trade-offs behind this project.
                     </p>
                   </div>
 
                   {project.decisions && project.decisions.length > 0 ? (
                     <div className="inspector-decisions-stack">
                       {project.decisions.map((decision, idx) => (
-                        <div className="decision-item-card" key={idx}>
+                        <article className="decision-item-card" key={idx}>
                           <div className="decision-header">
                             <span className="decision-kicker">DECISION 0{idx + 1}</span>
                             <h4>{decision.title}</h4>
@@ -534,13 +611,14 @@ export function EngineeringInspector({
                             <span className="reason-kicker">RATIONALE</span>
                             <p>{decision.reason}</p>
                           </div>
-                        </div>
+                        </article>
                       ))}
                     </div>
                   ) : null}
 
                   {project.lessons && project.lessons.length > 0 && (
                     <div className="pane-sub-block">
+                      <span className="pane-sub-kicker">RETROSPECTIVE</span>
                       <h4>Key Engineering Takeaway</h4>
                       <p className="sub-block-text">{project.lessons[0]}</p>
                     </div>
@@ -559,23 +637,23 @@ export function EngineeringInspector({
           </div>
 
           <div className="inspector-footer-actions">
-            {project.repository && (
+            {project.repository ? (
               <a
                 className="inspector-footer-repo"
                 href={project.repository}
                 rel="noreferrer"
                 target="_blank"
               >
-                <span>Code</span>
-                <ExternalLink size={12} aria-hidden="true" />
+                <span>Codebase</span>
+                <ArrowUpRight size={13} aria-hidden="true" />
               </a>
-            )}
+            ) : null}
             <button
               className="inspector-footer-close"
               onClick={handleClose}
               type="button"
             >
-              Done Inspecting
+              Close Dossier
             </button>
           </div>
         </div>

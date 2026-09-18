@@ -896,17 +896,27 @@
   }
 }
 
+@media (max-width: 640px) {
+  .desktop-only-flex {
+    display: none !important;
+  }
+
+  .mobile-only-flex {
+    display: flex !important;
+  }
+}
+
 @media (max-width: 480px) {
   .inspector-header {
-    padding: 14px 14px 0;
+    padding: 16px 16px 0;
   }
 
   .inspector-content {
-    padding: 16px 14px;
+    padding: 18px 16px;
   }
 
   .inspector-footer {
-    padding: 12px 14px;
+    padding: 12px 16px;
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
@@ -926,8 +936,9 @@
   }
 
   .inspector-tab-btn {
-    padding: 8px 10px;
-    font-size: 10px;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 10.5px;
   }
 
   .project-footer-actions {

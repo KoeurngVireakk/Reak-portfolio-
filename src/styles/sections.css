@@ -3668,9 +3668,9 @@ html.inspector-open {
   position: relative;
   z-index: 2001;
   width: 100%;
-  max-width: 680px;
+  max-width: 720px;
   height: 100%;
-  background: var(--card, #11141a);
+  background: var(--card, var(--surface-raised));
   border-left: 1px solid var(--border-soft);
   display: flex;
   flex-direction: column;
@@ -3680,9 +3680,9 @@ html.inspector-open {
 
 /* Inspector Header */
 .inspector-header {
-  padding: 24px 28px 0;
+  padding: 22px 28px 0;
   border-bottom: 1px solid var(--border-soft);
-  background: var(--card, #11141a);
+  background: var(--card, var(--surface-raised));
   flex-shrink: 0;
 }
 
@@ -3690,13 +3690,15 @@ html.inspector-open {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .inspector-identity {
   display: flex;
   align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .inspector-badge {
@@ -3722,11 +3724,24 @@ html.inspector-open {
 .inspector-shortname {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--muted);
+  font-weight: 700;
+  color: var(--foreground);
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-soft);
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: 3px;
+}
+
+.inspector-status-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
 }
 
 .inspector-close-button {
@@ -3734,14 +3749,14 @@ html.inspector-open {
   border: 1px solid var(--border-soft);
   color: var(--muted);
   cursor: pointer;
-  padding: 6px;
   border-radius: 4px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.18s ease;
-  min-width: 36px;
-  min-height: 36px;
+  min-width: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
 }
 
 .inspector-close-button:hover {
@@ -3750,16 +3765,32 @@ html.inspector-open {
   background: rgba(255, 255, 255, 0.05);
 }
 
+.inspector-close-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
 .inspector-title-block {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .inspector-title {
-  font-size: clamp(1.45rem, 2.2vw, 1.9rem);
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
   font-weight: 750;
   letter-spacing: -0.02em;
   color: var(--foreground);
-  margin: 0 0 6px;
+  margin: 0 0 4px;
+  line-height: 1.25;
+}
+
+.inspector-role-kicker {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--project-accent, var(--primary));
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 4px;
 }
 
 .inspector-tagline {
@@ -3774,12 +3805,11 @@ html.inspector-open {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--border-soft);
   border-radius: 4px;
-  margin-bottom: 14px;
-  overflow-x: auto;
+  margin-bottom: 12px;
 }
 
 .inspector-nav-kicker {
@@ -3795,6 +3825,12 @@ html.inspector-open {
   display: flex;
   align-items: center;
   gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.inspector-nav-links::-webkit-scrollbar {
+  display: none;
 }
 
 .inspector-nav-item {
@@ -3804,7 +3840,8 @@ html.inspector-open {
   background: transparent;
   border: 1px solid transparent;
   border-radius: 3px;
-  padding: 3px 7px;
+  padding: 4px 8px;
+  min-height: 32px;
   cursor: pointer;
   color: var(--muted);
   font-family: var(--font-mono);
@@ -3834,12 +3871,53 @@ html.inspector-open {
   font-weight: 700;
 }
 
+/* Mobile Stepper */
+.inspector-mobile-stepper {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+}
+
+.stepper-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 36px;
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.stepper-btn:hover {
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+.stepper-btn:focus-visible {
+  outline: 2px solid var(--focus);
+}
+
+.stepper-status {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--project-accent, var(--primary));
+  letter-spacing: 0.05em;
+}
+
 /* Inspector Tabs */
 .inspector-tabs {
   display: flex;
   gap: 4px;
   overflow-x: auto;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .inspector-tabs::-webkit-scrollbar {
@@ -3850,7 +3928,11 @@ html.inspector-open {
   position: relative;
   background: transparent;
   border: 0;
-  padding: 10px 14px;
+  min-height: 44px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 650;
@@ -3859,6 +3941,8 @@ html.inspector-open {
   cursor: pointer;
   transition: color 0.18s ease;
   white-space: nowrap;
+  outline: none;
+  flex-shrink: 0;
 }
 
 .inspector-tab-btn:hover {
@@ -3867,6 +3951,11 @@ html.inspector-open {
 
 .inspector-tab-btn.is-active {
   color: var(--foreground);
+}
+
+.inspector-tab-btn:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
 }
 
 .tab-indicator {
@@ -3882,7 +3971,7 @@ html.inspector-open {
 .inspector-content {
   flex: 1;
   overflow-y: auto;
-  padding: 28px;
+  padding: 26px 28px;
   overscroll-behavior: contain;
 }
 
@@ -3890,14 +3979,19 @@ html.inspector-open {
   outline: none;
 }
 
+.inspector-tab-view:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
 .tab-pane {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
 }
 
 .pane-intro {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .pane-kicker {
@@ -3911,7 +4005,7 @@ html.inspector-open {
 }
 
 .pane-intro h3 {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--foreground);
@@ -3929,7 +4023,7 @@ html.inspector-open {
 .pane-summary-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-soft);
@@ -3948,6 +4042,17 @@ html.inspector-open {
 .summary-field strong {
   font-size: 13px;
   color: var(--foreground);
+}
+
+.summary-field .field-status-value {
+  color: var(--project-accent, var(--primary));
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.summary-field .field-accent-tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 .status-indicator {
@@ -3970,12 +4075,12 @@ html.inspector-open {
 }
 
 .narrative-segment h4 {
-  font-size: 13px;
+  font-size: 12px;
   font-family: var(--font-mono);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   color: var(--project-accent, var(--primary));
-  margin: 0 0 6px;
   text-transform: uppercase;
+  margin: 0 0 6px;
 }
 
 .narrative-segment p {
@@ -3983,22 +4088,23 @@ html.inspector-open {
   line-height: 1.6;
   color: var(--foreground);
   margin: 0;
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .architecture-summary-text {
   font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--muted);
-  background: rgba(0, 0, 0, 0.25);
-  padding: 10px 14px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--foreground);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-soft);
+  padding: 10px 14px;
   border-radius: 4px;
 }
 
 .pane-highlights-block h4,
 .pane-stack-block h4 {
-  font-size: 12.5px;
+  font-size: 12px;
   font-family: var(--font-mono);
   letter-spacing: 0.06em;
   color: var(--muted);
@@ -4016,16 +4122,17 @@ html.inspector-open {
 }
 
 .inspector-highlights-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
   font-size: 13px;
   line-height: 1.5;
   color: var(--foreground);
   opacity: 0.9;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 
-.inspector-highlights-list .highlight-icon {
+.inspector-highlights-list .highlight-icon,
+.highlight-icon {
   color: var(--project-accent, var(--primary));
   flex-shrink: 0;
   margin-top: 3px;
@@ -4037,7 +4144,7 @@ html.inspector-open {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .inspector-stack-pills li {
@@ -4057,7 +4164,7 @@ html.inspector-open {
 }
 
 .pane-methodology-block h4 {
-  font-size: 12.5px;
+  font-size: 12px;
   font-family: var(--font-mono);
   letter-spacing: 0.06em;
   color: var(--muted);
@@ -4078,7 +4185,7 @@ html.inspector-open {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   background: rgba(255, 255, 255, 0.015);
   border: 1px solid var(--border-soft);
   border-radius: 4px;
@@ -4107,7 +4214,7 @@ html.inspector-open {
 }
 
 .pane-repo-action {
-  padding-top: 8px;
+  padding-top: 6px;
 }
 
 .inspector-repo-link {
@@ -4116,7 +4223,7 @@ html.inspector-open {
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 12px;
-  padding: 8px 14px;
+  padding: 9px 16px;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-soft);
   border-radius: 4px;
@@ -4143,7 +4250,7 @@ html.inspector-open {
 .architecture-tier-pipeline {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
 }
 
 .architecture-tier-card {
@@ -4154,23 +4261,17 @@ html.inspector-open {
   padding: 16px 18px;
 }
 
-.tier-card-header {
+.tier-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 8px;
 }
 
-.tier-badge-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.tier-step {
+.tier-badge {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--project-accent, var(--primary));
 }
@@ -4179,19 +4280,20 @@ html.inspector-open {
   font-size: 13.5px;
   font-weight: 700;
   color: var(--foreground);
+  margin: 0;
 }
 
-.tier-tech-chip {
+.tier-tech {
   font-family: var(--font-mono);
-  font-size: 10px;
-  padding: 3px 8px;
+  font-size: 10.5px;
+  padding: 2px 8px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-soft);
   color: var(--muted);
 }
 
-.tier-detail-text {
+.tier-detail {
   font-size: 13px;
   line-height: 1.55;
   color: var(--foreground);
@@ -4199,47 +4301,11 @@ html.inspector-open {
   opacity: 0.88;
 }
 
-.tier-pipeline-connector {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2px 0;
-  color: var(--muted);
-}
-
-.connector-stem {
-  width: 1px;
-  height: 8px;
-  background: var(--border-soft);
-}
-
-.connector-arrow {
-  font-size: 12px;
-  line-height: 1;
-  color: var(--project-accent, var(--primary));
-}
-
-.pane-sub-block {
-  border-top: 1px solid var(--border-soft);
-  padding-top: 16px;
-  margin-top: 8px;
-}
-
-.pane-sub-block h4 {
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  color: var(--project-accent, var(--primary));
-  text-transform: uppercase;
-  margin: 0 0 6px;
-}
-
-.sub-block-text {
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--foreground);
-  margin: 0;
-  opacity: 0.88;
+.architecture-fallback-block {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
 }
 
 /* Tab 3 & 4: Security & Testing Lists */
@@ -4268,18 +4334,33 @@ html.inspector-open {
 .testing-icon {
   color: var(--project-accent, var(--primary));
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
-.security-measure-copy strong,
-.testing-practice-copy strong {
+.security-measure-copy,
+.testing-practice-copy {
+  flex: 1;
+}
+
+.measure-category-row,
+.practice-category-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.measure-category-badge,
+.practice-category-badge {
   font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  color: var(--project-accent, var(--primary));
-  display: block;
-  margin-bottom: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--project-accent, var(--primary)) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--project-accent, var(--primary)) 30%, transparent);
+  color: var(--project-accent, var(--primary));
 }
 
 .security-measure-copy p,
@@ -4288,7 +4369,7 @@ html.inspector-open {
   line-height: 1.55;
   color: var(--foreground);
   margin: 0;
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .security-single-summary,
@@ -4339,7 +4420,7 @@ html.inspector-open {
 }
 
 .decision-header h4 {
-  font-size: 14.5px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--foreground);
   margin: 0;
@@ -4370,11 +4451,41 @@ html.inspector-open {
   opacity: 0.88;
 }
 
+.pane-sub-block {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.pane-sub-kicker {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+  font-weight: 700;
+}
+
+.pane-sub-block h4 {
+  font-size: 13px;
+  color: var(--foreground);
+  margin: 0 0 6px;
+}
+
+.sub-block-text {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0;
+}
+
 /* Inspector Footer */
 .inspector-footer {
   padding: 16px 28px;
   border-top: 1px solid var(--border-soft);
-  background: var(--card, #11141a);
+  background: var(--card, var(--surface-raised));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4400,10 +4511,11 @@ html.inspector-open {
 .inspector-footer-repo {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-family: var(--font-mono);
   font-size: 11px;
-  padding: 6px 10px;
+  padding: 8px 12px;
+  min-height: 38px;
   border: 1px solid var(--border-soft);
   border-radius: 4px;
   color: var(--muted);
@@ -4425,7 +4537,8 @@ html.inspector-open {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 7px 14px;
+  padding: 8px 16px;
+  min-height: 38px;
   border-radius: 4px;
   cursor: pointer;
   transition: opacity 0.18s ease;
@@ -4433,4 +4546,61 @@ html.inspector-open {
 
 .inspector-footer-close:hover {
   opacity: 0.9;
+}
+
+.inspector-footer-close:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   11. LIGHT MODE PARITY FOR INSPECTOR
+   -------------------------------------------------------------------------- */
+.site[data-theme="light"] .engineering-inspector-backdrop {
+  background: rgba(21, 32, 26, 0.45);
+}
+
+.site[data-theme="light"] .engineering-inspector-panel {
+  background: var(--surface-raised);
+  box-shadow: -16px 0 48px rgba(21, 32, 26, 0.16);
+  border-left-color: var(--border);
+}
+
+.site[data-theme="light"] .inspector-header,
+.site[data-theme="light"] .inspector-footer {
+  background: var(--surface-raised);
+  border-color: var(--border-soft);
+}
+
+.site[data-theme="light"] .inspector-nav-bar {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: var(--border-soft);
+}
+
+.site[data-theme="light"] .pane-summary-grid,
+.site[data-theme="light"] .architecture-tier-card,
+.site[data-theme="light"] .security-measure-item,
+.site[data-theme="light"] .testing-practice-item,
+.site[data-theme="light"] .decision-item-card,
+.site[data-theme="light"] .methodology-step-pill,
+.site[data-theme="light"] .security-single-summary,
+.site[data-theme="light"] .testing-single-summary {
+  background: var(--surface-overlay);
+  border-color: var(--border-soft);
+}
+
+.site[data-theme="light"] .inspector-footer-close {
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   12. REDUCED MOTION SAFEGUARDS
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .engineering-inspector-panel,
+  .tab-indicator,
+  .inspector-tab-view {
+    transition: none !important;
+    animation: none !important;
+  }
 }
