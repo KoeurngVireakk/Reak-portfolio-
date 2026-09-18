@@ -127,20 +127,24 @@
 .button-primary {
   background: var(--primary);
   color: var(--primary-foreground);
+  box-shadow: var(--hairline-inner), var(--shadow-sm);
 }
 
 .button-primary:hover {
   background: var(--primary-hover);
+  box-shadow: var(--hairline-inner), var(--shadow-md), 0 0 16px color-mix(in srgb, var(--primary) 28%, transparent);
 }
 
 .button-secondary {
   border-color: var(--border);
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
   color: var(--foreground);
+  box-shadow: var(--hairline-inner);
 }
 
 .button-secondary:hover {
-  border-color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 54%, var(--border));
+  background: color-mix(in srgb, var(--surface-raised) 96%, transparent);
 }
 
 .text-link {
@@ -190,6 +194,8 @@
   margin-top: 56px;
   border-bottom: 1px solid var(--border-soft);
   padding-bottom: 16px;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .project-filter-wrap > span {
@@ -242,20 +248,18 @@
 
 .site-header:not(.is-scrolled) {
   border-color: transparent;
-  background: color-mix(in srgb, var(--background) 58%, transparent);
+  background: color-mix(in srgb, var(--background) 65%, transparent);
   box-shadow: none;
 }
 
 .site-header.is-scrolled {
-  min-height: 58px;
+  top: max(8px, env(safe-area-inset-top));
+  width: min(1100px, calc(100% - 32px));
+  min-height: 54px;
   border-color: var(--border);
-  background: color-mix(in srgb, var(--background) 96%, transparent);
-  box-shadow: 0 12px 40px color-mix(in srgb, var(--background) 72%, transparent);
-  top: 10px;
-  width: min(1120px, calc(100% - 32px));
-  min-height: 56px;
-  background: color-mix(in srgb, var(--background) 88%, transparent);
-  backdrop-filter: blur(22px) saturate(1.2);
+  background: color-mix(in srgb, var(--background) 90%, transparent);
+  box-shadow: var(--hairline-inner), 0 14px 40px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(20px) saturate(1.2);
 }
 
 .button {
@@ -266,13 +270,22 @@
   gap: 9px;
   border: 1px solid transparent;
   border-radius: var(--radius-control);
-  padding-inline: 17px;
+  padding-inline: 18px;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 750;
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition:
+    border-color var(--duration-direct) ease,
+    background-color var(--duration-direct) ease,
+    color var(--duration-direct) ease,
+    box-shadow var(--duration-direct) ease,
+    transform var(--duration-direct) var(--ease-arrive);
+}
+
+.button:active {
+  transform: scale(0.98);
 }
 
 .button::after {

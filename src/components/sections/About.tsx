@@ -46,6 +46,9 @@ export function About() {
               <span>VERIFY.</span>
             </Reveal>
             <Reveal className="about-statement">
+              <blockquote className="about-editorial-quote">
+                &ldquo;Clean architecture matters more than flashy demos — verifiable systems built from database transactions to responsive client states.&rdquo;
+              </blockquote>
               <p className="statement-lead">
                 I&apos;m <strong>Koeurng Vireak</strong>, a final-year Bachelor of Information Technology
                 student at Build Bright University in Battambang.
@@ -57,7 +60,7 @@ export function About() {
               </p>
               <p>
                 I&apos;m especially interested in backend engineering, application security, and projects
-                where clean architecture matters more than flashy demos.
+                where architectural integrity and reliability are prioritized.
               </p>
               <div className="inline-links">
                 <a href={profile.github} rel="noreferrer" target="_blank">

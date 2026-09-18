@@ -15,6 +15,7 @@
 html {
   scroll-behavior: smooth;
   background: #020503;
+  overflow-x: clip;
 }
 
 body {

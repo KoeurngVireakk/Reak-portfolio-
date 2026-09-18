@@ -12,6 +12,7 @@ export function SystemRail({ activeStage = "Identity" }: SystemRailProps) {
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, springSoft);
+  const activeIndex = stages.indexOf(activeStage);
 
   return (
     <aside className="system-rail" aria-hidden="true">
@@ -19,10 +20,16 @@ export function SystemRail({ activeStage = "Identity" }: SystemRailProps) {
       <div className="system-rail-track">
         <motion.i style={{ scaleY: reduceMotion ? 1 : progress }} />
         {stages.map((stage, index) => {
-          const isCurrent = stage === activeStage;
+          const status =
+            index < activeIndex
+              ? "is-completed"
+              : index === activeIndex
+              ? "is-current"
+              : "is-upcoming";
+
           return (
             <span
-              className={`system-rail-stage ${isCurrent ? "is-current" : ""}`}
+              className={`system-rail-stage ${status}`}
               data-stage={stage.toLowerCase()}
               key={stage}
             >

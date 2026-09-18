@@ -113,8 +113,6 @@ export function HeroSpatialScene() {
           <circle cx="330" cy="492" r="3" /><circle cx="558" cy="628" r="3" />
         </svg>
 
-        <div className="scene-coordinate scene-coordinate-top" aria-hidden="true">SYSTEM / PORTRAIT / 04</div>
-        <div className="scene-coordinate scene-coordinate-side" aria-hidden="true">11.5564° N · 104.9282° E</div>
         <div className="scene-status" aria-hidden="true"><i /> Architecture online</div>
 
         <div className="portrait-plane">

@@ -8,31 +8,31 @@ type SectionTransitionProps = {
 };
 
 type TransitionMotif = {
-  code: string;
-  motif: string;
-  badge: string;
+  phase: string;
+  label: string;
+  shape: "circle" | "diamond" | "bracket" | "pulse";
 };
 
 const transitionMotifs: Record<string, TransitionMotif> = {
   "Identity->System": {
-    code: "SYS.CONDUIT // 01",
-    motif: "TOPOLOGY_INGEST",
-    badge: "IDENTITY ➔ ARCHITECTURE",
+    phase: "Phase 01 → 02",
+    label: "Identity to System",
+    shape: "circle",
   },
   "System->Proof": {
-    code: "SYS.CONDUIT // 02",
-    motif: "ARCH_VERIFIED",
-    badge: "CAPABILITIES ➔ SYSTEMS",
+    phase: "Phase 02 → 03",
+    label: "System to Evidence",
+    shape: "diamond",
   },
   "Proof->Trajectory": {
-    code: "SYS.CONDUIT // 03",
-    motif: "PROOF_COMPILED",
-    badge: "PROJECTS ➔ TRAJECTORY",
+    phase: "Phase 03 → 04",
+    label: "Evidence to Trajectory",
+    shape: "bracket",
   },
   "Trajectory->Contact": {
-    code: "SYS.CONDUIT // 04",
-    motif: "SIGNAL_RESOLVE",
-    badge: "PROGRESSION ➔ ACTION",
+    phase: "Phase 04 → 05",
+    label: "Trajectory to Contact",
+    shape: "pulse",
   },
 };
 
@@ -42,16 +42,16 @@ export function SectionTransition({ from, to }: SectionTransitionProps) {
   const reduceMotion = useReducedMotion();
   const transitionKey = `${from}->${to}`;
   const motif = transitionMotifs[transitionKey] ?? {
-    code: "SYS.CONDUIT",
-    motif: "FLOW_TRANSFER",
-    badge: `${from.toUpperCase()} ➔ ${to.toUpperCase()}`,
+    phase: "Conduit",
+    label: `${from} to ${to}`,
+    shape: "circle" as const,
   };
 
   return (
     <div className="section-transition" aria-hidden="true" ref={containerRef}>
       <div className="transition-endpoint endpoint-from">
         <span className="endpoint-name">{from}</span>
-        <small className="endpoint-code">{motif.code}</small>
+        <small className="endpoint-code">{motif.phase.split(" → ")[0]}</small>
       </div>
 
       <div className="section-transition-path">
@@ -64,10 +64,10 @@ export function SectionTransition({ from, to }: SectionTransitionProps) {
           whileInView={{ scaleX: 1 }}
         />
 
-        {/* Evolving architecture motif badge in center */}
-        <div className="transition-motif-badge">
-          <span className="motif-text">{motif.motif}</span>
-          <span className="motif-sub">{motif.badge}</span>
+        {/* Evolving geometric conduit motif in center */}
+        <div className={`transition-motif-badge shape-${motif.shape}`}>
+          <span className="motif-shape-indicator" />
+          <span className="motif-text">{motif.label}</span>
         </div>
 
         {/* Single-shot data signal packet traveling once across the connector */}
@@ -92,7 +92,7 @@ export function SectionTransition({ from, to }: SectionTransitionProps) {
 
       <div className="transition-endpoint endpoint-to">
         <span className="endpoint-name">{to}</span>
-        <small className="endpoint-code">NEXT // ONLINE</small>
+        <small className="endpoint-code">{motif.phase.split(" → ")[1] ?? "Next"}</small>
       </div>
     </div>
   );

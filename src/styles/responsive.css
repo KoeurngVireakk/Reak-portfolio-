@@ -104,7 +104,6 @@
     height: calc(100% - 36px);
   }
   .hero h1 {
-    font-size: 2.85rem;
     font-size: 2.8rem;
   }
 
@@ -229,7 +228,6 @@
   .hero-layout {
     grid-template-columns: 1fr;
     gap: 28px;
-    grid-template-columns: 1fr;
     min-height: auto;
   }
 
@@ -258,9 +256,8 @@
   }
 
   .about-layout {
-    grid-template-columns: 130px 1fr;
     grid-template-columns: 1fr;
-    gap: 48px;
+    gap: 40px;
     padding-inline-start: 0;
   }
 
@@ -334,7 +331,11 @@
   }
   .site-header.is-scrolled {
     top: 7px;
-    width: calc(100% - 18px);
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-width: none;
+    transform: none;
   }
 
   .hero::after {
@@ -407,17 +408,19 @@
   }
 
   .technology-rail-viewport {
-    overflow: visible;
+    overflow: hidden;
     mask-image: none;
   }
 
   .technology-rail-track {
-    width: auto;
+    width: 100%;
     animation: none;
   }
 
   .technology-rail-list {
     flex-wrap: wrap;
+    flex: 1 1 100%;
+    width: 100%;
   }
 
   .technology-rail-list[aria-hidden="true"] {
@@ -425,23 +428,27 @@
   }
 
   .technology-rail-list li {
-    min-height: 40px;
+    min-height: 38px;
   }
 
   .contact-system-flow {
     margin-top: 24px;
   }
+
   .container,
   .site-footer {
-    width: calc(100% - 28px);
+    width: calc(100% - 24px);
   }
 
   .site-header {
     top: max(7px, env(safe-area-inset-top));
-    top: 9px;
-    width: calc(100% - 18px);
-    min-height: 58px;
-    padding: 6px 7px 6px 9px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-width: none;
+    transform: none;
+    min-height: 56px;
+    padding: 6px 8px;
   }
 
   .brand-mark {
@@ -559,7 +566,6 @@
 
   .capability-row {
     grid-template-columns: 34px 1fr;
-    grid-template-columns: 34px 1fr;
     gap: 16px;
     padding-block: 28px;
   }
@@ -572,8 +578,6 @@
   .capability-evidence {
     grid-column: 1 / -1;
     padding-left: 50px;
-    grid-column: 1 / -1;
-    padding-left: 50px;
   }
 
   .capability-evidence ul {
@@ -583,13 +587,15 @@
   .project-filter-wrap {
     display: block;
     margin-top: 42px;
+    overflow: hidden;
+    max-width: 100%;
   }
 
   .project-filters {
-    margin-inline: -14px;
+    margin-inline: 0;
     overflow-x: auto;
     flex-wrap: nowrap;
-    padding-inline: 14px;
+    padding-inline: 0;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
@@ -652,6 +658,46 @@
 
   .dashboard-rail {
     gap: 14px;
+  }
+
+  /* Mobile presentation layouts */
+  .product-view-browser .browser-app-body {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .product-view-desktop {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .product-view-desktop .viewfinder-lens {
+    min-height: 90px;
+  }
+
+  .product-view-dashboard .dash-kpi-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .product-view-dashboard .table-header-strip,
+  .product-view-dashboard .table-row {
+    grid-template-columns: 1.5fr 1fr 1fr;
+  }
+
+  .product-view-dashboard .table-header-strip span:nth-child(3),
+  .product-view-dashboard .table-row span:nth-child(3) {
+    display: none;
+  }
+
+  .product-view-pos {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .product-view-pos .pos-catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .media-placeholder-content {
