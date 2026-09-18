@@ -31,11 +31,17 @@ function navigateToSection(id: string, updateHistory = true) {
 
 type SiteHeaderProps = {
   theme: "dark" | "light";
-  onToggleTheme: () => void;
+  onToggleTheme: (origin?: { x: number; y: number }) => void;
+  activeSection?: string;
 };
 
-export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
-  const [activeSection, setActiveSection] = useState("home");
+export function SiteHeader({
+  theme,
+  onToggleTheme,
+  activeSection: propActiveSection,
+}: SiteHeaderProps) {
+  const [internalActiveSection, setInternalActiveSection] = useState("home");
+  const activeSection = propActiveSection ?? internalActiveSection;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -43,6 +49,8 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (propActiveSection !== undefined) return;
+
     const sections = ["home", ...navItems.map((item) => item.id)]
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => Boolean(section));
@@ -53,14 +61,14 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-        if (visible?.target.id) setActiveSection(visible.target.id);
+        if (visible?.target.id) setInternalActiveSection(visible.target.id);
       },
       { rootMargin: "-18% 0px -68% 0px", threshold: [0.01, 0.2, 0.45] },
     );
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [propActiveSection]);
 
   useEffect(() => {
     function restoreSectionFromHistory() {
@@ -164,7 +172,13 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
           className="icon-button"
           type="button"
           aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-          onClick={onToggleTheme}
+          onClick={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            onToggleTheme({
+              x: rect.left + rect.width / 2,
+              y: rect.top + rect.height / 2,
+            });
+          }}
           transition={motionTokens.spring}
           whileTap={reduceMotion ? undefined : interactionMotion.iconPress}
         >

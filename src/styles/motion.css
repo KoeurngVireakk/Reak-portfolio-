@@ -70,6 +70,18 @@
   animation: none;
 }
 
+html[data-theme-transition="circular"]::view-transition-old(root) {
+  display: block;
+  animation: none;
+  z-index: 1;
+}
+
+html[data-theme-transition="circular"]::view-transition-new(root) {
+  animation: none;
+  z-index: 2;
+  mix-blend-mode: normal;
+}
+
 ::view-transition-old(site-header) {
   display: none;
 }

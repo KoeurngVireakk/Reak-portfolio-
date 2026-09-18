@@ -159,24 +159,17 @@
     grid-row: 1;
   }
 
-  .architecture-explorer-map {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-  }
-
-  .architecture-explorer-map > div {
-    min-height: 110px;
+  .architecture-explorer-diagram {
     grid-template-columns: 1fr;
-    align-content: start;
   }
 
-  .architecture-explorer-map i {
-    top: 15px;
-    right: -8px;
-    bottom: auto;
-    left: auto;
-    width: 16px;
-    height: 1px;
+  .architecture-connector-track {
+    display: none;
+  }
+
+  .architecture-explorer-nodes {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
   .cursor-spotlight {
     display: none;
@@ -409,12 +402,8 @@
     padding: 18px 14px;
   }
 
-  .architecture-explorer-map {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .architecture-explorer-map i {
-    display: none;
+  .architecture-explorer-nodes {
+    grid-template-columns: 1fr;
   }
 
   .technology-rail-viewport {

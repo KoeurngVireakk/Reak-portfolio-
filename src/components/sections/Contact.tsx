@@ -1,17 +1,36 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { motion } from "motion/react";
 import { profile } from "../../data/portfolio";
 import { interactionMotion, motionTokens } from "../../lib/motion";
 import { useContinuousMotion } from "../../lib/motionLifecycle";
+import { useFinePointer } from "../../lib/pointer";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
-import { ArchitectureFlow } from "../visual/ArchitectureFlow";
+
+const convergenceNodes = [
+  { short: "UI", label: "Client" },
+  { short: "API", label: "Services" },
+  { short: "DATA", label: "Persistence" },
+  { short: "SEC", label: "Security" },
+];
 
 export function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const { active: motionActive, reducedMotion: reduceMotion } = useContinuousMotion(sectionRef, 0.08);
+  const finePointer = useFinePointer();
+  const [pulsing, setPulsing] = useState(false);
+  const pulseTimerRef = useRef<number | null>(null);
+
+  function triggerSignalPulse() {
+    if (reduceMotion || !finePointer || pulsing) return;
+    setPulsing(true);
+    if (pulseTimerRef.current) window.clearTimeout(pulseTimerRef.current);
+    pulseTimerRef.current = window.setTimeout(() => {
+      setPulsing(false);
+    }, 700);
+  }
 
   return (
     <section
@@ -23,13 +42,32 @@ export function Contact() {
     >
       <Container>
         <Reveal className="contact-panel">
-          <div>
-            <span className="contact-index">Contact</span>
-            <div className="contact-orbit" aria-hidden="true">
-              <i /><i /><i />
-              <span>UI</span><span>API</span><span>DATA</span><span>SEC</span><b>KV</b>
+          <div className="contact-main">
+            <span className="contact-index">Contact // Resolution</span>
+
+            {/* Architecture convergence schematic */}
+            <div className={`contact-convergence ${pulsing ? "is-pulsing" : ""}`} aria-hidden="true">
+              <div className="convergence-kicker">
+                <span>System convergence</span>
+                <span className="convergence-spec">UI · API · DATA · SEC ➔ CONVERSATION</span>
+              </div>
+              <div className="convergence-grid">
+                {convergenceNodes.map((node) => (
+                  <div className="convergence-node" key={node.short}>
+                    <strong>{node.short}</strong>
+                    <small>{node.label}</small>
+                    <i className="convergence-connector" />
+                  </div>
+                ))}
+              </div>
+              <div className="convergence-terminal-line">
+                <i className="terminal-bus" />
+                {pulsing && !reduceMotion ? (
+                  <span className="convergence-pulse-packet" />
+                ) : null}
+              </div>
             </div>
-            <ArchitectureFlow className="contact-system-flow" label="Engineering system resolving to contact" nodes={["UI", "API", "Data", "Contact"]} />
+
             <h2>Let&apos;s build software that holds up beyond the demo.</h2>
             <p>
               I&apos;m open to internship and junior opportunities where I can contribute to real
@@ -64,8 +102,10 @@ export function Contact() {
           </div>
 
           <motion.a
-            className="button button-primary contact-button"
+            className={`button button-primary contact-button ${pulsing ? "is-signaling" : ""}`}
             href={`mailto:${profile.email}`}
+            onFocus={triggerSignalPulse}
+            onPointerEnter={triggerSignalPulse}
             transition={motionTokens.spring}
             whileHover={reduceMotion ? undefined : interactionMotion.lift}
             whileTap={reduceMotion ? undefined : interactionMotion.press}

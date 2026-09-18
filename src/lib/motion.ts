@@ -61,9 +61,9 @@ export const interactionMotion = {
 };
 
 export const projectDepth = {
-  enter: { opacity: 0, scale: 0.97, rotateY: -2, y: 18 },
-  center: { opacity: 1, scale: 1, rotateY: 0 },
-  exit: { opacity: 0, scale: 0.96, rotateY: 2, y: -18 },
+  enter: { opacity: 0, scale: 0.975, y: 16, filter: "brightness(0.92)" },
+  center: { opacity: 1, scale: 1, y: 0, filter: "brightness(1)" },
+  exit: { opacity: 0, scale: 0.955, y: -16, filter: "brightness(0.85)" },
 };
 
 export const revealMask = {

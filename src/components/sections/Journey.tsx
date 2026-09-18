@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
+import { useRef, useState } from "react";
+import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { journey } from "../../data/portfolio";
 import { revealSoftTransition, springSoft } from "../../lib/motion";
 import { SectionHeading } from "../SectionHeading";
@@ -8,11 +8,24 @@ import { Container } from "../layout/Container";
 export function Journey() {
   const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const [activeMilestone, setActiveMilestone] = useState(0);
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start 70%", "end 64%"],
+    offset: ["start 72%", "end 60%"],
   });
   const progress = useSpring(scrollYProgress, springSoft);
+
+  useMotionValueEvent(progress, "change", (latest) => {
+    if (reduceMotion) return;
+    if (latest < 0.38) {
+      setActiveMilestone(0);
+    } else if (latest < 0.74) {
+      setActiveMilestone(1);
+    } else {
+      setActiveMilestone(2);
+    }
+  });
 
   return (
     <section
@@ -33,23 +46,31 @@ export function Journey() {
             <motion.i style={{ scaleY: reduceMotion ? 1 : progress }} />
           </span>
           <ol className="journey-list">
-            {journey.map((item, index) => (
-              <motion.li
-                initial={reduceMotion ? false : { opacity: 0.42, x: -10 }}
-                key={item.title}
-                transition={{ ...revealSoftTransition, delay: reduceMotion ? 0 : index * 0.05 }}
-                viewport={{ once: true, amount: 0.55 }}
-                whileInView={{ opacity: 1, x: 0 }}
-              >
-                <span className="journey-index">{String(index + 1).padStart(2, "0")}</span>
-                <time>{item.date}</time>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p className="journey-org">{item.organization}</p>
-                  <p>{item.description}</p>
-                </div>
-              </motion.li>
-            ))}
+            {journey.map((item, index) => {
+              const isCurrent = reduceMotion || activeMilestone === index;
+              const isPassed = !reduceMotion && activeMilestone > index;
+              const statusClass = isCurrent ? "is-current" : isPassed ? "is-passed" : "is-upcoming";
+
+              return (
+                <motion.li
+                  className={statusClass}
+                  data-milestone={index}
+                  initial={reduceMotion ? false : { opacity: 0.42, x: -10 }}
+                  key={item.title}
+                  transition={{ ...revealSoftTransition, delay: reduceMotion ? 0 : index * 0.05 }}
+                  viewport={{ once: true, amount: 0.55 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                >
+                  <span className="journey-index">{String(index + 1).padStart(2, "0")}</span>
+                  <time>{item.date}</time>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p className="journey-org">{item.organization}</p>
+                    <p>{item.description}</p>
+                  </div>
+                </motion.li>
+              );
+            })}
           </ol>
         </div>
       </Container>

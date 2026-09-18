@@ -10,6 +10,7 @@ import { Projects } from "./components/sections/Projects";
 import { SectionTransition } from "./components/visual/SectionTransition";
 import { SystemRail } from "./components/visual/SystemRail";
 import { springSoft } from "./lib/motion";
+import { useActiveSection } from "./lib/useActiveSection";
 
 type Theme = "dark" | "light";
 
@@ -27,6 +28,7 @@ function getInitialTheme(): Theme {
 
 function App() {
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const { activeSection, activeStage } = useActiveSection();
   const { scrollYProgress } = useScroll();
   const progressScale = useSpring(scrollYProgress, {
     stiffness: springSoft.stiffness,
@@ -43,6 +45,52 @@ function App() {
       ?.setAttribute("content", theme === "dark" ? "#020503" : "#f4f3ee");
   }, [theme]);
 
+  function handleToggleTheme(origin?: { x: number; y: number }) {
+    const nextTheme: Theme = theme === "dark" ? "light" : "dark";
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion || !("startViewTransition" in document)) {
+      startTransition(() => {
+        setTheme(nextTheme);
+      });
+      return;
+    }
+
+    const x = origin?.x ?? window.innerWidth - 48;
+    const y = origin?.y ?? 32;
+    const maxRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    document.documentElement.dataset.themeTransition = "circular";
+    const transition = document.startViewTransition(() => {
+      setTheme(nextTheme);
+    });
+
+    transition.ready
+      .then(() => {
+        document.documentElement.animate(
+          {
+            clipPath: [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${maxRadius}px at ${x}px ${y}px)`,
+            ],
+          },
+          {
+            duration: 460,
+            easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+            pseudoElement: "::view-transition-new(root)",
+          },
+        );
+      })
+      .catch(() => {});
+
+    transition.finished.finally(() => {
+      delete document.documentElement.dataset.themeTransition;
+    });
+  }
+
   return (
     <div className="site" data-theme={theme} data-styleseed-recipe="expressive-brand">
       <motion.div
@@ -54,15 +102,12 @@ function App() {
         Skip to content
       </a>
 
-      <SystemRail />
+      <SystemRail activeStage={activeStage} />
 
       <SiteHeader
+        activeSection={activeSection}
         theme={theme}
-        onToggleTheme={() => {
-          startTransition(() => {
-            setTheme((current) => (current === "dark" ? "light" : "dark"));
-          });
-        }}
+        onToggleTheme={handleToggleTheme}
       />
 
       <main id="main">

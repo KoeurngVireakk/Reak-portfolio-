@@ -1,4 +1,4 @@
-import { useRef, type PointerEvent } from "react";
+import { useRef, useState, type PointerEvent } from "react";
 import { Mail, MapPin } from "lucide-react";
 import {
   motion,
@@ -25,36 +25,71 @@ export function HeroSpatialScene() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const { active: sceneActive, reducedMotion: reduceMotion } = useContinuousMotion(sceneRef, 0.08);
   const finePointer = useFinePointer();
+  const [highlightedNode, setHighlightedNode] = useState<number | undefined>(undefined);
+
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, springSpatial);
   const smoothY = useSpring(pointerY, springSpatial);
-  const gridX = useTransform(smoothX, (value) => value * 0.35);
-  const gridY = useTransform(smoothY, (value) => value * 0.35);
-  const meshX = useTransform(smoothX, (value) => value * -0.18);
-  const meshY = useTransform(smoothY, (value) => value * -0.18);
+
+  // Calibrated multi-plane depth reactions:
+  // Far grid: 0.22, Mid mesh: -0.16 (counter), Topology: 0.38, Labels: 1.15 (foreground)
+  const gridX = useTransform(smoothX, (value) => value * 0.22);
+  const gridY = useTransform(smoothY, (value) => value * 0.22);
+  const meshX = useTransform(smoothX, (value) => value * -0.16);
+  const meshY = useTransform(smoothY, (value) => value * -0.16);
   const labelsX = useTransform(smoothX, (value) => value * 1.15);
   const labelsY = useTransform(smoothY, (value) => value * 1.15);
+
+  // Refined scroll exit handoff into System section
   const { scrollYProgress } = useScroll();
-  const sceneY = useTransform(scrollYProgress, [0, 0.22], [0, -46]);
-  const sceneOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.66]);
+  const sceneY = useTransform(scrollYProgress, [0, 0.24], [0, -56]);
+  const sceneScale = useTransform(scrollYProgress, [0, 0.24], [1, 0.97]);
+  const sceneOpacity = useTransform(scrollYProgress, [0.08, 0.24], [1, 0.58]);
 
   function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
     if (!sceneActive || !finePointer) return;
     const bounds = event.currentTarget.getBoundingClientRect();
-    pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 18);
-    pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 18);
+    const relX = (event.clientX - bounds.left) / bounds.width;
+    const relY = (event.clientY - bounds.top) / bounds.height;
+    const normX = (relX - 0.5) * 2;
+    const normY = (relY - 0.5) * 2;
+
+    pointerX.set(normX * 9);
+    pointerY.set(normY * 9);
+
+    if (sceneRef.current) {
+      sceneRef.current.style.setProperty("--scene-pointer-x", normX.toFixed(3));
+      sceneRef.current.style.setProperty("--scene-pointer-y", normY.toFixed(3));
+      sceneRef.current.style.setProperty("--scene-px", `${(relX * 100).toFixed(1)}%`);
+      sceneRef.current.style.setProperty("--scene-py", `${(relY * 100).toFixed(1)}%`);
+    }
+
+    // Architecture-node highlight influenced by pointer horizontal sector
+    const nodeIndex = Math.min(3, Math.max(0, Math.floor(relX * 4)));
+    setHighlightedNode(nodeIndex);
   }
 
   function resetPointer() {
     pointerX.set(0);
     pointerY.set(0);
+    setHighlightedNode(undefined);
+    if (sceneRef.current) {
+      sceneRef.current.style.setProperty("--scene-pointer-x", "0");
+      sceneRef.current.style.setProperty("--scene-pointer-y", "0");
+      sceneRef.current.style.setProperty("--scene-px", "50%");
+      sceneRef.current.style.setProperty("--scene-py", "40%");
+    }
   }
 
   return (
     <motion.div
       className="hero-scene-exit"
-      style={{ opacity: reduceMotion ? 1 : sceneOpacity, y: reduceMotion ? 0 : sceneY }}
+      style={{
+        opacity: reduceMotion ? 1 : sceneOpacity,
+        y: reduceMotion ? 0 : sceneY,
+        scale: reduceMotion ? 1 : sceneScale,
+      }}
     >
       <motion.div
         className="hero-spatial-scene"
@@ -69,6 +104,7 @@ export function HeroSpatialScene() {
         <motion.div className="scene-layer scene-grid" style={{ x: gridX, y: gridY }} aria-hidden="true" />
         <motion.div className="scene-layer scene-mesh" style={{ x: meshX, y: meshY }} aria-hidden="true" />
         <div className="scene-layer scene-halo" aria-hidden="true" />
+        <div className="scene-layer scene-illumination" aria-hidden="true" />
         <svg className="scene-layer scene-topology" viewBox="0 0 620 760" aria-hidden="true">
           <path d="M48 154 C168 78 246 188 352 116 S528 102 580 44" />
           <path d="M16 548 C122 438 228 594 330 492 S502 432 604 514" />
@@ -82,7 +118,7 @@ export function HeroSpatialScene() {
         <div className="scene-status" aria-hidden="true"><i /> Architecture online</div>
 
         <div className="portrait-plane">
-          <Tilt className="portrait-tilt" maxTilt={2.4}>
+          <Tilt className="portrait-tilt" maxTilt={2.2}>
             <div className="portrait-silhouette">
               <picture>
                 <source srcSet={profile.avatarWebp} type="image/webp" />
@@ -107,7 +143,10 @@ export function HeroSpatialScene() {
           ))}
         </motion.div>
 
-        <ArchitectureFlow className="hero-architecture-flow" />
+        <ArchitectureFlow
+          activeNodeIndex={highlightedNode}
+          className="hero-architecture-flow"
+        />
 
         <div className="scene-contact">
           <span><MapPin size={13} /> {profile.location}</span>

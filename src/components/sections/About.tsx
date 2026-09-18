@@ -145,7 +145,10 @@ export function About() {
               ))}
             </div>
             <Reveal className="architecture-explorer-wrap" delay={0.08}>
-              <ArchitectureExplorer activeIndex={activeCapability} />
+              <ArchitectureExplorer
+                activeIndex={activeCapability}
+                onSelectLayer={setActiveCapability}
+              />
             </Reveal>
           </div>
 
