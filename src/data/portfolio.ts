@@ -14,7 +14,19 @@ export type ProjectMedia = {
   assets: ProjectMediaAsset[];
 };
 
+export type ArchitectureTier = {
+  tier: string;
+  technology: string;
+  detail: string;
+};
+
+export type EngineeringDecision = {
+  title: string;
+  reason: string;
+};
+
 export type Project = {
+  slug: string;
   name: string;
   shortName: string;
   tagline: string;
@@ -35,6 +47,13 @@ export type Project = {
   presentation: ProjectPresentation;
   accent: string;
   media?: ProjectMedia;
+  // Phase 5 engineering evidence extensions
+  architectureTiers?: ArchitectureTier[];
+  decisions?: EngineeringDecision[];
+  securityDetails?: string[];
+  testingDetails?: string[];
+  challenges?: string[];
+  lessons?: string[];
 };
 
 export const professionalIdentity = {
@@ -82,11 +101,68 @@ export const workingPrinciples = [
   },
 ];
 
-export const itFoundations = [
+export type HowIWorkStep = {
+  step: string;
+  title: string;
+  summary: string;
+  evidence: string;
+};
+
+export const howIWork: HowIWorkStep[] = [
+  {
+    step: "01",
+    title: "Understand & Scope",
+    summary: "Analyze functional domains, user boundaries, and transactional invariants before coding.",
+    evidence: "Actor permissions, data lifecycle flows, and explicit API contract boundaries.",
+  },
+  {
+    step: "02",
+    title: "Architecture & Schema",
+    summary: "Model normalized schemas, deterministic state transitions, and defensive access rules.",
+    evidence: "Versioned migrations (Flyway/EF), relational normalization, and least-privilege tokens.",
+  },
+  {
+    step: "03",
+    title: "Implement & Test",
+    summary: "Construct type-safe interfaces, isolated service logic, and automated verification suites.",
+    evidence: "Component isolation, service layers, unit test assertions, and integration tests.",
+  },
+  {
+    step: "04",
+    title: "Harden & Secure",
+    summary: "Enforce zero-trust authorization, input validation pipelines, and offline data protections.",
+    evidence: "Deny-by-default rules, CSRF protection, rate limiting, and local biometric processing.",
+  },
+  {
+    step: "05",
+    title: "Verify & Deliver",
+    summary: "Validate builds in CI, run pre-flight diagnostics, and verify cross-device reliability.",
+    evidence: "GitHub Actions automation, isolated service containers, and doctor diagnostic scripts.",
+  },
+];
+
+export type ITFoundationDomain = {
+  domain: string;
+  title: string;
+  description: string;
+  evidenceType: "Academic Lab" | "System Lab" | "Practical Practice";
+  evidenceContext: string;
+  evidenceNotes: string[];
+  skills: string[];
+};
+
+export const itFoundations: ITFoundationDomain[] = [
   {
     domain: "NETWORK",
     title: "LAN & Networking Fundamentals",
     description: "Network topography, IP addressing, and connectivity diagnostics.",
+    evidenceType: "Academic Lab",
+    evidenceContext: "BBU IT Networking Curriculum & Hardware Labs",
+    evidenceNotes: [
+      "Subnetting calculations & Cisco Packet Tracer topology designs",
+      "Physical router, switch, and AP patch cabling & configuration",
+      "ICMP, traceroute, and ARP connectivity diagnostics",
+    ],
     skills: [
       "IP Addressing & Subnetting",
       "DNS & DHCP Configuration",
@@ -99,6 +175,13 @@ export const itFoundations = [
     domain: "SYSTEMS",
     title: "Operating Systems & Administration",
     description: "Workstation and server environments across Windows and Linux platforms.",
+    evidenceType: "System Lab",
+    evidenceContext: "BBU Systems Laboratory & Personal Practice Environments",
+    evidenceNotes: [
+      "Ubuntu & Kali Linux terminal administration and permissions",
+      "Windows Server domain environment setup and service controls",
+      "Daemon lifecycle management and scheduled automation",
+    ],
     skills: [
       "Windows Client & Server Environments",
       "Linux Fundamentals (Ubuntu, Kali)",
@@ -111,6 +194,13 @@ export const itFoundations = [
     domain: "SUPPORT",
     title: "Hardware, Peripherals & Workplace IT",
     description: "Component assembly, peripheral integration, and user support diagnostics.",
+    evidenceType: "Practical Practice",
+    evidenceContext: "Hands-on Technical Practice & Workstation Maintenance",
+    evidenceNotes: [
+      "Desktop workstation motherboard, CPU, RAM, and storage assembly",
+      "OS imaging, clean installation, and driver troubleshooting",
+      "Network printer, scanner, and workplace email client configuration",
+    ],
     skills: [
       "Hardware Assembly & Component Diagnostics",
       "OS & Application Installation",
@@ -142,30 +232,57 @@ export const facts = [
   { label: "Location", value: "Battambang, Cambodia" },
 ];
 
-export const focusAreas = [
+export type FocusArea = {
+  title: string;
+  description: string;
+  technologies: string[];
+  demonstratedProjects: Array<{ slug: string; name: string; shortName: string; role: string }>;
+};
+
+export const focusAreas: FocusArea[] = [
   {
     title: "Frontend Engineering",
     description:
       "Responsive product interfaces with React, TypeScript, Tailwind CSS, Razor and Thymeleaf views, and practical UX flows.",
     technologies: ["React", "TypeScript", "Tailwind CSS", "JavaScript", "HTML/CSS"],
+    demonstratedProjects: [
+      { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI", role: "Full-Stack RSVP & Guest Client" },
+      { slug: "e-menu-saas", name: "E-Menu SaaS", shortName: "EM", role: "PWA Customer Catalog & Admin UI" },
+    ],
   },
   {
     title: "Backend & Data",
     description:
       "REST APIs, authentication, authorization, transactions, relational data modeling, migrations, and server-side business rules.",
     technologies: ["Spring Boot", "Laravel", "ASP.NET Core", "MySQL", "SQL Server", "Firebase"],
+    demonstratedProjects: [
+      { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI", role: "Spring Boot REST Services & MySQL" },
+      { slug: "loan-management", name: "Loan Management System", shortName: "LM", role: "Transactional Services & Flyway" },
+      { slug: "sale-management", name: "Sale Management System", shortName: "SM", role: "EF Core ORM & Negative-Stock Rules" },
+      { slug: "e-menu-saas", name: "E-Menu SaaS", shortName: "EM", role: "Laravel REST API & Schema Design" },
+    ],
   },
   {
     title: "Mobile & Applied AI",
     description:
       "Flutter applications and local computer-vision workflows using InsightFace, OpenCV, ONNX Runtime, and camera integrations.",
     technologies: ["Flutter", "Dart", "Python", "PySide6", "InsightFace", "OpenCV"],
+    demonstratedProjects: [
+      { slug: "krama", name: "KRAMA", shortName: "KR", role: "Flutter Client & Cloud Functions" },
+      { slug: "face-attendance-studio", name: "Face Attendance Studio", shortName: "FA", role: "PySide6 & Local ONNX Inference" },
+    ],
   },
   {
     title: "Security & Delivery",
     description:
       "Secure-by-design application work including role-based access control, secret handling, CI/CD, Docker, Cloudflare, and testing.",
     technologies: ["Spring Security", "ASP.NET Identity", "GitHub Actions", "Docker", "Cloudflare", "Kali Linux"],
+    demonstratedProjects: [
+      { slug: "loan-management", name: "Loan Management System", shortName: "LM", role: "Spring Security RBAC & CSRF Protection" },
+      { slug: "sale-management", name: "Sale Management System", shortName: "SM", role: "ASP.NET Identity & Antiforgery Tokens" },
+      { slug: "krama", name: "KRAMA", shortName: "KR", role: "Deny-by-Default Firestore Security Rules" },
+      { slug: "face-attendance-studio", name: "Face Attendance Studio", shortName: "FA", role: "Zero-Cloud Local Biometric Processing" },
+    ],
   },
 ];
 
@@ -186,8 +303,62 @@ export const technologyRail = [
   "GitHub Actions",
 ];
 
+export const technologyProjectMap: Record<string, Array<{ slug: string; name: string; shortName: string }>> = {
+  React: [
+    { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+    { slug: "e-menu-saas", name: "E-Menu SaaS", shortName: "EM" },
+  ],
+  TypeScript: [
+    { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+    { slug: "krama", name: "KRAMA", shortName: "KR" },
+  ],
+  "Spring Boot": [
+    { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+    { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+  ],
+  Java: [
+    { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+    { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+  ],
+  Laravel: [
+    { slug: "e-menu-saas", name: "E-Menu SaaS", shortName: "EM" },
+  ],
+  "ASP.NET Core": [
+    { slug: "sale-management", name: "Sale Management System", shortName: "SM" },
+  ],
+  Flutter: [
+    { slug: "krama", name: "KRAMA", shortName: "KR" },
+  ],
+  Firebase: [
+    { slug: "krama", name: "KRAMA", shortName: "KR" },
+  ],
+  MySQL: [
+    { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+    { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+    { slug: "e-menu-saas", name: "E-Menu SaaS", shortName: "EM" },
+  ],
+  "SQL Server": [
+    { slug: "sale-management", name: "Sale Management System", shortName: "SM" },
+  ],
+  Python: [
+    { slug: "face-attendance-studio", name: "Face Attendance Studio", shortName: "FA" },
+  ],
+  Docker: [
+    { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+    { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+  ],
+  Cloudflare: [
+    { slug: "e-menu-saas", name: "E-Menu SaaS", shortName: "EM" },
+  ],
+  "GitHub Actions": [
+    { slug: "sale-management", name: "Sale Management System", shortName: "SM" },
+    { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+  ],
+};
+
 export const projects: Project[] = [
   {
+    slug: "koupreng-einvitation",
     name: "Koupreng E-Invitation",
     shortName: "EI",
     tagline: "Full-stack Khmer wedding invitation platform",
@@ -212,8 +383,54 @@ export const projects: Project[] = [
     presentation: "browser",
     accent: "#d7ba77",
     featured: true,
+    architectureTiers: [
+      {
+        tier: "Presentation Tier",
+        technology: "React 19 & TypeScript",
+        detail: "Interactive guest RSVP portal, dynamic invitation customizer, and host event management console.",
+      },
+      {
+        tier: "Service Tier",
+        technology: "Spring Boot REST Services",
+        detail: "Stateless API endpoints, JWT authentication filter, guest state transitions, and check-in validation.",
+      },
+      {
+        tier: "Persistence Tier",
+        technology: "MySQL Relational Database",
+        detail: "Transactional storage for guest records, seating assignments, RSVP tallies, and event configurations.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Decoupled Guest Portal from Host Console",
+        reason:
+          "Separates high-volume public RSVP requests from administrative invitation publishing, keeping the guest payload lean and eliminating accidental exposure of host controls.",
+      },
+      {
+        title: "Cryptographically Signed QR Event Passes",
+        reason:
+          "Encodes a signed verification token inside the guest QR code to prevent duplicate attendance logging and ticket forgery during on-site event check-in.",
+      },
+    ],
+    securityDetails: [
+      "Stateless JWT authentication with distinct claims for event hosts and guests.",
+      "Strict CORS rules and server-side request sanitization on all guest response routes.",
+      "Rate limiting on public RSVP submission endpoints to safeguard database write transactions.",
+    ],
+    testingDetails: [
+      "Spring Boot backend unit tests validating guest status transitions and seating constraints.",
+      "Playwright end-to-end test suite testing create → publish → guest response → QR check-in flows.",
+      "Static analysis and automated build checks in team repository workflow.",
+    ],
+    challenges: [
+      "Handling concurrent guest responses during invitation drops without race conditions on limited table allocations.",
+    ],
+    lessons: [
+      "Establishing strict API contracts early significantly accelerates frontend and backend team coordination.",
+    ],
   },
   {
+    slug: "krama",
     name: "KRAMA",
     shortName: "KR",
     tagline: "Connected Cambodian fashion demo ecosystem",
@@ -239,8 +456,54 @@ export const projects: Project[] = [
     accent: "#a85245",
     repositoryLabel: "Private repository",
     featured: true,
+    architectureTiers: [
+      {
+        tier: "Client Architecture",
+        technology: "Flutter & Riverpod",
+        detail: "Feature-first mobile architecture separated into presentation, application, domain, and data layers.",
+      },
+      {
+        tier: "Authoritative Mediation",
+        technology: "Firebase Cloud Functions (TypeScript)",
+        detail: "Server-side functions enforcing stock decrements, commission calculations, and order state mutations.",
+      },
+      {
+        tier: "Data & Security Rules",
+        technology: "Cloud Firestore & Storage",
+        detail: "Deny-by-default security rules validating document structures and role-based custom claims.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Server-Authoritative Mutations in Cloud Functions",
+        reason:
+          "Client devices cannot be trusted with inventory decrements, artisan commission payouts, or order finalization; all critical mutations execute in verified server runtimes.",
+      },
+      {
+        title: "Deny-by-Default Firestore Security Rules",
+        reason:
+          "Guarantees that actors (customers, artisans, vendors, admins) can only query their authorized document subtrees through explicit role claim validations.",
+      },
+    ],
+    securityDetails: [
+      "Custom Auth claims isolating 4 distinct actor roles (Customer, Artisan, Vendor, Admin).",
+      "Deny-by-default Firestore rules with strict schema field validations on every write.",
+      "Sensitive operational logic isolated inside Cloud Functions rather than executed on client devices.",
+    ],
+    testingDetails: [
+      "Flutter widget and domain unit tests validating Riverpod state transitions.",
+      "Firebase Local Emulator Suite testing Firestore security rules against unauthorized cross-role access.",
+      "Automated verification scripts for Cloud Functions deployment artifact integrity.",
+    ],
+    challenges: [
+      "Enforcing role separation and data integrity across multi-actor marketplace workflows in a serverless environment.",
+    ],
+    lessons: [
+      "Emulator-driven security rules testing catches permission bypass vulnerabilities before deploying to production.",
+    ],
   },
   {
+    slug: "face-attendance-studio",
     name: "Face Attendance Studio",
     shortName: "FA",
     tagline: "Local-first face-recognition attendance desktop app",
@@ -266,8 +529,54 @@ export const projects: Project[] = [
     accent: "#67d5c5",
     repository: "https://github.com/KoeurngVireakk/face_attendance_recognition",
     featured: true,
+    architectureTiers: [
+      {
+        tier: "Desktop Presentation Tier",
+        technology: "PySide6 (Qt for Python)",
+        detail: "Hardware-accelerated desktop UI with live camera viewfinder, enrollment wizard, and attendance reporting.",
+      },
+      {
+        tier: "Computer Vision Engine",
+        technology: "InsightFace, OpenCV & ONNX Runtime",
+        detail: "Local face detection, landmark alignment, and 512-dimensional embedding generation without cloud latency.",
+      },
+      {
+        tier: "Local Storage & Analytics",
+        technology: "SQLite Relational Database",
+        detail: "Embedded database storing cosine similarity indexing, member profiles, schedules, and audit history.",
+      },
+    ],
+    decisions: [
+      {
+        title: "100% Local Inference via ONNX Runtime",
+        reason:
+          "Ensures complete biometric privacy by computing facial embeddings on-device without sending facial imagery across the internet, eliminating cloud breach exposure.",
+      },
+      {
+        title: "Pre-Flight Diagnostic Doctor Script",
+        reason:
+          "Validates camera hardware access, model weight hashes, and CPU/CUDA driver compatibility before starting the main attendance loop to prevent runtime crashes.",
+      },
+    ],
+    securityDetails: [
+      "Zero cloud biometric transmission: facial templates and embeddings are calculated and stored purely on local disk.",
+      "Audit trail logging for all manual attendance overrides and administrative policy modifications.",
+      "Model weights hash integrity checks to prevent tampered or corrupted ONNX model files.",
+    ],
+    testingDetails: [
+      "Built-in doctor diagnostic suite testing camera access, library dependencies, and hardware capabilities.",
+      "Offline demo mode with synthetic/mock image feeds for automated UI verification without webcam hardware.",
+      "Unit tests covering cosine similarity threshold logic and attendance policy window evaluation.",
+    ],
+    challenges: [
+      "Optimizing inference throughput on standard CPU hardware while maintaining reliable recognition confidence thresholds.",
+    ],
+    lessons: [
+      "A robust pre-flight diagnostic check dramatically simplifies troubleshooting when deploying desktop software across varied target machines.",
+    ],
   },
   {
+    slug: "e-menu-saas",
     name: "E-Menu SaaS",
     shortName: "EM",
     tagline: "QR-based digital menu platform",
@@ -292,8 +601,54 @@ export const projects: Project[] = [
     accent: "#e0a55c",
     repository: "https://github.com/KoeurngVireakk/e-menu-saas",
     featured: true,
+    architectureTiers: [
+      {
+        tier: "Client & Offline Tier",
+        technology: "React 19 & PWA Service Worker",
+        detail: "Vite-bundled SPA with selective cache manifest, offline item browsing, and local cart state.",
+      },
+      {
+        tier: "Backend Service Tier",
+        technology: "Laravel REST API",
+        detail: "Sanctum authentication, menu item management, table QR code routing, and order session validation.",
+      },
+      {
+        tier: "Relational Persistence",
+        technology: "MySQL Database",
+        detail: "Normalized catalog tables, modifier groups, pricing tiers, and restaurant tenant records.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Network-First Cache for Public Menus, Strict Online for Checkout",
+        reason:
+          "Diners can browse food catalogs smoothly even in venues with weak cellular signal, while order submissions and payment mutations strictly require verified live connectivity.",
+      },
+      {
+        title: "Exclusion of Admin Endpoints from PWA Cache",
+        reason:
+          "Prevents stale permission data or administrative session tokens from lingering in service worker caches on shared devices.",
+      },
+    ],
+    securityDetails: [
+      "Laravel Sanctum token authentication for restaurant owners and staff.",
+      "Explicit service worker cache manifest excluding authenticated API endpoints and customer payment payloads.",
+      "Request validation rules guarding against malformed item options or price manipulation.",
+    ],
+    testingDetails: [
+      "Laravel PHPUnit/Pest feature tests verifying catalog retrieval and order validation endpoints.",
+      "Service worker offline cache behavior tests simulating disconnected network conditions.",
+      "Vite production build and bundle analyzer checks.",
+    ],
+    challenges: [
+      "Preventing split-brain cart states when a user transitions between offline browsing and online order submission.",
+    ],
+    lessons: [
+      "Clear offline boundaries build trust: offline is an enhancement for reading, not a loophole for writing.",
+    ],
   },
   {
+    slug: "loan-management",
     name: "Loan Management System",
     shortName: "LM",
     tagline: "Role-based loan operations platform",
@@ -318,8 +673,55 @@ export const projects: Project[] = [
     presentation: "dashboard",
     accent: "#6a9ee8",
     repositoryLabel: "Private repository",
+    featured: false,
+    architectureTiers: [
+      {
+        tier: "Server-Rendered Presentation",
+        technology: "Spring Boot MVC & Thymeleaf",
+        detail: "Server-rendered HTML views with responsive tabular layouts, amortization charts, and PDF exports.",
+      },
+      {
+        tier: "Security & Business Tier",
+        technology: "Spring Security & Transactional Services",
+        detail: "Role-based access control enforcing Officer vs. Manager sign-offs with ACID transaction boundaries.",
+      },
+      {
+        tier: "Database & Migration Tier",
+        technology: "MySQL & Flyway Migrations",
+        detail: "Versioned SQL migration scripts ensuring repeatable schema deployment and audit trail logging.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Deterministic Schema Migrations with Flyway",
+        reason:
+          "Guarantees that database schemas, foreign keys, and audit tables deploy identically across local development, CI test containers, and staging environments.",
+      },
+      {
+        title: "Multi-Tier Approval State Machine",
+        reason:
+          "Enforces that loan disbursement requires distinct sign-off from both Loan Officers and Branch Managers, preventing unauthorized single-actor fund approval.",
+      },
+    ],
+    securityDetails: [
+      "Spring Security URL authorization filters separating Admin, Branch Manager, and Officer endpoints.",
+      "Cross-Site Request Forgery (CSRF) protection on all form post submissions.",
+      "Encrypted credential storage using BCrypt and session fixation protection.",
+    ],
+    testingDetails: [
+      "Spring Boot integration tests executed against an isolated MySQL container service in CI.",
+      "Amortization schedule calculation unit tests verifying interest and principal accuracy across payment terms.",
+      "Role access control tests verifying HTTP 403 Forbidden on unauthorized branch administrative routes.",
+    ],
+    challenges: [
+      "Maintaining absolute numerical precision in compound interest and amortization calculations while enforcing branch data isolation.",
+    ],
+    lessons: [
+      "Automating database migrations in version control eliminates drift and ensures reproducible testing.",
+    ],
   },
   {
+    slug: "sale-management",
     name: "Sale Management System",
     shortName: "SM",
     tagline: "Sales, inventory, POS, and reporting system",
@@ -344,6 +746,52 @@ export const projects: Project[] = [
     presentation: "pos",
     accent: "#59bbaa",
     repositoryLabel: "Private repository",
+    featured: false,
+    architectureTiers: [
+      {
+        tier: "POS Presentation Tier",
+        technology: "ASP.NET Core MVC & Razor Views",
+        detail: "Point of sale interface with barcode scanner input, real-time cart calculations, and receipt generation.",
+      },
+      {
+        tier: "Business Logic & ORM",
+        technology: "Entity Framework Core",
+        detail: "Atomic transactional service layer managing negative-stock guards, inventory adjustments, and returns.",
+      },
+      {
+        tier: "Identity & Persistence Tier",
+        technology: "SQL Server & ASP.NET Identity",
+        detail: "Centralized credential storage, role-based authorization policies (Admin vs. Cashier), and audit logs.",
+      },
+    ],
+    decisions: [
+      {
+        title: "Negative-Stock Guards at Service Layer",
+        reason:
+          "Prevents concurrent cashier checkout transactions from driving inventory counts below zero by wrapping stock adjustments in atomic database transactions.",
+      },
+      {
+        title: "Rate-Limiting on Authentication and POS Checkout",
+        reason:
+          "Protects login endpoints against brute-force attacks and prevents rapid duplicate receipt generations from accidental double-taps on POS touchscreens.",
+      },
+    ],
+    securityDetails: [
+      "ASP.NET Core Identity with password hashing, account lockout policies, and role authorization (Admin vs. Cashier).",
+      "Antiforgery token validation enforced across all POST, PUT, and DELETE actions.",
+      "Security headers (X-Frame-Options, X-Content-Type-Options) to protect administrative interfaces.",
+    ],
+    testingDetails: [
+      "xUnit test suite covering inventory adjustment calculations and checkout transaction invariants.",
+      "EF Core in-memory database tests verifying cascade rules on customer returns and receipts.",
+      "GitHub Actions workflow running code formatting verification, test execution, and deployment artifact bundling.",
+    ],
+    challenges: [
+      "Ensuring sub-second POS checkout response times while atomically updating inventory, customer balances, and tax receipts.",
+    ],
+    lessons: [
+      "Pairing declarative Identity authorization with defensive service layer validations creates a robust multi-tier defense.",
+    ],
   },
 ];
 

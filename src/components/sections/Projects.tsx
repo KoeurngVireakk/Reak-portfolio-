@@ -1,20 +1,30 @@
 import {
+  Suspense,
   ViewTransition,
+  lazy,
   startTransition,
+  useCallback,
   useEffect,
   useMemo,
   useState,
   type CSSProperties,
 } from "react";
-import { ArrowUpRight, Check, LockKeyhole } from "lucide-react";
+import { ArrowUpRight, Check, LockKeyhole, SlidersHorizontal } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { projects, type Project, type ProjectCategory } from "../../data/portfolio";
 import { motionTokens, projectDepth, projectTransition } from "../../lib/motion";
 import { ProjectMedia } from "../projects/ProjectMedia";
+import { type InspectorTab } from "../projects/EngineeringInspector";
 import { SectionHeading } from "../SectionHeading";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
 import { useMediaQuery } from "../../lib/pointer";
+
+const EngineeringInspector = lazy(() =>
+  import("../projects/EngineeringInspector").then((mod) => ({
+    default: mod.EngineeringInspector,
+  }))
+);
 
 const categories: Array<"All" | ProjectCategory> = [
   "All",
@@ -38,6 +48,39 @@ function getCategoryFromUrl(): { category: ProjectFilter; invalid: boolean } {
     : { category: "All", invalid: true };
 }
 
+function getInspectorFromUrl(): { projectSlug: string | null; view: InspectorTab | null } {
+  if (typeof window === "undefined") return { projectSlug: null, view: null };
+  const params = new URL(window.location.href).searchParams;
+  const projectSlug = params.get("project");
+  const viewParam = params.get("view") as InspectorTab | null;
+  const validViews: InspectorTab[] = ["overview", "architecture", "security", "testing", "decisions"];
+  const view = viewParam && validViews.includes(viewParam) ? viewParam : null;
+  return { projectSlug, view };
+}
+
+function updateInspectorUrl(project: Project | null, tab?: InspectorTab, replace = false) {
+  if (typeof window === "undefined") return;
+  const url = new URL(window.location.href);
+  if (project) {
+    url.searchParams.set("project", project.slug);
+    if (tab && tab !== "overview") {
+      url.searchParams.set("view", tab);
+    } else {
+      url.searchParams.delete("view");
+    }
+  } else {
+    url.searchParams.delete("project");
+    url.searchParams.delete("view");
+  }
+
+  const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+  if (replace) {
+    window.history.replaceState(null, "", nextUrl);
+  } else {
+    window.history.pushState(null, "", nextUrl);
+  }
+}
+
 function projectId(project: Project) {
   return `project-${project.shortName.toLowerCase()}`;
 }
@@ -48,14 +91,15 @@ function projectAccent(project: Project) {
 
 type ProjectNarrativeProps = {
   project: Project;
+  onInspect: (project: Project, tab?: InspectorTab, trigger?: HTMLElement) => void;
 };
 
-function ProjectNarrative({ project }: ProjectNarrativeProps) {
+function ProjectNarrative({ project, onInspect }: ProjectNarrativeProps) {
   return (
     <div className="project-content">
       <div>
         <p className="project-tagline">{project.tagline}</p>
-        <h3>{project.name}</h3>
+        <h3 className="project-title-heading">{project.name}</h3>
         <p className="project-description">{project.description}</p>
       </div>
 
@@ -88,42 +132,82 @@ function ProjectNarrative({ project }: ProjectNarrativeProps) {
         </div>
         <div className="decision-notes">
           {project.security ? (
-            <div>
-              <span>Security decision</span>
+            <button
+              type="button"
+              className="decision-interactive-card"
+              onClick={(e) => onInspect(project, "security", e.currentTarget)}
+              aria-label={`Inspect ${project.name} security evidence`}
+            >
+              <div className="decision-card-label">
+                <span>Security decision</span>
+                <span className="chip-arrow" aria-hidden="true">↗</span>
+              </div>
               <p>{project.security}</p>
-            </div>
+            </button>
           ) : null}
           {project.testing ? (
-            <div>
-              <span>Testing</span>
+            <button
+              type="button"
+              className="decision-interactive-card"
+              onClick={(e) => onInspect(project, "testing", e.currentTarget)}
+              aria-label={`Inspect ${project.name} testing evidence`}
+            >
+              <div className="decision-card-label">
+                <span>Testing verification</span>
+                <span className="chip-arrow" aria-hidden="true">↗</span>
+              </div>
               <p>{project.testing}</p>
-            </div>
+            </button>
           ) : null}
         </div>
       </div>
 
       <footer className="project-footer">
+        <div className="project-footer-actions">
+          <button
+            type="button"
+            className="inspect-system-btn"
+            onClick={(e) => onInspect(project, "overview", e.currentTarget)}
+            aria-label={`Inspect engineering system evidence for ${project.name}`}
+          >
+            <SlidersHorizontal size={14} aria-hidden="true" />
+            <span>Inspect System Evidence</span>
+          </button>
+
+          {project.repository ? (
+            <a href={project.repository} rel="noreferrer" target="_blank" className="project-repo-link">
+              View repository <ArrowUpRight size={15} />
+            </a>
+          ) : (
+            <span className="private-label">{project.repositoryLabel ?? "Case study project"}</span>
+          )}
+        </div>
+
         <ul aria-label={`${project.name} technology stack`} className="tech-list">
           {project.stack.map((technology) => (
             <li key={technology}>{technology}</li>
           ))}
         </ul>
-        {project.repository ? (
-          <a href={project.repository} rel="noreferrer" target="_blank">
-            View repository <ArrowUpRight size={15} />
-          </a>
-        ) : (
-          <span className="private-label">{project.repositoryLabel ?? "Case study project"}</span>
-        )}
       </footer>
     </div>
   );
 }
 
-function ProjectHeader({ project }: { project: Project }) {
+function ProjectHeader({
+  project,
+  index,
+  total,
+}: {
+  project: Project;
+  index: number;
+  total: number;
+}) {
   return (
     <header className="project-case-header">
       <div className="project-kinds">
+        <span className="project-index-mobile" aria-hidden="true">
+          Project {index + 1} / {total} · {project.shortName}
+        </span>
         {project.featured ? <span className="featured-tag">Featured project</span> : <span>Additional work</span>}
         <span>{project.role}</span>
       </div>
@@ -138,11 +222,20 @@ function ProjectHeader({ project }: { project: Project }) {
 type FeaturedChapterProps = {
   project: Project;
   index: number;
+  total: number;
   onEnter: (project: Project) => void;
   showMedia: boolean;
+  onInspect: (project: Project, tab?: InspectorTab, trigger?: HTMLElement) => void;
 };
 
-function FeaturedChapter({ project, index, onEnter, showMedia }: FeaturedChapterProps) {
+function FeaturedChapter({
+  project,
+  index,
+  total,
+  onEnter,
+  showMedia,
+  onInspect,
+}: FeaturedChapterProps) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -159,27 +252,38 @@ function FeaturedChapter({ project, index, onEnter, showMedia }: FeaturedChapter
       <span className="featured-chapter-index" aria-hidden="true">
         {String(index + 1).padStart(2, "0")}
       </span>
-      <ProjectHeader project={project} />
+      <ProjectHeader index={index} project={project} total={total} />
       {showMedia ? (
         <div className="featured-mobile-media">
           <ProjectMedia compact index={index} project={project} />
         </div>
       ) : null}
-      <ProjectNarrative project={project} />
+      <ProjectNarrative onInspect={onInspect} project={project} />
     </motion.article>
   );
 }
 
-function SecondaryProject({ project, index }: { project: Project; index: number }) {
+function SecondaryProject({
+  project,
+  index,
+  total,
+  onInspect,
+}: {
+  project: Project;
+  index: number;
+  total: number;
+  onInspect: (project: Project, tab?: InspectorTab, trigger?: HTMLElement) => void;
+}) {
   return (
     <article
       className="secondary-project"
+      id={projectId(project)}
       style={projectAccent(project)}
     >
-      <ProjectHeader project={project} />
+      <ProjectHeader index={index} project={project} total={total} />
       <div className="secondary-project-layout">
         <ProjectMedia compact index={index} project={project} />
-        <ProjectNarrative project={project} />
+        <ProjectNarrative onInspect={onInspect} project={project} />
       </div>
     </article>
   );
@@ -191,6 +295,21 @@ export function Projects() {
   );
   const reduceMotion = useReducedMotion();
   const desktopStory = useMediaQuery("(min-width: 901px)");
+
+  // Initial inspector state from URL
+  const initialInspector = useMemo(() => {
+    const { projectSlug, view } = getInspectorFromUrl();
+    if (!projectSlug) return { project: null, tab: "overview" as InspectorTab };
+    const found = projects.find((p) => p.slug === projectSlug);
+    return {
+      project: found ?? null,
+      tab: (view ?? "overview") as InspectorTab,
+    };
+  }, []);
+
+  const [inspectingProject, setInspectingProject] = useState<Project | null>(initialInspector.project);
+  const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>(initialInspector.tab);
+  const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
 
   const filteredProjects = useMemo(
     () => activeCategory === "All"
@@ -214,8 +333,10 @@ export function Projects() {
     setActiveFeaturedName(featuredProjects[0]?.name ?? "");
   }, [activeCategory, featuredProjects]);
 
+  // Handle URL restoration and popstate
   useEffect(() => {
-    const restoreFilter = () => {
+    const handlePopState = () => {
+      // 1. Work category
       const { category, invalid } = getCategoryFromUrl();
       if (invalid) {
         const url = new URL(window.location.href);
@@ -223,11 +344,24 @@ export function Projects() {
         window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
       }
       startTransition(() => setActiveCategory(category));
+
+      // 2. Project inspector
+      const { projectSlug, view } = getInspectorFromUrl();
+      if (projectSlug) {
+        const matched = projects.find((p) => p.slug === projectSlug);
+        if (matched) {
+          setInspectingProject(matched);
+          setActiveInspectorTab(view ?? "overview");
+        } else {
+          setInspectingProject(null);
+        }
+      } else {
+        setInspectingProject(null);
+      }
     };
 
-    restoreFilter();
-    window.addEventListener("popstate", restoreFilter);
-    return () => window.removeEventListener("popstate", restoreFilter);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   function selectCategory(category: ProjectFilter) {
@@ -241,6 +375,39 @@ export function Projects() {
     startTransition(() => setActiveCategory(category));
   }
 
+  const openInspector = useCallback(
+    (project: Project, tab: InspectorTab = "overview", trigger?: HTMLElement) => {
+      setTriggerElement(trigger ?? null);
+      setInspectingProject(project);
+      setActiveInspectorTab(tab);
+      updateInspectorUrl(project, tab, false);
+    },
+    [],
+  );
+
+  const closeInspector = useCallback(() => {
+    updateInspectorUrl(null, undefined, false);
+    setInspectingProject(null);
+  }, []);
+
+  const handleSelectTab = useCallback(
+    (tab: InspectorTab) => {
+      setActiveInspectorTab(tab);
+      if (inspectingProject) {
+        updateInspectorUrl(inspectingProject, tab, true);
+      }
+    },
+    [inspectingProject],
+  );
+
+  const handleSelectProject = useCallback(
+    (project: Project) => {
+      setInspectingProject(project);
+      updateInspectorUrl(project, activeInspectorTab, false);
+    },
+    [activeInspectorTab],
+  );
+
   return (
     <section className="section section-anchor projects-section" id="projects" tabIndex={-1}>
       <Container>
@@ -249,6 +416,35 @@ export function Projects() {
           title="Engineering stories, not a wall of project cards."
           description="Move through the featured systems to see the problem, architecture, security decisions, testing evidence, and honest current status behind each build."
         />
+
+        {/* Compact Engineering Quick Index */}
+        <div className="projects-compact-index" aria-label="Quick project index">
+          <span className="compact-index-label">ENGINEERING INDEX:</span>
+          <div className="compact-index-list">
+            {projects.map((p, idx) => {
+              const isCurrent = activeFeatured?.slug === p.slug;
+              return (
+                <button
+                  aria-label={`Jump to ${p.name}`}
+                  className={`compact-index-item ${isCurrent ? "is-current" : ""}`}
+                  key={p.slug}
+                  onClick={() => {
+                    const targetEl = document.getElementById(projectId(p));
+                    if (targetEl) {
+                      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                    } else {
+                      openInspector(p, "overview");
+                    }
+                  }}
+                  type="button"
+                >
+                  <span className="index-num">{String(idx + 1).padStart(2, "0")}</span>
+                  <span className="index-short">{p.shortName}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
         <Reveal className="project-filter-wrap">
           <div className="project-filters" aria-label="Filter projects" role="group">
@@ -334,8 +530,10 @@ export function Projects() {
                     onEnter={(current) => {
                       if (desktopStory) setActiveFeaturedName(current.name);
                     }}
+                    onInspect={openInspector}
                     project={project}
                     showMedia={!desktopStory}
+                    total={projects.length}
                   />
                 </ViewTransition>
               ))}
@@ -351,22 +549,41 @@ export function Projects() {
             </div>
             <div>
               {secondaryProjects.map((project) => (
-                  <ViewTransition
-                    enter={reduceMotion ? "none" : "project-filter-enter"}
-                    exit={reduceMotion ? "none" : "project-filter-exit"}
-                    key={project.name}
-                    update={reduceMotion ? "none" : "project-filter-move"}
-                  >
-                    <SecondaryProject
-                      index={projects.indexOf(project)}
-                      project={project}
-                    />
-                  </ViewTransition>
-                ))}
+                <ViewTransition
+                  enter={reduceMotion ? "none" : "project-filter-enter"}
+                  exit={reduceMotion ? "none" : "project-filter-exit"}
+                  key={project.name}
+                  update={reduceMotion ? "none" : "project-filter-move"}
+                >
+                  <SecondaryProject
+                    index={projects.indexOf(project)}
+                    onInspect={openInspector}
+                    project={project}
+                    total={projects.length}
+                  />
+                </ViewTransition>
+              ))}
             </div>
           </section>
         ) : null}
       </Container>
+
+      {/* Lazy / conditionally rendered Engineering Inspector */}
+      <Suspense fallback={null}>
+        <AnimatePresence>
+          {inspectingProject ? (
+            <EngineeringInspector
+              key="engineering-inspector"
+              activeTab={activeInspectorTab}
+              onClose={closeInspector}
+              onSelectProject={handleSelectProject}
+              onSelectTab={handleSelectTab}
+              project={inspectingProject}
+              triggerElement={triggerElement}
+            />
+          ) : null}
+        </AnimatePresence>
+      </Suspense>
     </section>
   );
 }

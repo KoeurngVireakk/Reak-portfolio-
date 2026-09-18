@@ -9,6 +9,7 @@ export type ArchitectureLayer = {
   role: string;
   boundary: string;
   evidence: string[];
+  demonstratedIn: Array<{ slug: string; name: string; shortName: string }>;
 };
 
 export const architectureLayers: ArchitectureLayer[] = [
@@ -19,6 +20,10 @@ export const architectureLayers: ArchitectureLayer[] = [
     role: "Client Presentation & Local State",
     boundary: "Untrusted Client Boundary",
     evidence: ["React 19 / TypeScript", "Tailwind UI Systems", "Native View Transitions", "WCAG 2.2 AA Compliance"],
+    demonstratedIn: [
+      { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+      { slug: "e-menu-saas", name: "E-Menu SaaS", shortName: "EM" },
+    ],
   },
   {
     short: "API",
@@ -27,6 +32,11 @@ export const architectureLayers: ArchitectureLayer[] = [
     role: "Application Logic & Mediation",
     boundary: "Authenticated Service Boundary",
     evidence: ["Spring Boot & ASP.NET Core", "REST Contract Validation", "Service Layer Isolation", "Idempotent Endpoints"],
+    demonstratedIn: [
+      { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+      { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+      { slug: "sale-management", name: "Sale Management System", shortName: "SM" },
+    ],
   },
   {
     short: "DATA",
@@ -34,7 +44,12 @@ export const architectureLayers: ArchitectureLayer[] = [
     detail: "Normalized relational schemas, ACID transactions, and deterministic migrations.",
     role: "Persistent Truth & Query Engine",
     boundary: "Encrypted Storage Tier",
-    evidence: ["PostgreSQL & MySQL & SQL Server", "ACID Transaction Isolation", "Flyway & EF Migrations", "Index Optimization"],
+    evidence: ["MySQL & SQL Server", "ACID Transaction Isolation", "Flyway & EF Migrations", "Index Optimization"],
+    demonstratedIn: [
+      { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+      { slug: "sale-management", name: "Sale Management System", shortName: "SM" },
+      { slug: "koupreng-einvitation", name: "Koupreng E-Invitation", shortName: "EI" },
+    ],
   },
   {
     short: "SEC",
@@ -43,6 +58,12 @@ export const architectureLayers: ArchitectureLayer[] = [
     role: "Enforcement & Audit Boundary",
     boundary: "Zero-Trust Enforcement Layer",
     evidence: ["Spring Security & ASP.NET Identity", "RBAC Policy Enforcement", "JWT Token Lifecycle", "Antiforgery & Rate Limiting"],
+    demonstratedIn: [
+      { slug: "loan-management", name: "Loan Management System", shortName: "LM" },
+      { slug: "sale-management", name: "Sale Management System", shortName: "SM" },
+      { slug: "krama", name: "KRAMA", shortName: "KR" },
+      { slug: "face-attendance-studio", name: "Face Attendance Studio", shortName: "FA" },
+    ],
   },
 ];
 
@@ -181,11 +202,30 @@ export function ArchitectureExplorer({ activeIndex, onSelectLayer }: Architectur
               ))}
             </ul>
           </div>
+
+          {/* Section 9: Capability -> Project Evidence */}
+          <div className="active-layer-projects">
+            <span className="layer-projects-kicker">DEMONSTRATED IN PROJECTS:</span>
+            <div className="layer-projects-tags">
+              {activeLayer.demonstratedIn.map((proj) => (
+                <a
+                  className="layer-project-chip"
+                  href={`#project-${proj.shortName.toLowerCase()}`}
+                  key={proj.slug}
+                  title={`View ${proj.name}`}
+                >
+                  <span className="proj-code">{proj.shortName}</span>
+                  <span className="proj-name">{proj.name}</span>
+                </a>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </AnimatePresence>
 
       <p className="sr-only" aria-live="polite">
-        {activeLayer.label} active: {activeLayer.detail}. Boundary: {activeLayer.boundary}.
+        {activeLayer.label} active: {activeLayer.detail}. Boundary: {activeLayer.boundary}. Demonstrated in:{" "}
+        {activeLayer.demonstratedIn.map((d) => d.name).join(", ")}.
       </p>
     </div>
   );
