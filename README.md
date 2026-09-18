@@ -1,6 +1,6 @@
 # Koeurng Vireak Portfolio
 
-A recruiter-focused developer portfolio built from Vireak's real projects and technical background. Portfolio V3 adds a restrained spatial layer without changing the evidence-first content model.
+A recruiter-focused developer portfolio built from Vireak's real projects and technical background. Portfolio V4 adds cinematic spatial engineering without changing the evidence-first content model.
 
 ## Design goals
 
@@ -9,7 +9,9 @@ A recruiter-focused developer portfolio built from Vireak's real projects and te
 - Evidence-driven project stories: architecture, security decisions, testing, project status, and public GitHub links where available.
 - Responsive, accessible, editorial dark-first UI with an intentional light mode and `prefers-reduced-motion` support.
 - Evidence-led project case studies covering problem, solution, role, architecture, security, testing, and status.
+- A layered CSS-3D portrait scene with grid, mesh, topology, and a reusable system-flow identity.
 - CSS-perspective product frames and subtle pointer interactions with complete static fallbacks.
+- Interactive capability architecture and a licensed monochrome technology rail.
 - Native-scroll featured-project storytelling with a simpler mobile composition.
 - Data-driven content in `src/data/portfolio.ts` so the portfolio can be updated without rewriting UI components.
 
@@ -22,16 +24,17 @@ A recruiter-focused developer portfolio built from Vireak's real projects and te
 - Motion for React
 - Lucide React
 - Self-hosted Manrope variable font
+- Simple Icons (CC0 brand SVG paths)
 
 ## Portfolio sections
 
-1. Hero
+1. Cinematic spatial hero
 2. Recruiter-focused profile facts
 3. About
 4. Capabilities / technology evidence
 5. Sticky, filterable engineering case studies
 6. Education + engineering journey
-7. Contact
+7. System-resolution contact
 
 ## Featured projects
 
@@ -68,7 +71,9 @@ src/data/portfolio.ts
 
 Update your name, role, contact details, skill areas, projects, and journey there.
 
-Each project also has a `presentation` value that selects its browser, desktop, phone/dashboard, dashboard, or POS frame. Add verified screenshots through the optional `media` field; the UI keeps an explicitly labeled placeholder until those assets exist.
+Each project also has a `presentation` value that selects its browser, desktop, phone/dashboard, dashboard, or POS frame, plus a restrained `accent` used by its product scene. Add verified screenshots through the optional `media` field; the UI keeps an explicitly labeled placeholder until those assets exist.
+
+The visual system and rationale are documented in `DESIGN.md`.
 
 ## Before publishing
 

@@ -1,4 +1,5 @@
-import avatarPhoto from "../components/photo/IMG_9318.JPG";
+import avatarPhoto from "../components/photo/IMG_9318-fallback.jpg";
+import avatarPhotoWebp from "../components/photo/IMG_9318.webp";
 
 export type ProjectCategory = "Web" | "Backend" | "Mobile" | "AI/CV" | "Security";
 export type ProjectPresentation = "browser" | "phone-dashboard" | "desktop" | "dashboard" | "pos";
@@ -32,6 +33,7 @@ export type Project = {
   repositoryLabel?: string;
   featured?: boolean;
   presentation: ProjectPresentation;
+  accent: string;
   media?: ProjectMedia;
 };
 
@@ -45,6 +47,7 @@ export const profile = {
   location: "Battambang, Cambodia",
   github: "https://github.com/KoeurngVireakk",
   avatar: avatarPhoto,
+  avatarWebp: avatarPhotoWebp,
 };
 
 export const facts = [
@@ -94,6 +97,7 @@ export const technologyRail = [
   "Python",
   "Docker",
   "Cloudflare",
+  "GitHub Actions",
 ];
 
 export const projects: Project[] = [
@@ -120,6 +124,7 @@ export const projects: Project[] = [
     testing: "Unit, backend, Playwright, build, and static-analysis foundations.",
     status: "Production-readiness phase",
     presentation: "browser",
+    accent: "#d7ba77",
     featured: true,
   },
   {
@@ -145,6 +150,7 @@ export const projects: Project[] = [
     testing: "Flutter, Functions, Firestore and Storage rules, plus emulator integration tests.",
     status: "University demo · private repository",
     presentation: "phone-dashboard",
+    accent: "#a85245",
     repositoryLabel: "Private repository",
     featured: true,
   },
@@ -171,6 +177,7 @@ export const projects: Project[] = [
     testing: "Doctor scripts, setup checks, demo mode, and automated tests are included.",
     status: "Public repository",
     presentation: "desktop",
+    accent: "#67d5c5",
     repository: "https://github.com/KoeurngVireakk/face_attendance_recognition",
     featured: true,
   },
@@ -196,6 +203,7 @@ export const projects: Project[] = [
     security: "Authenticated admin and payment data are deliberately excluded from offline caching.",
     status: "Public repository",
     presentation: "browser",
+    accent: "#e0a55c",
     repository: "https://github.com/KoeurngVireakk/e-menu-saas",
     featured: true,
   },
@@ -222,6 +230,7 @@ export const projects: Project[] = [
     testing: "CI verifies the application against an isolated MySQL service.",
     status: "Private repository",
     presentation: "dashboard",
+    accent: "#6a9ee8",
     repositoryLabel: "Private repository",
   },
   {
@@ -247,6 +256,7 @@ export const projects: Project[] = [
     testing: "GitHub Actions builds styles, verifies formatting, runs tests, and publishes artifacts.",
     status: "Private repository",
     presentation: "pos",
+    accent: "#59bbaa",
     repositoryLabel: "Private repository",
   },
 ];

@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { focusAreas, profile, technologyRail } from "../../data/portfolio";
+import { focusAreas, profile } from "../../data/portfolio";
 import { SectionHeading } from "../SectionHeading";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
+import { ArchitectureExplorer } from "../architecture/ArchitectureExplorer";
+import { TechnologyRail } from "../visual/TechnologyRail";
 
 export function About() {
+  const [activeCapability, setActiveCapability] = useState(0);
+
   return (
     <>
       <section className="section section-anchor about-section" id="about">
@@ -19,6 +24,11 @@ export function About() {
           </Reveal>
 
           <div className="about-layout">
+            <Reveal className="about-manifesto" aria-hidden="true">
+              <span>BUILD.</span>
+              <span>SECURE.</span>
+              <span>VERIFY.</span>
+            </Reveal>
             <Reveal className="about-statement">
               <p className="statement-lead">
                 I&apos;m <strong>Koeurng Vireak</strong>, a final-year Bachelor of Information Technology
@@ -74,39 +84,39 @@ export function About() {
             />
           </Reveal>
 
-          <div className="capability-list">
-            {focusAreas.map((area, index) => (
-              <Reveal className="capability-row" delay={index * 0.04} key={area.title}>
-                <span className="capability-number">{String(index + 1).padStart(2, "0")}</span>
-                <div className="capability-copy">
-                  <h3>{area.title}</h3>
-                  <p>{area.description}</p>
-                </div>
-                <div className="capability-evidence">
-                  <div className="capability-path" aria-hidden="true">
-                    <span>Input</span><i /><span>System</span><i /><span>Outcome</span>
+          <div className="capabilities-layout">
+            <div className="capability-list">
+              {focusAreas.map((area, index) => (
+                <Reveal
+                  className={`capability-row ${activeCapability === index ? "is-active" : ""}`}
+                  data-active={activeCapability === index}
+                  delay={index * 0.04}
+                  key={area.title}
+                  onFocus={() => setActiveCapability(index)}
+                  onMouseEnter={() => setActiveCapability(index)}
+                  tabIndex={0}
+                >
+                  <span className="capability-number">{String(index + 1).padStart(2, "0")}</span>
+                  <div className="capability-copy">
+                    <h3>{area.title}</h3>
+                    <p>{area.description}</p>
                   </div>
-                  <ul aria-label={`${area.title} technologies`}>
-                    {area.technologies.map((technology) => (
-                      <li key={technology}>{technology}</li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            ))}
+                  <div className="capability-evidence">
+                    <ul aria-label={`${area.title} technologies`}>
+                      {area.technologies.map((technology) => (
+                        <li key={technology}>{technology}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+            <Reveal className="architecture-explorer-wrap" delay={0.08}>
+              <ArchitectureExplorer activeIndex={activeCapability} />
+            </Reveal>
           </div>
 
-          <Reveal className="technology-rail-wrap" delay={0.08}>
-            <div className="technology-rail-label">
-              <span>Working stack</span>
-              <span>Selected technologies used across real projects</span>
-            </div>
-            <ul className="technology-rail" aria-label="Technology stack">
-              {technologyRail.map((technology) => (
-                <li key={technology}>{technology}</li>
-              ))}
-            </ul>
-          </Reveal>
+          <Reveal delay={0.08}><TechnologyRail /></Reveal>
         </Container>
       </section>
     </>

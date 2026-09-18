@@ -24,5 +24,5 @@
 - Density: comfortable
 - Motion: Silk restrained
 - Imagery/data role: real portrait and project evidence first; screenshots only when supplied
-- Signature move: native-scroll sticky project stories paired with project-specific CSS perspective frames
+- Signature move: a reusable UI → API → Data → Security flow moving from the spatial portrait through capabilities, projects, and contact
 - Locked: 2026-09-18

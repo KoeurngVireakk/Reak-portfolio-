@@ -39,7 +39,7 @@ function App() {
   }, [theme]);
 
   return (
-    <div className="site" data-theme={theme}>
+    <div className="site" data-theme={theme} data-styleseed-recipe="expressive-brand">
       <motion.div
         className="scroll-progress"
         style={{ scaleX: progressScale }}

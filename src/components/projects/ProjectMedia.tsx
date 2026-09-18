@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Project } from "../../data/portfolio";
 import { ProjectStack } from "../mockups/ProjectStack";
 import { Tilt } from "../motion/Tilt";
@@ -60,6 +61,7 @@ export function ProjectMedia({ project, index, compact = false }: ProjectMediaPr
   return (
     <figure
       className={`project-media project-media-${project.presentation} ${project.media ? "has-media" : "is-placeholder"}`}
+      style={{ "--project-accent": project.accent } as CSSProperties}
     >
       <Tilt className="project-media-tilt" maxTilt={2.25}>
         <ProjectStack

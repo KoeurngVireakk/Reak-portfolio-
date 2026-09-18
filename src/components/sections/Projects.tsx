@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { ArrowUpRight, Check, LockKeyhole } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { projects, type Project, type ProjectCategory } from "../../data/portfolio";
@@ -20,6 +20,10 @@ const categories: Array<"All" | ProjectCategory> = [
 
 function projectId(project: Project) {
   return `project-${project.shortName.toLowerCase()}`;
+}
+
+function projectAccent(project: Project) {
+  return { "--project-accent": project.accent } as CSSProperties;
 }
 
 type ProjectNarrativeProps = {
@@ -129,6 +133,7 @@ function FeaturedChapter({ project, index, onEnter }: FeaturedChapterProps) {
       initial={reduceMotion ? false : { opacity: 0.45, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={motionTokens.revealSoft}
+      style={projectAccent(project)}
     >
       <span className="featured-chapter-index" aria-hidden="true">
         {String(index + 1).padStart(2, "0")}
@@ -153,6 +158,7 @@ function SecondaryProject({ project, index }: { project: Project; index: number 
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? undefined : { opacity: 0, y: 12 }}
       transition={{ ...projectTransition, delay: reduceMotion ? 0 : Math.min(index * 0.04, 0.12) }}
+      style={projectAccent(project)}
     >
       <ProjectHeader project={project} />
       <div className="secondary-project-layout">
@@ -238,6 +244,7 @@ export function Projects() {
                       animate={projectDepth.center}
                       exit={reduceMotion ? undefined : projectDepth.exit}
                       transition={projectTransition}
+                      style={projectAccent(activeFeatured)}
                     >
                       <ProjectMedia
                         index={projects.indexOf(activeFeatured)}

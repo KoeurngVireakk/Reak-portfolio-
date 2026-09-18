@@ -5,6 +5,7 @@ import { interactionMotion, motionTokens } from "../../lib/motion";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
+import { ArchitectureFlow } from "../visual/ArchitectureFlow";
 
 export function Contact() {
   const reduceMotion = useReducedMotion();
@@ -15,6 +16,7 @@ export function Contact() {
         <Reveal className="contact-panel">
           <div>
             <span className="contact-index">Contact</span>
+            <ArchitectureFlow className="contact-system-flow" label="Engineering system resolving to contact" nodes={["UI", "API", "Data", "Contact"]} />
             <h2>Let&apos;s build software that holds up beyond the demo.</h2>
             <p>
               I&apos;m open to internship and junior opportunities where I can contribute to real

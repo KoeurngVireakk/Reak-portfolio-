@@ -1,21 +1,13 @@
-import { ArrowDown, ArrowUpRight, Mail, MapPin } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
 import { facts, profile } from "../../data/portfolio";
-import { heroDepth, heroItemVariants, interactionMotion, motionTokens, staggerSlow } from "../../lib/motion";
+import { heroItemVariants, interactionMotion, motionTokens, staggerSlow } from "../../lib/motion";
 import { CursorSpotlight } from "../motion/CursorSpotlight";
+import { HeadlineReveal } from "../motion/HeadlineReveal";
 import { Magnetic } from "../motion/Magnetic";
-import { Parallax } from "../motion/Parallax";
-import { Tilt } from "../motion/Tilt";
-
-const depthLabels = [
-  { label: "React", className: "depth-label-react" },
-  { label: "Spring Boot", className: "depth-label-spring" },
-  { label: "Backend engineering", className: "depth-label-backend" },
-  { label: "Application security", className: "depth-label-security" },
-  { label: "Final-year IT", className: "depth-label-student" },
-];
+import { HeroSpatialScene } from "../visual/HeroSpatialScene";
 
 export function Hero() {
   const reduceMotion = useReducedMotion();
@@ -39,10 +31,9 @@ export function Hero() {
             Koeurng Vireak · Battambang, Cambodia
           </motion.p>
 
-          <motion.h1 variants={heroItemVariants}>
-            Full-stack developer
-            <span>building systems with depth.</span>
-          </motion.h1>
+          <motion.div variants={heroItemVariants}>
+            <HeadlineReveal lines={["Full-stack developer", "building systems with depth."]} />
+          </motion.div>
 
           <motion.p className="hero-intro" variants={heroItemVariants}>
             Final-year Information Technology student focused on backend systems, secure application
@@ -89,60 +80,7 @@ export function Hero() {
           </motion.div>
         </motion.div>
 
-        <motion.div
-          className="portrait-column"
-          initial={reduceMotion ? false : "hidden"}
-          animate="visible"
-          variants={heroDepth}
-        >
-          <Parallax className="hero-visual-parallax" distance={18}>
-            <div className="hero-visual-shell">
-              <Tilt className="portrait-tilt" maxTilt={3}>
-                <div className="portrait-frame">
-                  <div className="portrait-index" aria-hidden="true">
-                    <span>PROFILE / SYSTEMS</span>
-                    <span>2026</span>
-                  </div>
-                  <img
-                    className="portrait"
-                    src={profile.avatar}
-                    alt="Portrait of Koeurng Vireak"
-                    decoding="async"
-                    fetchPriority="high"
-                    height="520"
-                    width="520"
-                  />
-                  <div className="portrait-caption">
-                    <span>
-                      <MapPin size={14} /> {profile.location}
-                    </span>
-                    <a href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}>
-                      <Mail size={14} /> Email
-                    </a>
-                  </div>
-                </div>
-              </Tilt>
-
-              <div className="hero-depth-labels" aria-hidden="true">
-                {depthLabels.map((item, index) => (
-                  <motion.span
-                    className={item.className}
-                    initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ ...motionTokens.revealSoft, delay: reduceMotion ? 0 : 0.32 + index * 0.06 }}
-                    key={item.label}
-                  >
-                    {item.label}
-                  </motion.span>
-                ))}
-              </div>
-
-              <div className="hero-system-axis" aria-hidden="true">
-                <span>UI</span><i /><span>API</span><i /><span>DATA</span><i /><span>SEC</span>
-              </div>
-            </div>
-          </Parallax>
-        </motion.div>
+        <div className="portrait-column"><HeroSpatialScene /></div>
       </Container>
 
       <Container className="fact-rail" aria-label="Profile facts">

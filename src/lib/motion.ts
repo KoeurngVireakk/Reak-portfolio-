@@ -19,6 +19,13 @@ export const springMagnetic = {
   mass: 0.45,
 };
 
+export const springSpatial = {
+  type: "spring" as const,
+  stiffness: 105,
+  damping: 24,
+  mass: 0.85,
+};
+
 export const revealTransition = {
   duration: 0.62,
   ease: [0.16, 1, 0.3, 1] as const,
@@ -30,7 +37,7 @@ export const revealSoftTransition = {
 };
 
 export const projectTransition = {
-  duration: 0.52,
+  duration: 0.42,
   ease: [0.16, 1, 0.3, 1] as const,
 };
 
@@ -41,9 +48,30 @@ export const interactionMotion = {
 };
 
 export const projectDepth = {
-  enter: { opacity: 0, scale: 0.985, rotateY: -1.5 },
+  enter: { opacity: 0, scale: 0.97, rotateY: -2, y: 18 },
   center: { opacity: 1, scale: 1, rotateY: 0 },
-  exit: { opacity: 0, scale: 0.99, rotateY: 1.5 },
+  exit: { opacity: 0, scale: 0.96, rotateY: 2, y: -18 },
+};
+
+export const revealMask = {
+  variants: {
+    hidden: { y: "112%", rotate: 1.5 },
+    visible: { y: "0%", rotate: 0 },
+  },
+  transition: {
+    duration: 0.7,
+    ease: [0.16, 1, 0.3, 1] as const,
+  },
+};
+
+export const heroSceneReveal = {
+  hidden: { opacity: 0, scale: 0.97, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.72, delay: 0.46, ease: [0.16, 1, 0.3, 1] as const },
+  },
 };
 
 export const reveal = {
@@ -99,7 +127,10 @@ export const motionTokens = {
   springSoft,
   springInteractive,
   springMagnetic,
+  springSpatial,
   heroDepth,
+  heroSceneReveal,
+  revealMask,
   projectTransition,
   interaction: interactionMotion,
   projectDepth,
