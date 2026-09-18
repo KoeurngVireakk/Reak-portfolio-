@@ -66,6 +66,13 @@ export function HeroSpatialScene() {
         <motion.div className="scene-layer scene-grid" style={{ x: gridX, y: gridY }} aria-hidden="true" />
         <motion.div className="scene-layer scene-mesh" style={{ x: meshX, y: meshY }} aria-hidden="true" />
         <div className="scene-layer scene-halo" aria-hidden="true" />
+
+        <div className="scene-orbit-system" aria-hidden="true">
+          <span className="scene-orbit scene-orbit-a"><i /><i /></span>
+          <span className="scene-orbit scene-orbit-b"><i /><i /></span>
+          <span className="scene-core" />
+        </div>
+
         <svg className="scene-layer scene-topology" viewBox="0 0 620 760" aria-hidden="true">
           <path d="M48 154 C168 78 246 188 352 116 S528 102 580 44" />
           <path d="M16 548 C122 438 228 594 330 492 S502 432 604 514" />
@@ -74,7 +81,7 @@ export function HeroSpatialScene() {
           <circle cx="330" cy="492" r="3" /><circle cx="558" cy="628" r="3" />
         </svg>
 
-        <div className="scene-coordinate scene-coordinate-top" aria-hidden="true">SYSTEM / PORTRAIT / 04</div>
+        <div className="scene-coordinate scene-coordinate-top" aria-hidden="true">SYSTEM / PORTRAIT / 05</div>
         <div className="scene-coordinate scene-coordinate-side" aria-hidden="true">11.5564° N · 104.9282° E</div>
 
         <div className="portrait-plane">
@@ -107,7 +114,7 @@ export function HeroSpatialScene() {
 
         <div className="scene-contact">
           <span><MapPin size={13} /> {profile.location}</span>
-          <a href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}><Mail size={13} /> Email</a>
+          <a href={"mailto:" + profile.email} aria-label={"Email " + profile.name}><Mail size={13} /> Email</a>
         </div>
       </motion.div>
     </motion.div>
