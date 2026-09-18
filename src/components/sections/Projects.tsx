@@ -27,10 +27,15 @@ const categories: Array<"All" | ProjectCategory> = [
 
 type ProjectFilter = (typeof categories)[number];
 
-function getCategoryFromUrl(): ProjectFilter {
-  if (typeof window === "undefined") return "All";
+function getCategoryFromUrl(): { category: ProjectFilter; invalid: boolean } {
+  if (typeof window === "undefined") return { category: "All", invalid: false };
   const requested = new URL(window.location.href).searchParams.get("work");
-  return categories.find((category) => category.toLowerCase() === requested?.toLowerCase()) ?? "All";
+  if (!requested) return { category: "All", invalid: false };
+
+  const category = categories.find((item) => item.toLowerCase() === requested.toLowerCase());
+  return category
+    ? { category, invalid: false }
+    : { category: "All", invalid: true };
 }
 
 function projectId(project: Project) {
@@ -181,7 +186,9 @@ function SecondaryProject({ project, index }: { project: Project; index: number 
 }
 
 export function Projects() {
-  const [activeCategory, setActiveCategory] = useState<ProjectFilter>(getCategoryFromUrl);
+  const [activeCategory, setActiveCategory] = useState<ProjectFilter>(
+    () => getCategoryFromUrl().category,
+  );
   const reduceMotion = useReducedMotion();
   const desktopStory = useMediaQuery("(min-width: 901px)");
 
@@ -209,9 +216,16 @@ export function Projects() {
 
   useEffect(() => {
     const restoreFilter = () => {
-      startTransition(() => setActiveCategory(getCategoryFromUrl()));
+      const { category, invalid } = getCategoryFromUrl();
+      if (invalid) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("work");
+        window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+      }
+      startTransition(() => setActiveCategory(category));
     };
 
+    restoreFilter();
     window.addEventListener("popstate", restoreFilter);
     return () => window.removeEventListener("popstate", restoreFilter);
   }, []);
@@ -262,7 +276,10 @@ export function Projects() {
               );
             })}
           </div>
-          <span aria-live="polite">{filteredProjects.length} projects</span>
+          <span aria-hidden="true">{filteredProjects.length} projects</span>
+          <span className="sr-only" aria-atomic="true" aria-live="polite">
+            {activeCategory === "All" ? "All categories" : activeCategory}: {filteredProjects.length} projects shown.
+          </span>
         </Reveal>
 
         {featuredProjects.length > 0 ? (

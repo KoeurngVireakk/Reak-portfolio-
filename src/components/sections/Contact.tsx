@@ -1,17 +1,26 @@
+import { useRef } from "react";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { profile } from "../../data/portfolio";
 import { interactionMotion, motionTokens } from "../../lib/motion";
+import { useContinuousMotion } from "../../lib/motionLifecycle";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
 import { ArchitectureFlow } from "../visual/ArchitectureFlow";
 
 export function Contact() {
-  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const { active: motionActive, reducedMotion: reduceMotion } = useContinuousMotion(sectionRef, 0.08);
 
   return (
-    <section className="section section-anchor contact-section" id="contact" tabIndex={-1}>
+    <section
+      className="section section-anchor contact-section"
+      data-motion-active={motionActive}
+      id="contact"
+      ref={sectionRef}
+      tabIndex={-1}
+    >
       <Container>
         <Reveal className="contact-panel">
           <div>

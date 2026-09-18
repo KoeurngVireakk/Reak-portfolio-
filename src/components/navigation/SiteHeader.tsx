@@ -11,7 +11,7 @@ const navItems = [
   { id: "contact", label: "Contact" },
 ];
 
-function navigateToSection(id: string) {
+function navigateToSection(id: string, updateHistory = true) {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const target = document.getElementById(id);
   if (!target) return;
@@ -22,8 +22,10 @@ function navigateToSection(id: string) {
     block: "start",
   });
 
-  if (window.location.hash !== `#${id}`) {
-    window.history.pushState(null, "", `#${id}`);
+  if (updateHistory && window.location.hash !== `#${id}`) {
+    const url = new URL(window.location.href);
+    url.hash = id;
+    window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
   }
 }
 
@@ -58,6 +60,16 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    function restoreSectionFromHistory() {
+      const id = window.location.hash.slice(1) || "home";
+      window.requestAnimationFrame(() => navigateToSection(id, false));
+    }
+
+    window.addEventListener("popstate", restoreSectionFromHistory);
+    return () => window.removeEventListener("popstate", restoreSectionFromHistory);
   }, []);
 
   useEffect(() => {
@@ -168,7 +180,14 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
             </motion.span>
           </AnimatePresence>
         </motion.button>
-        <a className="header-contact" href="#contact">
+        <a
+          className="header-contact"
+          href="#contact"
+          onClick={(event) => {
+            event.preventDefault();
+            handleNavigation("contact");
+          }}
+        >
           Contact <ArrowUpRight size={15} />
         </a>
         <button

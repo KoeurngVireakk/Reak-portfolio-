@@ -1,4 +1,62 @@
-/* React 19.3 View Transitions and motion fallbacks */
+/* Portfolio foundation: motion */
+
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1000;
+  height: 2px;
+  transform-origin: 0 50%;
+  background: var(--primary);
+}
+
+.magnetic {
+  display: inline-flex;
+}
+
+.tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.cursor-spotlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 18%, transparent), transparent 68%);
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+@keyframes mesh-breathe {
+  to { transform: scale(1.06) translate3d(1.5%, -1%, 0); opacity: 0.84; }
+}
+
+@keyframes topology-drift {
+  to { stroke-dashoffset: -110; }
+}
+
+@keyframes flow-pulse {
+  from { transform: translateX(-8px); }
+  to { transform: translateX(160px); }
+}
+
+@keyframes technology-rail {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes portrait-scan-transform {
+  0%, 100% { transform: translateY(0); opacity: 0; }
+  14%, 82% { opacity: 0.32; }
+  92% { transform: translateY(430px); opacity: 0; }
+}
+
+@keyframes contact-orbit {
+  to { transform: rotate(1turn); }
+}
 
 ::view-transition {
   pointer-events: none;
@@ -52,28 +110,4 @@
 @keyframes v5-project-exit {
   from { opacity: 1; transform: translateY(0) scale(1); }
   to { opacity: 0; transform: translateY(-6px) scale(0.99); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(*),
-  ::view-transition-new(*),
-  ::view-transition-group(*) {
-    animation-duration: 0s !important;
-    animation-delay: 0s !important;
-  }
-
-  .contact-orbit > i,
-  .portrait-scan {
-    animation: none !important;
-  }
-
-  .about-manifesto span,
-  .button svg,
-  .header-contact svg,
-  .text-link svg,
-  .inline-links a svg,
-  .project-footer a svg,
-  .contact-details a > svg:last-child {
-    transform: none !important;
-  }
 }

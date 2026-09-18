@@ -1,3 +1,16 @@
+export const motionDurations = {
+  feedback: 0.2,
+  state: 0.42,
+  editorial: 0.62,
+  spatial: 0.72,
+} as const;
+
+export const motionEasings = {
+  arrive: [0.16, 1, 0.3, 1],
+  soft: [0.22, 1, 0.36, 1],
+  leave: [0.4, 0, 1, 1],
+} as const;
+
 export const springSoft = {
   type: "spring" as const,
   stiffness: 150,
@@ -27,18 +40,18 @@ export const springSpatial = {
 };
 
 export const revealTransition = {
-  duration: 0.62,
-  ease: [0.16, 1, 0.3, 1] as const,
+  duration: motionDurations.editorial,
+  ease: motionEasings.arrive,
 };
 
 export const revealSoftTransition = {
   duration: 0.46,
-  ease: [0.22, 1, 0.36, 1] as const,
+  ease: motionEasings.soft,
 };
 
 export const projectTransition = {
-  duration: 0.42,
-  ease: [0.16, 1, 0.3, 1] as const,
+  duration: motionDurations.state,
+  ease: motionEasings.arrive,
 };
 
 export const interactionMotion = {
@@ -60,7 +73,7 @@ export const revealMask = {
   },
   transition: {
     duration: 0.7,
-    ease: [0.16, 1, 0.3, 1] as const,
+    ease: motionEasings.arrive,
   },
 };
 
@@ -70,7 +83,7 @@ export const heroSceneReveal = {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: 0.72, delay: 0.46, ease: [0.16, 1, 0.3, 1] as const },
+    transition: { duration: motionDurations.spatial, delay: 0.46, ease: motionEasings.arrive },
   },
 };
 
@@ -118,8 +131,8 @@ export const staggerSlow = {
 export const motionTokens = {
   silk: revealTransition,
   quick: {
-    duration: 0.2,
-    ease: [0.22, 1, 0.36, 1] as const,
+    duration: motionDurations.feedback,
+    ease: motionEasings.soft,
   },
   spring: springInteractive,
   reveal: revealTransition,
@@ -137,6 +150,13 @@ export const motionTokens = {
   staggerFast,
   staggerSlow,
 };
+
+export const motionLanguage = {
+  editorialArrival: revealTransition,
+  interfaceFeedback: motionTokens.quick,
+  stateContinuity: projectTransition,
+  spatialContinuity: springSpatial,
+} as const;
 
 export const revealVariants = reveal;
 export const staggerVariants = staggerFast;

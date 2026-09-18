@@ -3,15 +3,14 @@ import { Mail, MapPin } from "lucide-react";
 import {
   motion,
   useMotionValue,
-  useInView,
-  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from "motion/react";
 import { profile } from "../../data/portfolio";
 import { heroSceneReveal, springSpatial } from "../../lib/motion";
-import { useDocumentVisible, useFinePointer } from "../../lib/pointer";
+import { useContinuousMotion } from "../../lib/motionLifecycle";
+import { useFinePointer } from "../../lib/pointer";
 import { Tilt } from "../motion/Tilt";
 import { ArchitectureFlow } from "./ArchitectureFlow";
 
@@ -24,11 +23,8 @@ const depthLabels = [
 
 export function HeroSpatialScene() {
   const sceneRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
+  const { active: sceneActive, reducedMotion: reduceMotion } = useContinuousMotion(sceneRef, 0.08);
   const finePointer = useFinePointer();
-  const documentVisible = useDocumentVisible();
-  const inView = useInView(sceneRef, { amount: 0.08 });
-  const sceneActive = !reduceMotion && documentVisible && inView;
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
   const smoothX = useSpring(pointerX, springSpatial);

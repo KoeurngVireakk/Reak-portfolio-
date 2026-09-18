@@ -1,0 +1,74 @@
+/* Portfolio foundation: accessibility */
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-mesh,
+  .scene-topology,
+  .portrait-scan,
+  .architecture-flow-connector i,
+  .technology-rail-track {
+    animation: none !important;
+  }
+
+  .technology-rail-track {
+    width: auto;
+  }
+
+  .technology-rail-list {
+    flex-wrap: wrap;
+  }
+
+  .technology-rail-list[aria-hidden="true"] {
+    display: none;
+  }
+
+  .scene-grid,
+  .scene-mesh,
+  .hero-depth-labels,
+  .hero-scene-exit {
+    transform: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .scroll-progress {
+    display: none;
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+
+  .contact-orbit > i,
+  .portrait-scan {
+    animation: none !important;
+  }
+
+  .about-manifesto span,
+  .button svg,
+  .header-contact svg,
+  .text-link svg,
+  .inline-links a svg,
+  .project-footer a svg,
+  .contact-details a > svg:last-child {
+    transform: none !important;
+  }
+}

@@ -79,7 +79,7 @@ Each project also has a `presentation` value that selects its browser, desktop, 
 
 The visual system and rationale are documented in `DESIGN.md`.
 
-The V5 CSS is split by responsibility: `src/styles/core.css` preserves the proven V4 foundation, while `v5-foundation.css`, `v5-sections.css`, and `v5-motion.css` hold the new system, section, and transition layers.
+The CSS foundation is split by responsibility under `src/styles/`: tokens, base, typography, layout, reusable components, sections, motion, responsive behavior, accessibility, and utilities. Legacy V2–V4 override layers have been consolidated into those final owners.
 
 ## Before publishing
 

@@ -1,0 +1,70 @@
+/* Portfolio foundation: tokens */
+
+:root {
+  font-family: "Manrope Variable", "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --font-sans: "Manrope Variable", "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --background: #020503;
+  --surface: #0a0d0b;
+  --surface-raised: #101512;
+  --chrome: #141b18;
+  --foreground: #eff3f1;
+  --muted: #a1a6a3;
+  --subtle: #737c77;
+  --border: #323a36;
+  --border-soft: #202723;
+  --primary: #7ac39e;
+  --primary-hover: #91d3b1;
+  --primary-foreground: #020403;
+  --accent: #77cdc2;
+  --focus: #95c9ff;
+  --success: #73d083;
+  --warning: #e1ad57;
+  --danger: #ff968a;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.26);
+  --radius-control: 8px;
+  --radius-surface: 14px;
+  --container: 1240px;
+  --space-section: clamp(104px, 10vw, 168px);
+  --depth-near: 42px;
+  --depth-mid: 20px;
+  --depth-far: -36px;
+  --motion-duration-feedback: 180ms;
+  --motion-duration-state: 360ms;
+  --motion-duration-editorial: 620ms;
+  --motion-duration-spatial: 620ms;
+  --motion-ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-leave: cubic-bezier(0.4, 0, 1, 1);
+  --duration-direct: var(--motion-duration-feedback);
+  --duration-state: var(--motion-duration-state);
+  --duration-scene: var(--motion-duration-spatial);
+  --ease-arrive: var(--motion-ease-arrive);
+  --ease-leave: var(--motion-ease-leave);
+}
+
+html[data-theme="light"] {
+  background: #f4f3ee;
+}
+
+.site[data-theme="light"] {
+  --background: #f4f3ee;
+  --surface: #fcfbf7;
+  --surface-raised: #ffffff;
+  --chrome: #e8ece8;
+  --foreground: #151a17;
+  --muted: #56615b;
+  --subtle: #626c66;
+  --border: #c7cec9;
+  --border-soft: #dce1dd;
+  --primary: #176c4a;
+  --primary-hover: #115b3e;
+  --primary-foreground: #ffffff;
+  --accent: #176d67;
+  --focus: #145ea8;
+  --success: #176b45;
+  --warning: #805200;
+  --danger: #a12b22;
+  --shadow: 0 18px 50px rgba(31, 48, 39, 0.1);
+}

@@ -65,7 +65,7 @@ Semantic landmarks and headings are preserved. Controls meet 44 px touch targets
 - Spatial scenes use CSS transforms and existing Motion primitives; no WebGL runtime is shipped.
 - Desktop and mobile project media are mutually mounted rather than duplicated and hidden.
 - Media-query and visibility subscriptions are shared through external stores.
-- Below-fold sections use `content-visibility: auto`; project images are lazy-loaded with fixed dimensions.
+- Safe, non-sticky below-fold sections use `content-visibility: auto` with intrinsic-size fallbacks; sticky and scroll-observed sections remain fully rendered. Project images are lazy-loaded with fixed dimensions.
 - Hero and rail loops stop when they cannot contribute to the current viewport.
 
 ## Breakpoints

@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
-import { useInView, useReducedMotion } from "motion/react";
 import {
   siCloudflare,
   siDocker,
@@ -17,6 +16,7 @@ import {
   type SimpleIcon,
 } from "simple-icons";
 import { technologyRail } from "../../data/portfolio";
+import { useContinuousMotion } from "../../lib/motionLifecycle";
 import { BrandIcon } from "./BrandIcon";
 
 const icons: Record<string, SimpleIcon | undefined> = {
@@ -53,9 +53,8 @@ function TechnologyItems({ duplicate = false }: { duplicate?: boolean }) {
 export function TechnologyRail() {
   const railRef = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
-  const reduceMotion = useReducedMotion();
-  const inView = useInView(railRef, { amount: 0.1 });
-  const playing = !reduceMotion && !paused && inView;
+  const { active } = useContinuousMotion(railRef);
+  const playing = active && !paused;
 
   return (
     <div className="technology-rail-wrap" ref={railRef}>
