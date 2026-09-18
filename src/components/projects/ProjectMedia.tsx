@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import type { Project } from "../../data/portfolio";
+import { motionTokens } from "../../lib/motion";
 import { ProjectStack } from "../mockups/ProjectStack";
 import { Tilt } from "../motion/Tilt";
 
@@ -11,7 +13,7 @@ type ProjectMediaProps = {
 
 function MediaPlaceholder({ project, index, compact = false }: ProjectMediaProps) {
   return (
-    <div className={`media-placeholder-content ${compact ? "media-placeholder-compact" : ""}`}>
+    <div className={"media-placeholder-content " + (compact ? "media-placeholder-compact" : "")}>
       <div className="media-coordinate" aria-hidden="true">
         <span>P-{String(index + 1).padStart(2, "0")}</span>
         <span>{project.categories.join(" / ")}</span>
@@ -40,8 +42,9 @@ function ArchitecturePreview({ project }: { project: Project }) {
 }
 
 export function ProjectMedia({ project, index, compact = false }: ProjectMediaProps) {
+  const reduceMotion = useReducedMotion();
   const mediaContent = project.media ? (
-    <div className={`project-media-assets media-assets-${project.media.kind}`}>
+    <div className={"project-media-assets media-assets-" + project.media.kind}>
       {project.media.assets.map((asset) => (
         <img
           src={asset.src}
@@ -59,9 +62,13 @@ export function ProjectMedia({ project, index, compact = false }: ProjectMediaPr
   );
 
   return (
-    <figure
-      className={`project-media project-media-${project.presentation} ${project.media ? "has-media" : "is-placeholder"}`}
+    <motion.figure
+      className={"project-media project-media-" + project.presentation + " " + (project.media ? "has-media" : "is-placeholder")}
       style={{ "--project-accent": project.accent } as CSSProperties}
+      initial={reduceMotion ? false : { opacity: 0, y: 26, scale: 0.975, rotateX: 2.2 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+      viewport={{ once: true, amount: 0.22 }}
+      transition={motionTokens.reveal}
     >
       <Tilt className="project-media-tilt" maxTilt={2.25}>
         <ProjectStack
@@ -76,6 +83,6 @@ export function ProjectMedia({ project, index, compact = false }: ProjectMediaPr
         <span>{project.presentation.replace("phone-dashboard", "mobile + dashboard")}</span>
         <span>{project.media ? "Project media" : "Real screenshots pending"}</span>
       </figcaption>
-    </figure>
+    </motion.figure>
   );
 }
