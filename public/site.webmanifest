@@ -1,0 +1,15 @@
+{
+  "name": "Koeurng Vireak Portfolio",
+  "short_name": "Vireak",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020503",
+  "theme_color": "#020503",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

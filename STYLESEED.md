@@ -1,0 +1,28 @@
+# StyleSeed — Design Lock
+<!-- Selections persist here. This file cannot waive StyleSeed core invariants. -->
+- App domain: developer-tools
+- Surface: responsive-website
+- Surface adapter: product-ui
+- Page type: landing
+- Output grammar: expressive-marketing
+- Grammar path: built-in:engine/RULESETS.md
+- Grammar fallback: expressive-marketing
+- Reference confidence: n/a
+- Brand recipe: expressive-brand
+- Palette recipe: deep-lime-studio
+- Key color: #78E6B1
+- Palette character: calm
+- Palette mode: dark
+- Palette harmony: tonal
+- Surface temperature: neutral
+- Aesthetic profile: editorial
+- Skin: custom
+- Primary action: #78E6B1
+- Font: Manrope
+- Radius: restrained
+- Elevation: light=tonal grouping + hairlines · dark=tonal ramp + restrained shadow
+- Density: comfortable
+- Motion: Silk restrained
+- Imagery/data role: real portrait and project evidence first; screenshots only when supplied
+- Signature move: editorial case-study rows with numbered architecture rails and inspectable evidence
+- Locked: 2026-09-18

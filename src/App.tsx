@@ -1,0 +1,66 @@
+import { useEffect, useState } from "react";
+import { motion, useScroll, useSpring } from "motion/react";
+import { SiteFooter } from "./components/layout/SiteFooter";
+import { SiteHeader } from "./components/navigation/SiteHeader";
+import { About } from "./components/sections/About";
+import { Contact } from "./components/sections/Contact";
+import { Hero } from "./components/sections/Hero";
+import { Journey } from "./components/sections/Journey";
+import { Projects } from "./components/sections/Projects";
+
+type Theme = "dark" | "light";
+
+function getInitialTheme(): Theme {
+  if (typeof window === "undefined") return "dark";
+
+  const storedTheme = window.localStorage.getItem("portfolio-theme");
+  if (storedTheme === "dark" || storedTheme === "light") return storedTheme;
+
+  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function App() {
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
+  const { scrollYProgress } = useScroll();
+  const progressScale = useSpring(scrollYProgress, {
+    stiffness: 130,
+    damping: 28,
+    mass: 0.24,
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("portfolio-theme", theme);
+    document.documentElement.style.colorScheme = theme;
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
+  return (
+    <div className="site" data-theme={theme}>
+      <motion.div
+        className="scroll-progress"
+        style={{ scaleX: progressScale }}
+        aria-hidden="true"
+      />
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+
+      <SiteHeader
+        theme={theme}
+        onToggleTheme={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+      />
+
+      <main id="main">
+        <Hero />
+        <About />
+        <Projects />
+        <Journey />
+        <Contact />
+      </main>
+
+      <SiteFooter />
+    </div>
+  );
+}
+
+export default App;
