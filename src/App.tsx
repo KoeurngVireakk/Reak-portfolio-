@@ -7,6 +7,8 @@ import { Contact } from "./components/sections/Contact";
 import { Hero } from "./components/sections/Hero";
 import { Journey } from "./components/sections/Journey";
 import { Projects } from "./components/sections/Projects";
+import { AmbientSystem } from "./components/visual/AmbientSystem";
+import { SectionTransition } from "./components/visual/SectionTransition";
 import { springSoft } from "./lib/motion";
 
 type Theme = "dark" | "light";
@@ -40,6 +42,8 @@ function App() {
 
   return (
     <div className="site" data-theme={theme} data-styleseed-recipe="expressive-brand">
+      <AmbientSystem />
+
       <motion.div
         className="scroll-progress"
         style={{ scaleX: progressScale }}
@@ -56,9 +60,13 @@ function App() {
 
       <main id="main">
         <Hero />
+        <SectionTransition index="01" from="Identity" to="System" />
         <About />
+        <SectionTransition index="02" from="System" to="Proof" />
         <Projects />
+        <SectionTransition index="03" from="Proof" to="Trajectory" />
         <Journey />
+        <SectionTransition index="04" from="Trajectory" to="Contact" />
         <Contact />
       </main>
 
