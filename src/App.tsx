@@ -32,6 +32,9 @@ function App() {
     window.localStorage.setItem("portfolio-theme", theme);
     document.documentElement.style.colorScheme = theme;
     document.documentElement.dataset.theme = theme;
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#020503" : "#f4f3ee");
   }, [theme]);
 
   return (

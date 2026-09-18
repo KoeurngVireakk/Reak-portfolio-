@@ -8,15 +8,21 @@ type ProjectMediaProps = {
 export function ProjectMedia({ project, index }: ProjectMediaProps) {
   if (project.media) {
     return (
-      <figure className="project-media project-media-image">
-        <img
-          src={project.media.src}
-          alt={project.media.alt}
-          decoding="async"
-          loading="lazy"
-          height="900"
-          width="1440"
-        />
+      <figure className={`project-media project-media-image media-${project.media.kind}`}>
+        <div className="project-media-assets">
+          {project.media.assets.map((asset) => (
+            <img
+              src={asset.src}
+              alt={asset.alt}
+              decoding="async"
+              key={asset.src}
+              loading="lazy"
+              height="900"
+              width="1440"
+            />
+          ))}
+        </div>
+        <figcaption>{project.name} · project media</figcaption>
       </figure>
     );
   }

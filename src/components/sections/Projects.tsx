@@ -32,7 +32,7 @@ function ProjectCaseStudy({ project, index }: ProjectCaseStudyProps) {
   return (
     <motion.article
       className={`project-case ${project.featured ? "project-featured" : "project-secondary"}`}
-      layout
+      layout={!reduceMotion}
       initial={reduceMotion ? false : { opacity: 0, y: 22 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reduceMotion ? undefined : { opacity: 0, y: 12 }}
@@ -131,6 +131,7 @@ function ProjectCaseStudy({ project, index }: ProjectCaseStudyProps) {
 
 export function Projects() {
   const [activeCategory, setActiveCategory] = useState<(typeof categories)[number]>("All");
+  const reduceMotion = useReducedMotion();
 
   const filteredProjects = useMemo(
     () =>
@@ -145,7 +146,6 @@ export function Projects() {
       <Container>
         <Reveal>
           <SectionHeading
-            number="03"
             eyebrow="Selected work"
             title="Case studies over surface-level project cards."
             description="Each project foregrounds the problem, system architecture, security decisions, testing evidence, and honest current status."
@@ -165,7 +165,12 @@ export function Projects() {
                   onClick={() => setActiveCategory(category)}
                 >
                   {category}
-                  {active ? <motion.span className="filter-indicator" layoutId="filter-indicator" /> : null}
+                  {active ? (
+                    <motion.span
+                      className="filter-indicator"
+                      layoutId={reduceMotion ? undefined : "filter-indicator"}
+                    />
+                  ) : null}
                 </button>
               );
             })}
@@ -173,7 +178,7 @@ export function Projects() {
           <span aria-live="polite">{filteredProjects.length} projects</span>
         </Reveal>
 
-        <motion.div className="project-list" layout>
+        <motion.div className="project-list" layout={!reduceMotion}>
           <AnimatePresence initial={false} mode="popLayout">
             {filteredProjects.map((project, index) => (
               <ProjectCaseStudy index={index} key={project.name} project={project} />

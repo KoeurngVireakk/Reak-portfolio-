@@ -9,7 +9,6 @@ export function Journey() {
       <Container>
         <Reveal>
           <SectionHeading
-            number="04"
             eyebrow="Engineering journey"
             title="Progression without invented experience."
             description="A concise record of education, project depth, and the engineering direction I am actively developing."

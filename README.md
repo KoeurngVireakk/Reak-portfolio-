@@ -7,7 +7,8 @@ A recruiter-focused developer portfolio built from Vireak's real projects and te
 - Product-first presentation inspired by modern technical portfolios, without copying another developer's branding or claims.
 - No fabricated years of experience, clients, or proficiency percentages.
 - Evidence-driven project cards: architecture, security decisions, testing, project status, and public GitHub links where available.
-- Responsive, accessible, dark-first UI with light mode and `prefers-reduced-motion` support.
+- Responsive, accessible, editorial dark-first UI with an intentional light mode and `prefers-reduced-motion` support.
+- Evidence-led project case studies covering problem, solution, role, architecture, security, testing, and status.
 - Data-driven content in `src/data/portfolio.ts` so the portfolio can be updated without rewriting UI components.
 
 ## Stack
@@ -18,14 +19,15 @@ A recruiter-focused developer portfolio built from Vireak's real projects and te
 - Tailwind CSS 4 using `@tailwindcss/vite`
 - Motion for React
 - Lucide React
+- Self-hosted Manrope variable font
 
 ## Portfolio sections
 
 1. Hero
-2. Real portfolio facts
+2. Recruiter-focused profile facts
 3. About
 4. Capabilities / technology evidence
-5. Filterable project showcase
+5. Filterable engineering case studies
 6. Education + engineering journey
 7. Contact
 

@@ -14,7 +14,7 @@ export function Contact() {
       <Container>
         <Reveal className="contact-panel">
           <div>
-            <span className="contact-index">05 / Contact</span>
+            <span className="contact-index">Contact</span>
             <h2>Let&apos;s build software that holds up beyond the demo.</h2>
             <p>
               I&apos;m open to internship and junior opportunities where I can contribute to real

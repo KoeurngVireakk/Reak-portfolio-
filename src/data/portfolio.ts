@@ -1,8 +1,13 @@
 export type ProjectCategory = "Web" | "Backend" | "Mobile" | "AI/CV" | "Security";
 
-export type ProjectMedia = {
+export type ProjectMediaAsset = {
   src: string;
   alt: string;
+};
+
+export type ProjectMedia = {
+  kind: "desktop" | "mobile" | "dashboard" | "gallery";
+  assets: ProjectMediaAsset[];
 };
 
 export type Project = {

@@ -12,7 +12,6 @@ export function About() {
         <Container>
           <Reveal>
             <SectionHeading
-              number="01"
               eyebrow="Profile"
               title="Engineering the whole system, not only the interface."
               description="I care about the connection between product UI, APIs, data, authorization, testing, and delivery."
@@ -69,7 +68,6 @@ export function About() {
         <Container>
           <Reveal>
             <SectionHeading
-              number="02"
               eyebrow="Capabilities"
               title="Technical range, grounded in project evidence."
               description="No percentages or inflated proficiency scores—only the technologies and engineering decisions demonstrated across real projects."

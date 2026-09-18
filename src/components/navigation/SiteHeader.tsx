@@ -103,7 +103,12 @@ export function SiteHeader({ theme, onToggleTheme }: SiteHeaderProps) {
               }}
             >
               {item.label}
-              {active ? <motion.span className="nav-indicator" layoutId="desktop-nav-indicator" /> : null}
+              {active ? (
+                <motion.span
+                  className="nav-indicator"
+                  layoutId={reduceMotion ? undefined : "desktop-nav-indicator"}
+                />
+              ) : null}
             </a>
           );
         })}
