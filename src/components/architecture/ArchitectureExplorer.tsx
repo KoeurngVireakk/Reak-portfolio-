@@ -203,22 +203,10 @@ export function ArchitectureExplorer({ activeIndex, onSelectLayer }: Architectur
             </ul>
           </div>
 
-          {/* Section 9: Capability -> Project Evidence */}
-          <div className="active-layer-projects">
-            <span className="layer-projects-kicker">DEMONSTRATED IN PROJECTS:</span>
-            <div className="layer-projects-tags">
-              {activeLayer.demonstratedIn.map((proj) => (
-                <a
-                  className="layer-project-chip"
-                  href={`#project-${proj.shortName.toLowerCase()}`}
-                  key={proj.slug}
-                  title={`View ${proj.name}`}
-                >
-                  <span className="proj-code">{proj.shortName}</span>
-                  <span className="proj-name">{proj.name}</span>
-                </a>
-              ))}
-            </div>
+          <div className="active-layer-status">
+            <span className="layer-status-text">
+              Verified across {activeLayer.demonstratedIn.length} system implementations.
+            </span>
           </div>
         </motion.div>
       </AnimatePresence>

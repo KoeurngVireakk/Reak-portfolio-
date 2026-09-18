@@ -3427,524 +3427,37 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. How I Work: 5-Stage Engineering Methodology
+   1. Architecture Explorer Quiet Evidence Status
    -------------------------------------------------------------------------- */
-.how-i-work-wrapper {
-  margin-top: 52px;
-  width: 100%;
-}
-
-.how-i-work-container {
-  border: 1px solid var(--border-soft);
-  background: var(--card);
-  border-radius: 6px;
-  padding: 32px 36px 36px;
-  position: relative;
-  overflow: hidden;
-}
-
-.how-i-work-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--primary) 0%, transparent 60%);
-}
-
-.how-i-work-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
-  border-bottom: 1px solid var(--border-soft);
-  padding-bottom: 24px;
-  margin-bottom: 28px;
-}
-
-.how-i-work-kicker {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--primary);
-  font-weight: 700;
-  display: block;
-  margin-bottom: 6px;
-}
-
-.how-i-work-header h3 {
-  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin: 0 0 6px;
-  color: var(--foreground);
-}
-
-.how-i-work-header p {
-  font-size: 14px;
-  color: var(--muted);
-  margin: 0;
-  max-width: 580px;
-  line-height: 1.5;
-}
-
-.how-i-work-badge {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 5px 10px;
-  border: 1px solid var(--border-soft);
-  border-radius: 4px;
-  color: var(--muted);
-  background: rgba(255, 255, 255, 0.02);
-  white-space: nowrap;
-}
-
-.how-i-work-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
-}
-
-.how-i-work-card {
-  border: 1px solid var(--border-soft);
-  background: rgba(255, 255, 255, 0.015);
-  border-radius: 4px;
-  padding: 20px 18px;
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.how-i-work-card:hover {
-  border-color: color-mix(in srgb, var(--primary) 35%, var(--border-soft));
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.stage-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.stage-step {
-  font-family: var(--font-mono);
-  font-size: 15px;
-  font-weight: 750;
-  color: var(--primary);
-  letter-spacing: -0.02em;
-}
-
-.stage-tag {
-  font-family: var(--font-mono);
-  font-size: 8.5px;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-}
-
-.how-i-work-card h4 {
-  font-size: 14.5px;
-  font-weight: 700;
-  color: var(--foreground);
-  margin: 0 0 8px;
-  line-height: 1.35;
-}
-
-.stage-summary {
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--muted);
-  margin: 0 0 16px;
-  flex: 1 0 auto;
-}
-
-.stage-evidence {
-  border-top: 1px solid var(--border-soft);
-  padding-top: 12px;
-  margin-top: auto;
-}
-
-.evidence-caption {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  color: var(--primary);
-  font-weight: 700;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.stage-evidence p {
-  font-size: 11.5px;
-  line-height: 1.45;
-  color: var(--foreground);
-  margin: 0;
-  opacity: 0.88;
-}
-
-/* --------------------------------------------------------------------------
-   2. Recruiter Scan Refinements
-   -------------------------------------------------------------------------- */
-.dossier-status-badge {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #55cca8;
-  background: rgba(85, 204, 168, 0.1);
-  border: 1px solid rgba(85, 204, 168, 0.25);
-  padding: 3px 7px;
-  border-radius: 3px;
-  font-weight: 600;
-}
-
-/* --------------------------------------------------------------------------
-   3. Capability -> Demonstrated Projects Chips
-   -------------------------------------------------------------------------- */
-.capability-demonstrated-group {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border-soft);
-}
-
-.demonstrated-label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  color: var(--primary);
-  font-weight: 700;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.demonstrated-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.demonstrated-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  padding: 4px 9px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-soft);
-  border-radius: 4px;
-  color: var(--foreground);
-  text-decoration: none;
-}
-
-.chip-code {
-  color: var(--primary);
-  font-weight: 700;
-}
-
-.chip-name {
-  color: var(--muted);
-}
-
-/* --------------------------------------------------------------------------
-   4. Architecture Explorer Layer Demonstrated Chips
-   -------------------------------------------------------------------------- */
-.active-layer-projects {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-soft);
-}
-
-.layer-projects-kicker {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  color: var(--primary);
-  font-weight: 700;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.layer-projects-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.layer-project-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-soft);
-  border-radius: 4px;
-  color: var(--foreground);
-  text-decoration: none;
-  transition: border-color 0.18s ease, background-color 0.18s ease;
-}
-
-.layer-project-chip:hover {
-  border-color: var(--primary);
-  background: rgba(215, 186, 119, 0.08);
-}
-
-.layer-project-chip .proj-code {
-  color: var(--primary);
-  font-weight: 750;
-}
-
-.layer-project-chip .proj-name {
-  color: var(--muted);
-}
-
-/* --------------------------------------------------------------------------
-   5. IT Foundations Lab & Practical Evidence Additions
-   -------------------------------------------------------------------------- */
-.foundation-meta-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.foundation-evidence-type {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: 3px;
-  background: rgba(103, 213, 197, 0.1);
-  border: 1px solid rgba(103, 213, 197, 0.28);
-  color: #67d5c5;
-  font-weight: 600;
-}
-
-.foundation-context {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--primary);
-  margin: 0 0 6px;
-}
-
-.foundation-description {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--muted);
-  margin: 0;
-}
-
-.foundation-notes-block {
-  border-top: 1px solid var(--border-soft);
-  padding-top: 12px;
-  margin-top: 14px;
-}
-
-.foundation-notes-kicker,
-.foundation-skills-kicker {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.09em;
-  color: var(--muted);
-  font-weight: 700;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.foundation-notes-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.foundation-notes-list li {
-  font-size: 12px;
-  line-height: 1.45;
-  color: var(--foreground);
-  opacity: 0.85;
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-}
-
-.foundation-notes-list .note-bullet {
-  color: var(--primary);
-  font-size: 10px;
-  line-height: 1.45;
-}
-
-.foundation-skills-block {
-  border-top: 1px solid var(--border-soft);
-  padding-top: 12px;
-  margin-top: 14px;
-}
-
-/* --------------------------------------------------------------------------
-   6. TechnologyRail Interactive Evidence Additions
-   -------------------------------------------------------------------------- */
-.technology-rail-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--muted);
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.technology-rail-btn:hover {
-  color: var(--foreground);
-  background: rgba(255, 255, 255, 0.03);
-  border-color: var(--border-soft);
-}
-
-.technology-rail-btn.is-selected {
-  color: var(--foreground);
-  background: rgba(215, 186, 119, 0.08);
-  border-color: var(--primary);
-}
-
-.technology-rail-btn.has-evidence .evidence-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--primary);
-  margin-left: 2px;
-}
-
-.technology-evidence-drawer {
+.active-layer-status {
   margin-top: 16px;
-  border: 1px solid var(--border-soft);
-  background: var(--card);
-  border-radius: 4px;
-  padding: 16px 20px;
-  position: relative;
-  animation: drawer-fade-in 0.22s ease-out;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
 }
 
-@keyframes drawer-fade-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.drawer-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  border-bottom: 1px solid var(--border-soft);
-  padding-bottom: 10px;
-  margin-bottom: 12px;
-}
-
-.drawer-title-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.drawer-icon {
-  color: var(--primary);
-}
-
-.drawer-kicker {
+.layer-status-text {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  letter-spacing: 0.04em;
   color: var(--muted);
-}
-
-.drawer-tech-name {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--primary);
-  font-weight: 700;
-}
-
-.drawer-close-btn {
-  background: transparent;
-  border: 0;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.drawer-close-btn:hover {
-  color: var(--foreground);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.drawer-project-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.drawer-project-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border-soft);
-  border-radius: 4px;
-  text-decoration: none;
-  color: var(--foreground);
-  font-size: 12px;
-  transition: all 0.18s ease;
-}
-
-.drawer-project-link:hover {
-  border-color: var(--primary);
-  background: rgba(215, 186, 119, 0.06);
-}
-
-.drawer-proj-badge {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.drawer-proj-title {
-  color: var(--foreground);
-  font-weight: 500;
-}
-
-.drawer-proj-arrow {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.drawer-empty-text {
-  font-size: 12.5px;
-  color: var(--muted);
-  margin: 0;
+  display: block;
 }
 
 /* --------------------------------------------------------------------------
-   7. Compact Project Index in Projects Section
+   2. IT Foundations Single Integrity Footnote
+   -------------------------------------------------------------------------- */
+.it-foundations-integrity-note {
+  margin: 22px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  opacity: 0.72;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   3. Compact Project Index in Projects Section
    -------------------------------------------------------------------------- */
 .projects-compact-index {
   display: flex;
@@ -4535,6 +4048,62 @@ html.inspector-open {
   border: 1px solid var(--border-soft);
   border-radius: 3px;
   color: var(--foreground);
+}
+
+.pane-methodology-block {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.pane-methodology-block h4 {
+  font-size: 12.5px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+
+.inspector-methodology-strip {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inspector-methodology-strip li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+}
+
+.methodology-step-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--project-accent, var(--primary));
+  padding-top: 1px;
+}
+
+.methodology-step-copy strong {
+  font-size: 12.5px;
+  color: var(--foreground);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.methodology-step-copy p {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.45;
 }
 
 .pane-repo-action {

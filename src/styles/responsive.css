@@ -847,31 +847,12 @@
    Phase 5 Responsive Extensions
    -------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
-  .how-i-work-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   .engineering-inspector-panel {
     max-width: 580px;
   }
 }
 
 @media (max-width: 768px) {
-  .how-i-work-container {
-    padding: 24px 20px 28px;
-  }
-
-  .how-i-work-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-  }
-
-  .how-i-work-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
   .engineering-inspector-panel {
     max-width: 100vw;
     width: 100vw;
@@ -968,20 +949,5 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
-  }
-
-  .foundation-meta-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-
-  .drawer-project-chips {
-    flex-direction: column;
-  }
-
-  .drawer-project-link {
-    width: 100%;
-    justify-content: space-between;
   }
 }

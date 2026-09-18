@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from "motion/react";
 import {
   education,
   focusAreas,
-  howIWork,
   itFoundations,
   languages,
   professionalIdentity,
@@ -49,6 +48,12 @@ export function About() {
           />
 
           <div className="about-layout">
+            <Reveal className="about-manifesto" aria-hidden="true">
+              <span>BUILD.</span>
+              <span>SECURE.</span>
+              <span>VERIFY.</span>
+            </Reveal>
+
             <Reveal className="about-statement">
               <blockquote className="about-editorial-quote">
                 &ldquo;Clean architecture matters more than flashy demos — verifiable systems built from database transactions to responsive client states.&rdquo;
@@ -89,7 +94,6 @@ export function About() {
             <Reveal className="about-notes recruiter-dossier" delay={0.08}>
               <div className="dossier-kicker">
                 <span>RECRUITER SCAN // 30-SEC PROFILE</span>
-                <span className="dossier-status-badge">Available for Internship & Junior Roles</span>
               </div>
 
               <div className="dossier-entry">
@@ -99,15 +103,15 @@ export function About() {
               </div>
 
               <div className="dossier-entry">
-                <span>Target Engineering Directions</span>
+                <span>Career Direction</span>
                 <strong>{professionalIdentity.directions.slice(0, 2).join(" · ")}</strong>
                 <p>{professionalIdentity.directions.slice(2).join(" · ")}</p>
               </div>
 
               <div className="dossier-entry">
-                <span>Location & Availability</span>
+                <span>Location</span>
                 <strong>{profile.location}</strong>
-                <p>Ready for on-site Battambang, remote, or relocation opportunities</p>
+                <p>Available for internship & junior engineering opportunities</p>
               </div>
 
               <div className="dossier-entry">
@@ -121,43 +125,12 @@ export function About() {
               </div>
 
               <div className="dossier-entry">
-                <span>Working Principles</span>
+                <span>Working Style</span>
                 <strong>{workingPrinciples[0].title} · {workingPrinciples[1].title}</strong>
                 <p>{workingPrinciples[2].title} & {workingPrinciples[3].title.toLowerCase()}</p>
               </div>
             </Reveal>
           </div>
-
-          {/* Section 12: How I Work - Concise 5-Step Engineering Methodology */}
-          <Reveal className="how-i-work-wrapper" delay={0.08}>
-            <div className="how-i-work-container">
-              <div className="how-i-work-header">
-                <div>
-                  <span className="how-i-work-kicker">DISCIPLINED EXECUTION // HOW I WORK</span>
-                  <h3>Engineering Methodology</h3>
-                  <p>A consistent 5-stage lifecycle applied across full-stack systems and technical projects.</p>
-                </div>
-                <div className="how-i-work-badge" aria-hidden="true">SYSTEMS MANUAL PROCESS</div>
-              </div>
-
-              <div className="how-i-work-grid">
-                {howIWork.map((stage) => (
-                  <div className="how-i-work-card" key={stage.step}>
-                    <div className="stage-top">
-                      <span className="stage-step">{stage.step}</span>
-                      <span className="stage-tag">PHASE</span>
-                    </div>
-                    <h4>{stage.title}</h4>
-                    <p className="stage-summary">{stage.summary}</p>
-                    <div className="stage-evidence">
-                      <span className="evidence-caption">VERIFIED OUTPUT:</span>
-                      <p>{stage.evidence}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
         </Container>
       </section>
 
@@ -212,19 +185,6 @@ export function About() {
                       ))}
                     </ul>
                   </div>
-
-                  {/* Section 9: Capability -> Project Evidence connection */}
-                  <div className="capability-demonstrated-group">
-                    <span className="demonstrated-label">DEMONSTRATED IN:</span>
-                    <div className="demonstrated-chips">
-                      {area.demonstratedProjects.map((p) => (
-                        <span className="demonstrated-chip" key={p.slug}>
-                          <span className="chip-code">{p.shortName}</span>
-                          <span className="chip-name">{p.name}</span>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
                 </motion.button>
               ))}
             </div>
@@ -237,7 +197,6 @@ export function About() {
             </Reveal>
           </div>
 
-          {/* Section 11: IT Foundations with honest academic/lab evidence labels */}
           <Reveal className="it-foundations-wrap" delay={0.08}>
             <div className="it-foundations-panel">
               <div className="it-foundations-header">
@@ -246,48 +205,32 @@ export function About() {
                   <h3>Foundational IT, Network & System Competencies</h3>
                   <p>Practical laboratory and academic training supporting production-minded development.</p>
                 </div>
-                <span className="it-foundations-badge">ACADEMIC & PRACTICAL TRAINING (NON-EMPLOYMENT)</span>
+                <span className="it-foundations-badge">ACADEMIC & PRACTICAL TRAINING</span>
               </div>
 
               <div className="it-foundations-grid">
                 {itFoundations.map((foundation) => (
                   <div className="it-foundation-card" key={foundation.domain}>
                     <div className="foundation-card-head">
-                      <div className="foundation-meta-row">
-                        <span className="foundation-domain-tag">DOMAIN // {foundation.domain}</span>
-                        <span className="foundation-evidence-type">{foundation.evidenceType}</span>
-                      </div>
+                      <span className="foundation-domain-tag">DOMAIN // {foundation.domain}</span>
                       <h4>{foundation.title}</h4>
-                      <p className="foundation-context">{foundation.evidenceContext}</p>
-                      <p className="foundation-description">{foundation.description}</p>
+                      <p>{foundation.description}</p>
                     </div>
-
-                    <div className="foundation-notes-block">
-                      <span className="foundation-notes-kicker">LAB & PRACTICAL EXERCISES:</span>
-                      <ul className="foundation-notes-list">
-                        {foundation.evidenceNotes.map((note) => (
-                          <li key={note}>
-                            <span className="note-bullet" aria-hidden="true">▪</span>
-                            <span>{note}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className="foundation-skills-block">
-                      <span className="foundation-skills-kicker">COMPETENCY CHECKLIST:</span>
-                      <ul className="foundation-skills-list" aria-label={`${foundation.title} competencies`}>
-                        {foundation.skills.map((skill) => (
-                          <li key={skill}>
-                            <Check size={13} aria-hidden="true" />
-                            <span>{skill}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <ul className="foundation-skills-list" aria-label={`${foundation.title} competencies`}>
+                      {foundation.skills.map((skill) => (
+                        <li key={skill}>
+                          <Check size={13} aria-hidden="true" />
+                          <span>{skill}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
+
+              <p className="it-foundations-integrity-note">
+                Academic & practical laboratory training — non-employment experience.
+              </p>
             </div>
           </Reveal>
 

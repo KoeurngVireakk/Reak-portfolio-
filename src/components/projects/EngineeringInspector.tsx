@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import {
+  howIWork,
   projects,
   type Project,
 } from "../../data/portfolio";
@@ -355,6 +356,21 @@ export function EngineeringInspector({
                         <li key={tech}>{tech}</li>
                       ))}
                     </ul>
+                  </div>
+
+                  <div className="pane-methodology-block">
+                    <h4>Engineering Methodology</h4>
+                    <ol className="inspector-methodology-strip" aria-label="Engineering execution lifecycle">
+                      {howIWork.map((stage) => (
+                        <li key={stage.step} className="methodology-step-pill">
+                          <span className="methodology-step-num">{stage.step}</span>
+                          <div className="methodology-step-copy">
+                            <strong>{stage.title}</strong>
+                            <p>{stage.summary}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
                   </div>
 
                   {project.repository ? (
