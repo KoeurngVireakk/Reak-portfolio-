@@ -519,7 +519,7 @@ summary:focus-visible {
   aspect-ratio: 0.9;
   background: var(--chrome);
   object-fit: cover;
-  object-position: center;
+  object-position: center 25%;
 }
 
 .portrait-caption {

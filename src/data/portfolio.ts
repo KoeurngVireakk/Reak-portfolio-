@@ -1,3 +1,5 @@
+import avatarPhoto from "../components/photo/IMG_9318.JPG";
+
 export type ProjectCategory = "Web" | "Backend" | "Mobile" | "AI/CV" | "Security";
 export type ProjectPresentation = "browser" | "phone-dashboard" | "desktop" | "dashboard" | "pos";
 
@@ -42,7 +44,7 @@ export const profile = {
   email: "koeurngvireak@bb.bbu.edu.kh",
   location: "Battambang, Cambodia",
   github: "https://github.com/KoeurngVireakk",
-  avatar: "https://avatars.githubusercontent.com/u/281500662?v=4",
+  avatar: avatarPhoto,
 };
 
 export const facts = [
