@@ -50,7 +50,7 @@ export function About() {
           />
 
           <div className="about-layout">
-            <Reveal className="about-manifesto" aria-hidden="true">
+            <Reveal className="about-manifesto" variant="structural" aria-hidden="true">
               <span>BUILD.</span>
               <span>SECURE.</span>
               <span>VERIFY.</span>
@@ -93,7 +93,7 @@ export function About() {
               </div>
             </Reveal>
 
-            <Reveal className="about-notes recruiter-dossier" delay={0.08}>
+            <Reveal className="about-notes recruiter-dossier" delay={0.08} variant="system">
               <div className="dossier-kicker">
                 <span>RECRUITER SCAN // 30-SEC PROFILE</span>
               </div>
@@ -191,7 +191,7 @@ export function About() {
               ))}
             </div>
 
-            <Reveal className="architecture-explorer-wrap" delay={0.08}>
+            <Reveal className="architecture-explorer-wrap" delay={0.08} variant="system">
               <ArchitectureExplorer
                 activeIndex={activeCapability}
                 onSelectLayer={setActiveCapability}
@@ -199,7 +199,7 @@ export function About() {
             </Reveal>
           </div>
 
-          <Reveal className="it-foundations-wrap" delay={0.08}>
+          <Reveal className="it-foundations-wrap" delay={0.08} variant="structural">
             <div className="it-foundations-panel">
               <div className="it-foundations-header">
                 <div>
@@ -236,7 +236,7 @@ export function About() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.08}><TechnologyRail /></Reveal>
+          <Reveal delay={0.08} variant="media"><TechnologyRail /></Reveal>
         </Container>
       </section>
     </>

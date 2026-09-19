@@ -239,15 +239,15 @@ export function EngineeringInspector({
         type="button"
       />
 
-      {/* Slide-in inspector panel */}
+      {/* Spatially connected inspector surface */}
       <motion.div
         className="engineering-inspector-panel"
-        exit={reduceMotion ? { opacity: 0 } : { x: "100%", opacity: 0.8 }}
-        initial={reduceMotion ? { opacity: 0 } : { x: "100%", opacity: 1 }}
-        animate={reduceMotion ? { opacity: 1 } : { x: 0, opacity: 1 }}
+        exit={reduceMotion ? { opacity: 0 } : { x: 24, opacity: 0, scale: 0.99 }}
+        initial={reduceMotion ? { opacity: 0 } : { x: 36, opacity: 0, scale: 0.985 }}
+        animate={reduceMotion ? { opacity: 1 } : { x: 0, opacity: 1, scale: 1 }}
         ref={panelRef}
         role="document"
-        transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: reduceMotion ? 0 : 0.34, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Panel Header */}
         <div className="inspector-header">
@@ -272,61 +272,44 @@ export function EngineeringInspector({
             </button>
           </div>
 
-          <div className="inspector-title-block">
-            <h2 id="inspector-heading" className="inspector-title">
-              {project.name}
-            </h2>
-            <p className="inspector-role-kicker">{project.role}</p>
-            <p className="inspector-tagline">{project.tagline}</p>
-          </div>
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="inspector-title-block"
+              exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 5 }}
+              key={project.slug}
+              transition={{ duration: reduceMotion ? 0 : 0.24 }}
+            >
+              <h2 id="inspector-heading" className="inspector-title">
+                {project.name}
+              </h2>
+              <p className="inspector-role-kicker">{project.role}</p>
+              <p className="inspector-tagline">{project.tagline}</p>
+            </motion.div>
+          </AnimatePresence>
 
-          {/* Quick Project Switcher Index */}
-          <div className="inspector-nav-bar" aria-label="Quick project index">
-            <span className="inspector-nav-kicker">INDEX:</span>
-
-            {/* Desktop 6-project button row */}
-            <div className="inspector-nav-links desktop-only-flex">
-              {projects.map((p, idx) => {
-                const isSelected = p.slug === project.slug;
-                return (
-                  <button
-                    aria-current={isSelected ? "true" : undefined}
-                    className={`inspector-nav-item ${isSelected ? "is-active" : ""}`}
-                    key={p.slug}
-                    onClick={() => onSelectProject(p)}
-                    type="button"
-                  >
-                    <span className="nav-num">{String(idx + 1).padStart(2, "0")}</span>
-                    <span className="nav-code">{p.shortName}</span>
-                    <span className="sr-only"> — Inspect {p.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Mobile Thumb Stepper */}
-            <div className="inspector-mobile-stepper mobile-only-flex">
-              <button
-                type="button"
-                className="stepper-btn"
-                onClick={() => onSelectProject(prevProject)}
-                aria-label={`Previous project: ${prevProject.name}`}
-              >
-                <ChevronLeft size={16} aria-hidden="true" />
-              </button>
-              <span className="stepper-status">
-                {currentNumber} / {String(projects.length).padStart(2, "0")} · {project.shortName}
-              </span>
-              <button
-                type="button"
-                className="stepper-btn"
-                onClick={() => onSelectProject(nextProject)}
-                aria-label={`Next project: ${nextProject.name}`}
-              >
-                <ChevronRight size={16} aria-hidden="true" />
-              </button>
-            </div>
-          </div>
+          <nav className="inspector-nav-bar" aria-label="Inspector project navigation">
+            <button
+              type="button"
+              className="stepper-btn"
+              onClick={() => onSelectProject(prevProject)}
+              aria-label={`Previous project: ${prevProject.name}`}
+            >
+              <ChevronLeft size={16} aria-hidden="true" />
+            </button>
+            <span aria-live="polite" className="stepper-status">
+              {currentNumber} / {String(projects.length).padStart(2, "0")} · {project.name}
+            </span>
+            <button
+              type="button"
+              className="stepper-btn"
+              onClick={() => onSelectProject(nextProject)}
+              aria-label={`Next project: ${nextProject.name}`}
+            >
+              <ChevronRight size={16} aria-hidden="true" />
+            </button>
+          </nav>
 
           {/* Tab Navigation List */}
           <div

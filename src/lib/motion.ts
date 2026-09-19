@@ -72,7 +72,7 @@ export const revealMask = {
     visible: { y: "0%", rotate: 0 },
   },
   transition: {
-    duration: 0.7,
+    duration: 0.62,
     ease: motionEasings.arrive,
   },
 };
@@ -83,7 +83,7 @@ export const heroSceneReveal = {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: motionDurations.spatial, delay: 0.46, ease: motionEasings.arrive },
+    transition: { duration: motionDurations.spatial, delay: 0.34, ease: motionEasings.arrive },
   },
 };
 
@@ -122,8 +122,8 @@ export const staggerSlow = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.09,
-      delayChildren: 0.06,
+      staggerChildren: 0.075,
+      delayChildren: 0.04,
     },
   },
 };
@@ -165,6 +165,6 @@ export const heroItemVariants = {
   hidden: revealSoft.hidden,
   visible: {
     ...revealSoft.visible,
-    transition: revealTransition,
+    transition: { duration: 0.54, ease: motionEasings.arrive },
   },
 };

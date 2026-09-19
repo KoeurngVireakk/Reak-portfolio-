@@ -64,6 +64,20 @@ summary:focus-visible {
     animation: none !important;
   }
 
+  .page-atmosphere > span {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .portrait-plane,
+  .portrait-instrument-ring,
+  .section-heading-copy h2,
+  .project-title-heading,
+  .contact-panel h2 {
+    animation: none !important;
+    transform: none !important;
+  }
+
   .about-manifesto span,
   .button svg,
   .header-contact svg,
@@ -89,6 +103,12 @@ summary:focus-visible {
     display: none !important;
   }
 
+  .page-atmosphere,
+  .portrait-instrument-ring,
+  .contact-panel::after {
+    display: none !important;
+  }
+
   button:focus-visible,
   a:focus-visible,
   summary:focus-visible {
@@ -97,5 +117,24 @@ summary:focus-visible {
 
   .button {
     border: 1px solid ButtonText;
+  }
+
+  .project-sequence-nav > button,
+  .stepper-btn,
+  .inspector-close-button,
+  .inspector-tab-btn {
+    border: 1px solid ButtonText;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .scene-mesh,
+  .scene-topology,
+  .portrait-scan {
+    animation: none !important;
+  }
+
+  .scene-illumination {
+    opacity: 0.24;
   }
 }

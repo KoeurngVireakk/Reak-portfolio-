@@ -91,7 +91,27 @@ export function SiteHeader({
     }
 
     window.addEventListener("popstate", restoreSectionFromHistory);
-    return () => window.removeEventListener("popstate", restoreSectionFromHistory);
+    const initialId = window.location.hash.slice(1);
+    const initialTarget = initialId ? document.getElementById(initialId) : null;
+    let restoreBehaviorFrame = 0;
+    const initialFrame = initialTarget
+      ? window.requestAnimationFrame(() => {
+          const root = document.documentElement;
+          const previousScrollBehavior = root.style.scrollBehavior;
+          root.style.scrollBehavior = "auto";
+          initialTarget.focus({ preventScroll: true });
+          initialTarget.scrollIntoView({ behavior: "auto", block: "start" });
+          restoreBehaviorFrame = window.requestAnimationFrame(() => {
+            root.style.scrollBehavior = previousScrollBehavior;
+          });
+        })
+      : 0;
+
+    return () => {
+      if (initialFrame) window.cancelAnimationFrame(initialFrame);
+      if (restoreBehaviorFrame) window.cancelAnimationFrame(restoreBehaviorFrame);
+      window.removeEventListener("popstate", restoreSectionFromHistory);
+    };
   }, []);
 
   useEffect(() => {

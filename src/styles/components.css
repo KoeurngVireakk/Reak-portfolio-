@@ -536,3 +536,33 @@
 .project-filters button:active {
   background: color-mix(in srgb, var(--primary) 8%, transparent);
 }
+
+/* Phase 7: open masthead settles into compact navigation chrome. */
+.site-header:not(.is-scrolled) {
+  width: min(var(--container), calc(100% - 32px));
+  min-height: 68px;
+}
+
+.site-header.is-scrolled {
+  width: min(940px, calc(100% - 32px));
+}
+
+.site-header .brand-copy {
+  max-width: 180px;
+  overflow: hidden;
+  opacity: 1;
+  transition: max-width 280ms var(--ease-arrive), opacity 180ms ease;
+}
+
+.site-header.is-scrolled .brand-copy {
+  max-width: 0;
+  opacity: 0;
+}
+
+.site-header.is-scrolled .brand {
+  gap: 0;
+}
+
+.site-header.is-scrolled .brand-mark {
+  transform: scale(0.92);
+}

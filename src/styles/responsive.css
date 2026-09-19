@@ -962,3 +962,136 @@
     gap: 6px;
   }
 }
+
+/* Phase 7: intentional circular portrait scaling and compact motion surfaces. */
+@media (max-width: 900px) {
+  .hero-scene-exit {
+    width: min(100%, 440px);
+    padding-block: 38px 64px;
+  }
+
+  .hero-spatial-scene {
+    width: clamp(320px, 54vw, 420px);
+    min-height: 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .projects-section::before {
+    opacity: 0.48;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-atmosphere > span {
+    inset: -5%;
+  }
+
+  .site-header .brand-copy,
+  .site-header.is-scrolled .brand-copy {
+    max-width: 150px;
+    opacity: 1;
+  }
+
+  .hero-layout {
+    gap: 24px;
+  }
+
+  .hero-scene-exit {
+    width: min(100%, 360px);
+    padding-block: 26px 60px;
+  }
+
+  .hero-spatial-scene {
+    width: clamp(260px, 80vw, 340px);
+    min-height: 0;
+    border-radius: 50%;
+  }
+
+  .portrait-plane {
+    inset: 10%;
+  }
+
+  .scene-grid {
+    inset: 16% 4% -4%;
+  }
+
+  .scene-status {
+    top: 1%;
+    right: 5%;
+  }
+
+  .hero-architecture-flow {
+    right: 5%;
+    bottom: -2%;
+    left: 5%;
+  }
+
+  .scene-contact {
+    right: 3%;
+    bottom: -15%;
+    left: 3%;
+  }
+
+  .section-transition .motif-text {
+    display: none;
+  }
+
+  .inspector-nav-bar .stepper-status {
+    font-size: 10px;
+  }
+
+  .contact-magnetic,
+  .contact-magnetic .contact-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-spatial-scene {
+    width: min(84vw, 300px);
+    min-height: 0;
+  }
+
+  .scene-status {
+    display: none;
+  }
+
+  .architecture-flow-node {
+    padding-inline: 4px;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 600px) and (orientation: landscape) {
+  .hero-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 0.72fr);
+    gap: 28px;
+    padding-block: 24px 44px;
+  }
+
+  .hero-copy {
+    padding-top: 8px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.8rem, 7.6vw, 4.2rem);
+  }
+
+  .portrait-column {
+    width: 100%;
+  }
+
+  .hero-scene-exit {
+    width: min(100%, 310px);
+    padding-block: 18px 42px;
+  }
+
+  .hero-spatial-scene {
+    width: clamp(260px, 39vw, 310px);
+  }
+
+  .hero-focus,
+  .fact-rail {
+    display: none;
+  }
+}

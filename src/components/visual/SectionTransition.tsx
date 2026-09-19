@@ -50,7 +50,12 @@ export function SectionTransition({ from, to }: SectionTransitionProps) {
   };
 
   return (
-    <div className="section-transition" aria-hidden="true" ref={containerRef}>
+    <div
+      className="section-transition"
+      data-transition={motif.shape}
+      aria-hidden="true"
+      ref={containerRef}
+    >
       <div className="transition-endpoint endpoint-from">
         <span className="endpoint-name">{from}</span>
         <small className="endpoint-code">{motif.phase.split(" → ")[0]}</small>

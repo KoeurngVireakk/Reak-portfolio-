@@ -16,7 +16,7 @@ export function HeadlineReveal({ lines }: HeadlineRevealProps) {
             aria-hidden="true"
             animate="visible"
             initial={reduceMotion ? false : "hidden"}
-            transition={{ ...revealMask.transition, delay: reduceMotion ? 0 : 0.2 + index * 0.08 }}
+            transition={{ ...revealMask.transition, delay: reduceMotion ? 0 : 0.12 + index * 0.06 }}
             variants={revealMask.variants}
           >
             {line}

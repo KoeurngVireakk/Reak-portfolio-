@@ -13,7 +13,7 @@ import {
   type ErrorInfo,
   type ReactNode,
 } from "react";
-import { ArrowUpRight, Check, LockKeyhole, SlidersHorizontal } from "lucide-react";
+import { ArrowUpRight, Check, ChevronLeft, ChevronRight, LockKeyhole, SlidersHorizontal } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { projects, type Project, type ProjectCategory } from "../../data/portfolio";
 import { motionTokens, projectDepth, projectTransition } from "../../lib/motion";
@@ -337,6 +337,7 @@ type FeaturedChapterProps = {
   project: Project;
   index: number;
   total: number;
+  active: boolean;
   onEnter: (project: Project) => void;
   showMedia: boolean;
   onInspect: (project: Project, tab?: InspectorTab, trigger?: HTMLElement) => void;
@@ -346,6 +347,7 @@ function FeaturedChapter({
   project,
   index,
   total,
+  active,
   onEnter,
   showMedia,
   onInspect,
@@ -355,7 +357,7 @@ function FeaturedChapter({
 
   return (
     <motion.article
-      className="featured-chapter"
+      className={`featured-chapter ${active ? "is-active" : "is-inactive"}`}
       id={projectId(project)}
       onViewportEnter={canObserve ? () => onEnter(project) : undefined}
       viewport={{ amount: 0.38, margin: "-18% 0px -24% 0px" }}
@@ -451,6 +453,15 @@ export function Projects() {
   const [activeFeaturedName, setActiveFeaturedName] = useState(featuredProjects[0]?.name ?? "");
   const activeFeatured = featuredProjects.find((project) => project.name === activeFeaturedName)
     ?? featuredProjects[0];
+  const activeFeaturedIndex = activeFeatured
+    ? featuredProjects.findIndex((project) => project.slug === activeFeatured.slug)
+    : -1;
+  const previousFeatured = activeFeaturedIndex >= 0
+    ? featuredProjects[(activeFeaturedIndex - 1 + featuredProjects.length) % featuredProjects.length]
+    : undefined;
+  const nextFeatured = activeFeaturedIndex >= 0
+    ? featuredProjects[(activeFeaturedIndex + 1) % featuredProjects.length]
+    : undefined;
 
   useEffect(() => {
     setActiveFeaturedName(featuredProjects[0]?.name ?? "");
@@ -538,14 +549,26 @@ export function Projects() {
         : "overview";
       setInspectingProject(project);
       setActiveInspectorTab(nextTab);
-      isHistoryPushedRef.current = true;
       updateInspectorUrl(project, nextTab, true);
     },
     [activeInspectorTab],
   );
 
+  function navigateToFeatured(project: Project) {
+    setActiveFeaturedName(project.name);
+    document.getElementById(projectId(project))?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }
+
   return (
-    <section className="section section-anchor projects-section" id="projects" tabIndex={-1}>
+    <section
+      className="section section-anchor projects-section"
+      id="projects"
+      style={activeFeatured ? { "--active-project-accent": activeFeatured.accent } as CSSProperties : undefined}
+      tabIndex={-1}
+    >
       <Container>
         <SectionHeading
           eyebrow="Selected work"
@@ -553,36 +576,7 @@ export function Projects() {
           description="Move through the featured systems to see the problem, architecture, security decisions, testing evidence, and honest current status behind each build."
         />
 
-        {/* Compact Engineering Quick Index */}
-        <div className="projects-compact-index" aria-label="Quick project index">
-          <span className="compact-index-label">ENGINEERING INDEX:</span>
-          <div className="compact-index-list">
-            {projects.map((p, idx) => {
-              const isCurrent = activeFeatured?.slug === p.slug;
-              return (
-                <button
-                  className={`compact-index-item ${isCurrent ? "is-current" : ""}`}
-                  key={p.slug}
-                  onClick={() => {
-                    const targetEl = document.getElementById(projectId(p));
-                    if (targetEl) {
-                      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-                    } else {
-                      openInspector(p, "overview");
-                    }
-                  }}
-                  type="button"
-                >
-                  <span className="index-num">{String(idx + 1).padStart(2, "0")}</span>
-                  <span className="index-short">{p.shortName}</span>
-                  <span className="sr-only"> — Jump to {p.name}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <Reveal className="project-filter-wrap">
+        <Reveal className="project-filter-wrap" variant="structural">
           <div className="project-filters" aria-label="Filter projects" role="group">
             {categories.map((category) => {
               const active = activeCategory === category;
@@ -637,18 +631,40 @@ export function Projects() {
                     ) : null}
                   </AnimatePresence>
 
-                  <nav className="featured-progress" aria-label="Featured projects">
-                    {featuredProjects.map((project, index) => (
-                      <a
-                        aria-current={activeFeatured?.name === project.name ? "location" : undefined}
-                        href={`#${projectId(project)}`}
-                        key={project.name}
+                  {activeFeatured && previousFeatured && nextFeatured ? (
+                    <nav className="project-sequence-nav" aria-label="Featured project navigation">
+                      <button
+                        aria-label={`Previous project: ${previousFeatured.name}`}
+                        onClick={() => navigateToFeatured(previousFeatured)}
+                        type="button"
                       >
-                        <span>{String(index + 1).padStart(2, "0")}</span>
-                        {project.shortName}
-                      </a>
-                    ))}
-                  </nav>
+                        <ChevronLeft aria-hidden="true" size={16} />
+                      </button>
+                      <div aria-live="polite" className="project-sequence-current">
+                        <span>
+                          {String(activeFeaturedIndex + 1).padStart(2, "0")} / {String(featuredProjects.length).padStart(2, "0")}
+                        </span>
+                        <AnimatePresence initial={false} mode="wait">
+                          <motion.strong
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+                            initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+                            key={activeFeatured.slug}
+                            transition={{ duration: reduceMotion ? 0 : 0.24 }}
+                          >
+                            {activeFeatured.name}
+                          </motion.strong>
+                        </AnimatePresence>
+                      </div>
+                      <button
+                        aria-label={`Next project: ${nextFeatured.name}`}
+                        onClick={() => navigateToFeatured(nextFeatured)}
+                        type="button"
+                      >
+                        <ChevronRight aria-hidden="true" size={16} />
+                      </button>
+                    </nav>
+                  ) : null}
                 </div>
               </div>
             ) : null}
@@ -662,6 +678,7 @@ export function Projects() {
                   update={reduceMotion ? "none" : "project-filter-move"}
                 >
                   <FeaturedChapter
+                    active={activeFeatured?.slug === project.slug}
                     index={projects.indexOf(project)}
                     onEnter={(current) => {
                       if (desktopStory) setActiveFeaturedName(current.name);

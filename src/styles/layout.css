@@ -29,3 +29,61 @@
     var(--background);
   transition: background-color 220ms ease, color 180ms ease;
 }
+
+/* Phase 7: section-aware atmosphere uses opacity-only layer handoffs. */
+.site {
+  isolation: isolate;
+  background: var(--background);
+}
+
+.page-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.page-atmosphere > span {
+  position: absolute;
+  inset: -10%;
+  opacity: 0;
+  transform: scale(1.035);
+  transition: opacity 720ms var(--ease-arrive), transform 900ms var(--ease-arrive);
+  will-change: opacity, transform;
+}
+
+.atmosphere-identity {
+  background:
+    radial-gradient(circle at 78% 24%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 29rem),
+    linear-gradient(118deg, transparent 48%, color-mix(in srgb, var(--border-soft) 25%, transparent) 48.1%, transparent 48.25%);
+}
+
+.atmosphere-system {
+  background:
+    radial-gradient(circle at 24% 36%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 34rem),
+    linear-gradient(90deg, transparent 0 18%, color-mix(in srgb, var(--border-soft) 24%, transparent) 18.1%, transparent 18.2% 82%, color-mix(in srgb, var(--border-soft) 24%, transparent) 82.1%, transparent 82.2%);
+}
+
+.atmosphere-proof {
+  background:
+    radial-gradient(circle at 68% 48%, color-mix(in srgb, var(--primary) 8%, transparent), transparent 34rem),
+    linear-gradient(155deg, transparent 55%, color-mix(in srgb, var(--accent) 3%, transparent));
+}
+
+.atmosphere-trajectory {
+  background: linear-gradient(104deg, color-mix(in srgb, var(--primary) 4%, transparent), transparent 38% 68%, color-mix(in srgb, var(--accent) 4%, transparent));
+}
+
+.atmosphere-contact {
+  background: radial-gradient(ellipse at 50% 72%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 42rem);
+}
+
+.site[data-active-stage="identity"] .atmosphere-identity,
+.site[data-active-stage="system"] .atmosphere-system,
+.site[data-active-stage="proof"] .atmosphere-proof,
+.site[data-active-stage="trajectory"] .atmosphere-trajectory,
+.site[data-active-stage="contact"] .atmosphere-contact {
+  opacity: 1;
+  transform: scale(1);
+}

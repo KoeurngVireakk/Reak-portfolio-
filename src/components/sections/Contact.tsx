@@ -7,6 +7,7 @@ import { useContinuousMotion } from "../../lib/motionLifecycle";
 import { useFinePointer } from "../../lib/pointer";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
+import { Magnetic } from "../motion/Magnetic";
 import { Reveal } from "../ui/Reveal";
 
 const convergenceNodes = [
@@ -45,7 +46,7 @@ export function Contact() {
       tabIndex={-1}
     >
       <Container>
-        <Reveal className="contact-panel">
+        <Reveal className="contact-panel" variant="system">
           <div className="contact-main">
             <span className="contact-index">Contact // Resolution</span>
 
@@ -105,17 +106,19 @@ export function Contact() {
             </div>
           </div>
 
-          <motion.a
-            className={`button button-primary contact-button ${pulsing ? "is-signaling" : ""}`}
-            href={`mailto:${profile.email}`}
-            onFocus={triggerSignalPulse}
-            onPointerEnter={triggerSignalPulse}
-            transition={motionTokens.spring}
-            whileHover={reduceMotion ? undefined : interactionMotion.lift}
-            whileTap={reduceMotion ? undefined : interactionMotion.press}
-          >
-            Start a conversation <ArrowUpRight aria-hidden="true" size={16} />
-          </motion.a>
+          <Magnetic className="contact-magnetic" strength={5}>
+            <motion.a
+              className={`button button-primary contact-button ${pulsing ? "is-signaling" : ""}`}
+              href={`mailto:${profile.email}`}
+              onFocus={triggerSignalPulse}
+              onPointerEnter={triggerSignalPulse}
+              transition={motionTokens.spring}
+              whileHover={reduceMotion ? undefined : interactionMotion.lift}
+              whileTap={reduceMotion ? undefined : interactionMotion.press}
+            >
+              Start a conversation <ArrowUpRight aria-hidden="true" size={16} />
+            </motion.a>
+          </Magnetic>
         </Reveal>
       </Container>
     </section>

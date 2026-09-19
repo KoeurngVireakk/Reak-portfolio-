@@ -121,7 +121,19 @@ function App() {
   }
 
   return (
-    <div className="site" data-theme={theme} data-styleseed-recipe="expressive-brand">
+    <div
+      className="site"
+      data-active-stage={activeStage.toLowerCase()}
+      data-theme={theme}
+      data-styleseed-recipe="expressive-brand"
+    >
+      <div className="page-atmosphere" aria-hidden="true">
+        <span className="atmosphere-identity" />
+        <span className="atmosphere-system" />
+        <span className="atmosphere-proof" />
+        <span className="atmosphere-trajectory" />
+        <span className="atmosphere-contact" />
+      </div>
       <motion.div
         className="scroll-progress"
         style={{ scaleX: progressScale }}
