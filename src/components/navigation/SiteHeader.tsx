@@ -51,6 +51,15 @@ export function SiteHeader({
   useEffect(() => {
     if (propActiveSection !== undefined) return;
 
+    const supportsIntersectionObserver = typeof globalThis.IntersectionObserver === "function";
+    if (!supportsIntersectionObserver) {
+      const hashSection = window.location.hash.slice(1);
+      if (["home", ...navItems.map((item) => item.id)].includes(hashSection)) {
+        setInternalActiveSection(hashSection);
+      }
+      return;
+    }
+
     const sections = ["home", ...navItems.map((item) => item.id)]
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => Boolean(section));
@@ -129,7 +138,6 @@ export function SiteHeader({
       <a
         className="brand"
         href="#home"
-        aria-label="Koeurng Vireak — home"
         onClick={(event) => {
           event.preventDefault();
           handleNavigation("home");
@@ -190,7 +198,7 @@ export function SiteHeader({
               key={theme}
               transition={motionTokens.quick}
             >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === "dark" ? <Sun aria-hidden="true" size={18} /> : <Moon aria-hidden="true" size={18} />}
             </motion.span>
           </AnimatePresence>
         </motion.button>
@@ -202,7 +210,7 @@ export function SiteHeader({
             handleNavigation("contact");
           }}
         >
-          Contact <ArrowUpRight size={15} />
+          Contact <ArrowUpRight aria-hidden="true" size={15} />
         </a>
         <button
           className="mobile-menu-button"
@@ -213,7 +221,7 @@ export function SiteHeader({
           onClick={() => setMobileOpen((value) => !value)}
           ref={menuButtonRef}
         >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          {mobileOpen ? <X aria-hidden="true" size={20} /> : <Menu aria-hidden="true" size={20} />}
         </button>
       </div>
 

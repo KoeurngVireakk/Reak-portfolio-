@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "motion/react";
 import { revealMask } from "../lib/motion";
+import { canObserveViewport } from "../lib/motionLifecycle";
 
 type SectionHeadingProps = {
   eyebrow: string;
@@ -17,6 +18,7 @@ export function SectionHeading({
   className = "",
 }: SectionHeadingProps) {
   const reduceMotion = useReducedMotion();
+  const canObserve = canObserveViewport();
   const words = title.split(" ");
 
   return (
@@ -28,13 +30,13 @@ export function SectionHeading({
       <div className="section-heading-copy">
         <motion.h2
           aria-label={title}
-          initial={reduceMotion ? false : "hidden"}
+          initial={reduceMotion || !canObserve ? false : "hidden"}
           variants={{
             hidden: {},
             visible: { transition: { staggerChildren: 0.035 } },
           }}
           viewport={{ once: true, amount: 0.3 }}
-          whileInView={reduceMotion ? undefined : "visible"}
+          whileInView={reduceMotion || !canObserve ? undefined : "visible"}
         >
           {words.map((word, index) => (
             <span className="section-heading-word" key={`${word}-${index}`}>

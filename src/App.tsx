@@ -20,10 +20,18 @@ function getInitialTheme(): Theme {
   const documentTheme = document.documentElement.dataset.theme;
   if (documentTheme === "dark" || documentTheme === "light") return documentTheme;
 
-  const storedTheme = window.localStorage.getItem("portfolio-theme");
-  if (storedTheme === "dark" || storedTheme === "light") return storedTheme;
+  try {
+    const storedTheme = window.localStorage.getItem("portfolio-theme");
+    if (storedTheme === "dark" || storedTheme === "light") return storedTheme;
+  } catch {
+    // localStorage unavailable (private browsing, iframe restrictions)
+  }
 
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  try {
+    return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  } catch {
+    return "dark";
+  }
 }
 
 function App() {
@@ -37,19 +45,32 @@ function App() {
   });
 
   useEffect(() => {
-    window.localStorage.setItem("portfolio-theme", theme);
+    try {
+      window.localStorage.setItem("portfolio-theme", theme);
+    } catch {
+      // localStorage unavailable
+    }
     document.documentElement.style.colorScheme = theme;
     document.documentElement.dataset.theme = theme;
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", theme === "dark" ? "#020503" : "#f4f3ee");
+      ?.setAttribute("content", theme === "dark" ? "#020503" : "#f6f5f0");
   }, [theme]);
 
   function handleToggleTheme(origin?: { x: number; y: number }) {
     const nextTheme: Theme = theme === "dark" ? "light" : "dark";
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let reduceMotion = false;
+    try {
+      reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      // Use the non-animated path if media-query APIs are unavailable below.
+    }
 
-    if (reduceMotion || !("startViewTransition" in document)) {
+    if (
+      reduceMotion
+      || typeof document.startViewTransition !== "function"
+      || typeof document.documentElement.animate !== "function"
+    ) {
       startTransition(() => {
         setTheme(nextTheme);
       });
@@ -64,9 +85,17 @@ function App() {
     );
 
     document.documentElement.dataset.themeTransition = "circular";
-    const transition = document.startViewTransition(() => {
-      setTheme(nextTheme);
-    });
+
+    let transition;
+    try {
+      transition = document.startViewTransition(() => {
+        setTheme(nextTheme);
+      });
+    } catch {
+      delete document.documentElement.dataset.themeTransition;
+      startTransition(() => setTheme(nextTheme));
+      return;
+    }
 
     transition.ready
       .then(() => {

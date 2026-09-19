@@ -2,6 +2,8 @@
 
 A recruiter-focused developer portfolio built from Vireak's real projects and technical background. Portfolio V5 evolves the experience into a systems field manual: cinematic where spatial context helps, quiet where recruiters need to read, and evidence-first throughout.
 
+Production: https://reak-portfolio-brown.vercel.app/
+
 ## Design goals
 
 - Product-first presentation inspired by modern technical portfolios, without copying another developer's branding or claims.
@@ -28,7 +30,7 @@ A recruiter-focused developer portfolio built from Vireak's real projects and te
 - Motion for React
 - Lucide React
 - Self-hosted Manrope variable font
-- Simple Icons (CC0 brand SVG paths)
+- Local CC0 brand SVG paths sourced from Simple Icons
 
 ## Portfolio sections
 
@@ -65,6 +67,32 @@ npm run build
 npm run preview
 ```
 
+The production site is deployed as a static Vite application on Vercel. `vercel.json` adds conservative response headers without overriding Vercel's immutable caching for hashed build assets. Hash navigation and query-backed Inspector states load from the canonical `/` document, so no SPA rewrite is required for the current single-page architecture.
+
+## Architecture overview
+
+- `src/data/portfolio.ts` owns public profile and project evidence.
+- Section components render the portfolio narrative; reusable motion, visual, mockup, and project components keep behavior isolated.
+- The Engineering Inspector is loaded as a separate chunk only when requested and restores focus when closed.
+- Shared media-query, visibility, and intersection observers pause continuous decoration when it cannot contribute.
+- CSS is split by tokens, base, typography, layout, components, sections, motion, responsive behavior, accessibility, and utilities.
+
+## Accessibility and motion policy
+
+The site targets WCAG 2.2 AA: semantic landmarks, visible keyboard focus, labelled dialogs and tabs, keyboard-operable navigation, 44 px touch targets, resilient forced-colors styling, and dark/light semantic contrast. `prefers-reduced-motion` removes continuous rails, scanner effects, parallax, shared-element travel, theme radial animation, and Inspector travel while keeping all content available. Continuous motion also pauses offscreen and while the document is hidden.
+
+## SEO and sharing
+
+Canonical, Open Graph, Twitter summary, Person, and WebSite metadata live in `index.html`. Crawl directives and the single canonical page are defined in `public/robots.txt` and `public/sitemap.xml`. A social image is intentionally omitted until a final 1200x630 asset exists, preventing broken previews.
+
+When a custom domain is introduced, update the canonical origin in `index.html`, `public/robots.txt`, and `public/sitemap.xml` together.
+
+## Production quality targets
+
+- Accessibility, SEO, and Best Practices: 95 or higher in representative Lighthouse runs.
+- Performance: 90 or higher on representative desktop runs, with strong mobile results and no artificial audit-only behavior.
+- Release gate: `npx tsc -b`, `npm run build`, `npm run preview`, `git diff --check`, and a browser keyboard/responsive pass.
+
 ## Where to edit your content
 
 Most personal/project content is intentionally centralized here:
@@ -83,12 +111,11 @@ The CSS foundation is split by responsibility under `src/styles/`: tokens, base,
 
 ## Before publishing
 
-- Replace the GitHub avatar with a local professional headshot if desired.
 - Add a verified LinkedIn URL only if you want it public.
 - Add a real resume PDF only when the final resume is ready.
 - Add screenshots for the best projects after capturing them from real builds.
-- Deploy to Vercel, Netlify, Cloudflare Pages, or another static host.
-- Connect a custom domain after the content and screenshots are final.
+- Create a final 1200x630 social card before enabling `og:image` and `twitter:image`.
+- Connect a custom domain when ready, then update every canonical-origin location listed above.
 
 ## Content integrity rule
 

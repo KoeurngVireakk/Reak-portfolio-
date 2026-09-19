@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { motion, useInView, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { motionEasings, revealSoftTransition } from "../../lib/motion";
+import { canObserveViewport, useSafeInView } from "../../lib/motionLifecycle";
 
 type SectionTransitionProps = {
   from: string;
@@ -38,7 +39,8 @@ const transitionMotifs: Record<string, TransitionMotif> = {
 
 export function SectionTransition({ from, to }: SectionTransitionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const inView = useInView(containerRef, { once: true, amount: 0.65 });
+  const inView = useSafeInView(containerRef, 0.65, true);
+  const canObserve = canObserveViewport();
   const reduceMotion = useReducedMotion();
   const transitionKey = `${from}->${to}`;
   const motif = transitionMotifs[transitionKey] ?? {
@@ -58,10 +60,10 @@ export function SectionTransition({ from, to }: SectionTransitionProps) {
         {/* Calibrated connector baseline */}
         <motion.i
           className="transition-line"
-          initial={reduceMotion ? false : { scaleX: 0 }}
+          initial={reduceMotion || !canObserve ? false : { scaleX: 0 }}
           transition={revealSoftTransition}
           viewport={{ once: true, amount: 0.7 }}
-          whileInView={{ scaleX: 1 }}
+          whileInView={canObserve ? { scaleX: 1 } : undefined}
         />
 
         {/* Evolving geometric conduit motif in center */}

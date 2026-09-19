@@ -1,38 +1,9 @@
 import { useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
-import {
-  siCloudflare,
-  siDocker,
-  siDotnet,
-  siFirebase,
-  siFlutter,
-  siGithubactions,
-  siLaravel,
-  siMysql,
-  siPython,
-  siReact,
-  siSpringboot,
-  siTypescript,
-  type SimpleIcon,
-} from "simple-icons";
+import { brandIconPaths } from "../../data/brandIconPaths";
 import { technologyRail, technologyProjectMap } from "../../data/portfolio";
 import { useContinuousMotion } from "../../lib/motionLifecycle";
 import { BrandIcon } from "./BrandIcon";
-
-const icons: Record<string, SimpleIcon | undefined> = {
-  React: siReact,
-  TypeScript: siTypescript,
-  "Spring Boot": siSpringboot,
-  Laravel: siLaravel,
-  "ASP.NET Core": siDotnet,
-  Flutter: siFlutter,
-  Firebase: siFirebase,
-  MySQL: siMysql,
-  Python: siPython,
-  Docker: siDocker,
-  Cloudflare: siCloudflare,
-  "GitHub Actions": siGithubactions,
-};
 
 function TechnologyItems({ duplicate = false }: { duplicate?: boolean }) {
   return (
@@ -45,7 +16,7 @@ function TechnologyItems({ duplicate = false }: { duplicate?: boolean }) {
           <li key={`${duplicate ? "duplicate-" : ""}${technology}`} title={duplicate ? undefined : hint}>
             <BrandIcon
               fallback={technology === "SQL Server" ? "SQL" : technology.slice(0, 2)}
-              icon={icons[technology]}
+              icon={brandIconPaths[technology]}
             />
             <span>{technology}</span>
           </li>
@@ -75,7 +46,7 @@ export function TechnologyRail() {
           onClick={() => setPaused((current) => !current)}
           type="button"
         >
-          {paused ? <Play size={14} /> : <Pause size={14} />}
+          {paused ? <Play aria-hidden="true" size={14} /> : <Pause aria-hidden="true" size={14} />}
           <span>{paused ? "Resume" : "Pause"}</span>
         </button>
       </div>

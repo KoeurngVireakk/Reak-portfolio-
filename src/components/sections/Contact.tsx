@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { motion } from "motion/react";
 import { profile } from "../../data/portfolio";
@@ -22,6 +22,10 @@ export function Contact() {
   const finePointer = useFinePointer();
   const [pulsing, setPulsing] = useState(false);
   const pulseTimerRef = useRef<number | null>(null);
+
+  useEffect(() => () => {
+    if (pulseTimerRef.current) window.clearTimeout(pulseTimerRef.current);
+  }, []);
 
   function triggerSignalPulse() {
     if (reduceMotion || !finePointer || pulsing) return;
@@ -77,23 +81,23 @@ export function Contact() {
 
           <div className="contact-details">
             <a href={`mailto:${profile.email}`}>
-              <Mail size={17} />
+              <Mail aria-hidden="true" size={17} />
               <span>
                 <small>Email</small>
                 {profile.email}
               </span>
-              <ArrowUpRight size={16} />
+              <ArrowUpRight aria-hidden="true" size={16} />
             </a>
-            <a href={profile.github} rel="noreferrer" target="_blank">
+            <a href={profile.github} rel="noopener noreferrer" target="_blank">
               <GitHubIcon size={17} />
               <span>
                 <small>GitHub</small>
                 KoeurngVireakk
               </span>
-              <ArrowUpRight size={16} />
+              <ArrowUpRight aria-hidden="true" size={16} />
             </a>
             <div>
-              <MapPin size={17} />
+              <MapPin aria-hidden="true" size={17} />
               <span>
                 <small>Location</small>
                 {profile.location}
@@ -110,7 +114,7 @@ export function Contact() {
             whileHover={reduceMotion ? undefined : interactionMotion.lift}
             whileTap={reduceMotion ? undefined : interactionMotion.press}
           >
-            Start a conversation <ArrowUpRight size={16} />
+            Start a conversation <ArrowUpRight aria-hidden="true" size={16} />
           </motion.a>
         </Reveal>
       </Container>

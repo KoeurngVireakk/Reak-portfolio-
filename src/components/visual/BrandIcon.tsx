@@ -1,7 +1,7 @@
-import type { SimpleIcon } from "simple-icons";
+import type { BrandIconPath } from "../../data/brandIconPaths";
 
 type BrandIconProps = {
-  icon?: SimpleIcon;
+  icon?: BrandIconPath;
   fallback: string;
 };
 

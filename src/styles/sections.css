@@ -3144,7 +3144,6 @@
   height: 5px;
   border: 1px solid var(--primary);
   background: color-mix(in srgb, var(--primary) 35%, transparent);
-  transition: all 260ms ease;
   flex: 0 0 auto;
 }
 
@@ -3489,6 +3488,7 @@
   align-items: center;
   gap: 6px;
   padding: 4px 9px;
+  min-height: 44px;
   border: 1px solid var(--border-soft);
   background: transparent;
   border-radius: 3px;
@@ -3496,7 +3496,7 @@
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 11px;
-  transition: all 0.18s ease;
+  transition: border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
 }
 
 .compact-index-item:hover {
@@ -3608,9 +3608,10 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 8px 16px;
+  min-height: 44px;
   border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .inspect-system-btn:hover {
@@ -3630,7 +3631,7 @@
   padding: 8px 12px;
   border: 1px solid var(--border-soft);
   border-radius: 4px;
-  transition: all 0.18s ease;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .project-repo-link:hover {
@@ -3660,6 +3661,9 @@ html.inspector-open {
   position: absolute;
   inset: 0;
   background: rgba(6, 8, 12, 0.72);
+  border: 0;
+  cursor: pointer;
+  padding: 0;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -3676,6 +3680,31 @@ html.inspector-open {
   flex-direction: column;
   box-shadow: -16px 0 48px rgba(0, 0, 0, 0.65);
   outline: none;
+}
+
+.inspector-load-fallback {
+  justify-content: center;
+  gap: 16px;
+  overflow-y: auto;
+  padding: clamp(32px, 7vw, 72px);
+}
+
+.inspector-load-fallback h2,
+.inspector-load-fallback p {
+  max-width: 36rem;
+  margin: 0;
+}
+
+.inspector-load-fallback p:not(.pane-kicker) {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.inspector-load-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 /* Inspector Header */
@@ -3753,7 +3782,7 @@ html.inspector-open {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.18s ease;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
   min-width: 44px;
   min-height: 44px;
   flex-shrink: 0;
@@ -3846,7 +3875,7 @@ html.inspector-open {
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 11px;
-  transition: all 0.16s ease;
+  transition: color 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
   white-space: nowrap;
 }
 
@@ -3885,13 +3914,13 @@ html.inspector-open {
   align-items: center;
   justify-content: center;
   min-width: 44px;
-  min-height: 36px;
+  min-height: 44px;
   background: transparent;
   border: 1px solid var(--border-soft);
   border-radius: 4px;
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
 
 .stepper-btn:hover {
@@ -4229,7 +4258,7 @@ html.inspector-open {
   border-radius: 4px;
   color: var(--foreground);
   text-decoration: none;
-  transition: all 0.18s ease;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .inspector-repo-link:hover {
@@ -4515,12 +4544,12 @@ html.inspector-open {
   font-family: var(--font-mono);
   font-size: 11px;
   padding: 8px 12px;
-  min-height: 38px;
+  min-height: 44px;
   border: 1px solid var(--border-soft);
   border-radius: 4px;
   color: var(--muted);
   text-decoration: none;
-  transition: all 0.16s ease;
+  transition: color 0.16s ease, border-color 0.16s ease;
 }
 
 .inspector-footer-repo:hover {
@@ -4538,7 +4567,7 @@ html.inspector-open {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 8px 16px;
-  min-height: 38px;
+  min-height: 44px;
   border-radius: 4px;
   cursor: pointer;
   transition: opacity 0.18s ease;
@@ -4561,6 +4590,7 @@ html.inspector-open {
 }
 
 .site[data-theme="light"] .engineering-inspector-panel {
+  --project-accent: var(--primary);
   background: var(--surface-raised);
   box-shadow: -16px 0 48px rgba(21, 32, 26, 0.16);
   border-left-color: var(--border);

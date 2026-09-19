@@ -115,7 +115,7 @@ export function ArchitectureExplorer({ activeIndex, onSelectLayer }: Architectur
               animate={reduceMotion ? { y2: targetY * 2.8 } : { y2: targetY * 2.8 }}
               className="connector-active-trace"
               initial={false}
-              transition={springSoft}
+              transition={reduceMotion ? { duration: 0 } : springSoft}
               x1="12"
               x2="12"
               y1="20"
@@ -127,7 +127,7 @@ export function ArchitectureExplorer({ activeIndex, onSelectLayer }: Architectur
               cx="12"
               initial={false}
               r="3.5"
-              transition={springSoft}
+              transition={reduceMotion ? { duration: 0 } : springSoft}
             />
           </svg>
         </div>
@@ -211,10 +211,6 @@ export function ArchitectureExplorer({ activeIndex, onSelectLayer }: Architectur
         </motion.div>
       </AnimatePresence>
 
-      <p className="sr-only" aria-live="polite">
-        {activeLayer.label} active: {activeLayer.detail}. Boundary: {activeLayer.boundary}. Demonstrated in:{" "}
-        {activeLayer.demonstratedIn.map((d) => d.name).join(", ")}.
-      </p>
     </div>
   );
 }

@@ -2,12 +2,15 @@ import { useRef, useState } from "react";
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { journey } from "../../data/portfolio";
 import { revealSoftTransition, springSoft } from "../../lib/motion";
+import { canObserveViewport } from "../../lib/motionLifecycle";
 import { SectionHeading } from "../SectionHeading";
 import { Container } from "../layout/Container";
 
 export function Journey() {
   const sectionRef = useRef<HTMLElement>(null);
+  const activeMilestoneRef = useRef(0);
   const reduceMotion = useReducedMotion();
+  const canObserve = canObserveViewport();
   const [activeMilestone, setActiveMilestone] = useState(0);
 
   const { scrollYProgress } = useScroll({
@@ -19,7 +22,10 @@ export function Journey() {
   useMotionValueEvent(progress, "change", (latest) => {
     if (reduceMotion || journey.length === 0) return;
     const index = Math.min(journey.length - 1, Math.floor(latest * journey.length));
-    setActiveMilestone(index);
+    if (index !== activeMilestoneRef.current) {
+      activeMilestoneRef.current = index;
+      setActiveMilestone(index);
+    }
   });
 
   return (
@@ -50,11 +56,11 @@ export function Journey() {
                 <motion.li
                   className={statusClass}
                   data-milestone={index}
-                  initial={reduceMotion ? false : { opacity: 0.42, x: -10 }}
+                  initial={reduceMotion || !canObserve ? false : { x: -10 }}
                   key={item.title}
                   transition={{ ...revealSoftTransition, delay: reduceMotion ? 0 : index * 0.05 }}
                   viewport={{ once: true, amount: 0.55 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  whileInView={canObserve ? { x: 0 } : undefined}
                 >
                   <span className="journey-index">{String(index + 1).padStart(2, "0")}</span>
                   <time>{item.date}</time>

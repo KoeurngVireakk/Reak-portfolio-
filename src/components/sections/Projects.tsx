@@ -1,4 +1,5 @@
 import {
+  Component,
   Suspense,
   ViewTransition,
   lazy,
@@ -9,11 +10,14 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ErrorInfo,
+  type ReactNode,
 } from "react";
 import { ArrowUpRight, Check, LockKeyhole, SlidersHorizontal } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { projects, type Project, type ProjectCategory } from "../../data/portfolio";
 import { motionTokens, projectDepth, projectTransition } from "../../lib/motion";
+import { canObserveViewport } from "../../lib/motionLifecycle";
 import { ProjectMedia } from "../projects/ProjectMedia";
 import { type InspectorTab } from "../projects/EngineeringInspector";
 import { SectionHeading } from "../SectionHeading";
@@ -24,8 +28,69 @@ import { useMediaQuery } from "../../lib/pointer";
 const EngineeringInspector = lazy(() =>
   import("../projects/EngineeringInspector").then((mod) => ({
     default: mod.EngineeringInspector,
-  }))
+  })),
 );
+
+type InspectorLoadBoundaryProps = {
+  children: ReactNode;
+  onClose: () => void;
+  resetKey: string;
+};
+
+class InspectorLoadBoundary extends Component<
+  InspectorLoadBoundaryProps,
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch(_error: Error, _info: ErrorInfo) {
+    // The fallback below provides recovery without exposing implementation details.
+  }
+
+  componentDidUpdate(previousProps: InspectorLoadBoundaryProps) {
+    if (previousProps.resetKey !== this.props.resetKey && this.state.failed) {
+      this.setState({ failed: false });
+    }
+  }
+
+  render() {
+    if (!this.state.failed) return this.props.children;
+
+    return (
+      <div
+        aria-labelledby="inspector-load-error-title"
+        aria-modal="true"
+        className="engineering-inspector-overlay"
+        role="alertdialog"
+      >
+        <button
+          aria-label="Close Engineering Inspector"
+          className="engineering-inspector-backdrop"
+          onClick={this.props.onClose}
+          tabIndex={-1}
+          type="button"
+        />
+        <div className="engineering-inspector-panel inspector-load-fallback" role="document">
+          <p className="pane-kicker">INSPECTOR UNAVAILABLE</p>
+          <h2 id="inspector-load-error-title">The project details could not be loaded.</h2>
+          <p>The site may have been updated while this page was open. Reload to request the latest files.</p>
+          <div className="inspector-load-actions">
+            <button className="button button-primary" onClick={() => window.location.reload()} type="button">
+              Reload Portfolio
+            </button>
+            <button className="button button-secondary" onClick={this.props.onClose} type="button">
+              Close Inspector
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 
 const categories: Array<"All" | ProjectCategory> = [
   "All",
@@ -57,6 +122,56 @@ function getInspectorFromUrl(): { projectSlug: string | null; view: InspectorTab
   const validViews: InspectorTab[] = ["overview", "architecture", "security", "testing", "decisions"];
   const view = viewParam && validViews.includes(viewParam) ? viewParam : null;
   return { projectSlug, view };
+}
+
+function projectSupportsInspectorTab(project: Project, tab: InspectorTab) {
+  if (tab === "overview") return true;
+  if (tab === "architecture") return Boolean(project.architectureTiers?.length);
+  if (tab === "security") return Boolean(project.securityDetails?.length || project.security);
+  if (tab === "testing") return Boolean(project.testingDetails?.length || project.testing);
+  return Boolean(project.decisions?.length);
+}
+
+function sanitizeCurrentUrl() {
+  if (typeof window === "undefined") return;
+
+  const url = new URL(window.location.href);
+  let changed = false;
+  const { invalid: invalidCategory } = getCategoryFromUrl();
+  if (invalidCategory) {
+    url.searchParams.delete("work");
+    changed = true;
+  }
+
+  const rawProject = url.searchParams.get("project");
+  const rawView = url.searchParams.get("view");
+  const validViews: InspectorTab[] = ["overview", "architecture", "security", "testing", "decisions"];
+  const project = rawProject ? projects.find((item) => item.slug === rawProject) : undefined;
+
+  if (rawProject && !project) {
+    url.searchParams.delete("project");
+    url.searchParams.delete("view");
+    changed = true;
+  } else if (!rawProject && rawView) {
+    url.searchParams.delete("view");
+    changed = true;
+  } else if (project && rawView) {
+    const requestedView = validViews.includes(rawView as InspectorTab)
+      ? rawView as InspectorTab
+      : null;
+    if (
+      requestedView === null
+      || requestedView === "overview"
+      || !projectSupportsInspectorTab(project, requestedView)
+    ) {
+      url.searchParams.delete("view");
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }
 }
 
 function updateInspectorUrl(project: Project | null, tab?: InspectorTab, replace = false) {
@@ -137,7 +252,6 @@ function ProjectNarrative({ project, onInspect }: ProjectNarrativeProps) {
               type="button"
               className="decision-interactive-card"
               onClick={(e) => onInspect(project, "security", e.currentTarget)}
-              aria-label={`Inspect ${project.name} security evidence`}
             >
               <div className="decision-card-label">
                 <span>Security decision</span>
@@ -151,7 +265,6 @@ function ProjectNarrative({ project, onInspect }: ProjectNarrativeProps) {
               type="button"
               className="decision-interactive-card"
               onClick={(e) => onInspect(project, "testing", e.currentTarget)}
-              aria-label={`Inspect ${project.name} testing evidence`}
             >
               <div className="decision-card-label">
                 <span>Testing verification</span>
@@ -169,15 +282,15 @@ function ProjectNarrative({ project, onInspect }: ProjectNarrativeProps) {
             type="button"
             className="inspect-system-btn"
             onClick={(e) => onInspect(project, "overview", e.currentTarget)}
-            aria-label={`Inspect engineering system evidence for ${project.name}`}
           >
             <SlidersHorizontal size={14} aria-hidden="true" />
             <span>Inspect System Evidence</span>
+            <span className="sr-only"> for {project.name}</span>
           </button>
 
           {project.repository ? (
-            <a href={project.repository} rel="noreferrer" target="_blank" className="project-repo-link">
-              View repository <ArrowUpRight size={15} />
+            <a href={project.repository} rel="noopener noreferrer" target="_blank" className="project-repo-link">
+              View repository <ArrowUpRight aria-hidden="true" size={15} />
             </a>
           ) : (
             <span className="private-label">{project.repositoryLabel ?? "Case study project"}</span>
@@ -213,7 +326,7 @@ function ProjectHeader({
         <span>{project.role}</span>
       </div>
       <div className="project-status">
-        {project.repository ? <span>Public source</span> : <span><LockKeyhole size={12} /> Private source</span>}
+        {project.repository ? <span>Public source</span> : <span><LockKeyhole aria-hidden="true" size={12} /> Private source</span>}
         <span>{project.status}</span>
       </div>
     </header>
@@ -238,15 +351,16 @@ function FeaturedChapter({
   onInspect,
 }: FeaturedChapterProps) {
   const reduceMotion = useReducedMotion();
+  const canObserve = canObserveViewport();
 
   return (
     <motion.article
       className="featured-chapter"
       id={projectId(project)}
-      onViewportEnter={() => onEnter(project)}
+      onViewportEnter={canObserve ? () => onEnter(project) : undefined}
       viewport={{ amount: 0.38, margin: "-18% 0px -24% 0px" }}
-      initial={reduceMotion ? false : { opacity: 0.45, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduceMotion || !canObserve ? false : { y: 18 }}
+      whileInView={canObserve ? { y: 0 } : undefined}
       transition={motionTokens.revealSoft}
       style={projectAccent(project)}
     >
@@ -302,9 +416,12 @@ export function Projects() {
     const { projectSlug, view } = getInspectorFromUrl();
     if (!projectSlug) return { project: null, tab: "overview" as InspectorTab };
     const found = projects.find((p) => p.slug === projectSlug);
+    const requestedTab = view ?? "overview";
     return {
       project: found ?? null,
-      tab: (view ?? "overview") as InspectorTab,
+      tab: found && projectSupportsInspectorTab(found, requestedTab)
+        ? requestedTab
+        : "overview" as InspectorTab,
     };
   }, []);
 
@@ -312,6 +429,10 @@ export function Projects() {
   const [activeInspectorTab, setActiveInspectorTab] = useState<InspectorTab>(initialInspector.tab);
   const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
   const isHistoryPushedRef = useRef(false);
+
+  useEffect(() => {
+    sanitizeCurrentUrl();
+  }, []);
 
   const filteredProjects = useMemo(
     () => activeCategory === "All"
@@ -342,11 +463,6 @@ export function Projects() {
 
       // 1. Work category
       const { category, invalid } = getCategoryFromUrl();
-      if (invalid) {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("work");
-        window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
-      }
       startTransition(() => setActiveCategory(category));
 
       // 2. Project inspector
@@ -355,13 +471,18 @@ export function Projects() {
         const matched = projects.find((p) => p.slug === projectSlug);
         if (matched) {
           setInspectingProject(matched);
-          setActiveInspectorTab(view ?? "overview");
+          const requestedTab = view ?? "overview";
+          setActiveInspectorTab(
+            projectSupportsInspectorTab(matched, requestedTab) ? requestedTab : "overview",
+          );
         } else {
           setInspectingProject(null);
         }
       } else {
         setInspectingProject(null);
       }
+
+      if (invalid || projectSlug || view) sanitizeCurrentUrl();
     };
 
     window.addEventListener("popstate", handlePopState);
@@ -412,9 +533,13 @@ export function Projects() {
 
   const handleSelectProject = useCallback(
     (project: Project) => {
+      const nextTab = projectSupportsInspectorTab(project, activeInspectorTab)
+        ? activeInspectorTab
+        : "overview";
       setInspectingProject(project);
+      setActiveInspectorTab(nextTab);
       isHistoryPushedRef.current = true;
-      updateInspectorUrl(project, activeInspectorTab, false);
+      updateInspectorUrl(project, nextTab, false);
     },
     [activeInspectorTab],
   );
@@ -436,7 +561,6 @@ export function Projects() {
               const isCurrent = activeFeatured?.slug === p.slug;
               return (
                 <button
-                  aria-label={`Jump to ${p.name}`}
                   className={`compact-index-item ${isCurrent ? "is-current" : ""}`}
                   key={p.slug}
                   onClick={() => {
@@ -451,6 +575,7 @@ export function Projects() {
                 >
                   <span className="index-num">{String(idx + 1).padStart(2, "0")}</span>
                   <span className="index-short">{p.shortName}</span>
+                  <span className="sr-only"> — Jump to {p.name}</span>
                 </button>
               );
             })}
@@ -580,21 +705,26 @@ export function Projects() {
       </Container>
 
       {/* Lazy / conditionally rendered Engineering Inspector */}
-      <Suspense fallback={null}>
-        <AnimatePresence>
-          {inspectingProject ? (
-            <EngineeringInspector
-              key="engineering-inspector"
-              activeTab={activeInspectorTab}
-              onClose={closeInspector}
-              onSelectProject={handleSelectProject}
-              onSelectTab={handleSelectTab}
-              project={inspectingProject}
-              triggerElement={triggerElement}
-            />
-          ) : null}
-        </AnimatePresence>
-      </Suspense>
+      <InspectorLoadBoundary
+        onClose={closeInspector}
+        resetKey={inspectingProject?.slug ?? "closed"}
+      >
+        <Suspense fallback={null}>
+          <AnimatePresence>
+            {inspectingProject ? (
+              <EngineeringInspector
+                key="engineering-inspector"
+                activeTab={activeInspectorTab}
+                onClose={closeInspector}
+                onSelectProject={handleSelectProject}
+                onSelectTab={handleSelectTab}
+                project={inspectingProject}
+                triggerElement={triggerElement}
+              />
+            ) : null}
+          </AnimatePresence>
+        </Suspense>
+      </InspectorLoadBoundary>
     </section>
   );
 }

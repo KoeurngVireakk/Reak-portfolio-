@@ -11,6 +11,7 @@ import {
   workingPrinciples,
 } from "../../data/portfolio";
 import { motionTokens, revealSoft } from "../../lib/motion";
+import { canObserveViewport } from "../../lib/motionLifecycle";
 import { SectionHeading } from "../SectionHeading";
 import { GitHubIcon } from "../GitHubIcon";
 import { Container } from "../layout/Container";
@@ -22,6 +23,7 @@ export function About() {
   const [activeCapability, setActiveCapability] = useState(0);
   const capabilityTabs = useRef<Array<HTMLButtonElement | null>>([]);
   const reduceMotion = useReducedMotion();
+  const canObserve = canObserveViewport();
 
   function handleCapabilityKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
@@ -77,15 +79,15 @@ export function About() {
               </p>
 
               <div className="inline-links">
-                <a href={profile.github} rel="noreferrer" target="_blank">
-                  <GitHubIcon size={16} /> GitHub profile <ArrowUpRight size={14} />
+                <a href={profile.github} rel="noopener noreferrer" target="_blank">
+                  <GitHubIcon size={16} /> GitHub profile <ArrowUpRight aria-hidden="true" size={14} />
                 </a>
                 <a href={`mailto:${profile.email}`}>
-                  Email me <ArrowUpRight size={14} />
+                  Email me <ArrowUpRight aria-hidden="true" size={14} />
                 </a>
                 {profile.resumeUrl ? (
                   <a href={profile.resumeUrl} download>
-                    <FileText size={15} /> Download CV <ArrowUpRight size={14} />
+                    <FileText aria-hidden="true" size={15} /> Download CV <ArrowUpRight aria-hidden="true" size={14} />
                   </a>
                 ) : null}
               </div>
@@ -156,7 +158,7 @@ export function About() {
                   className={`capability-row ${activeCapability === index ? "is-active" : ""}`}
                   data-active={activeCapability === index}
                   id={`capability-tab-${index}`}
-                  initial={reduceMotion ? false : "hidden"}
+                  initial={reduceMotion || !canObserve ? false : "hidden"}
                   key={area.title}
                   onFocus={() => setActiveCapability(index)}
                   onKeyDown={(event) => handleCapabilityKeyDown(event, index)}
@@ -170,7 +172,7 @@ export function About() {
                   transition={{ ...motionTokens.revealSoft, delay: reduceMotion ? 0 : index * 0.04 }}
                   variants={revealSoft}
                   viewport={{ once: true, amount: 0.25 }}
-                  whileInView="visible"
+                  whileInView={canObserve ? "visible" : undefined}
                   type="button"
                 >
                   <span className="capability-number">{String(index + 1).padStart(2, "0")}</span>

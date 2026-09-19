@@ -67,6 +67,17 @@ Semantic landmarks and headings are preserved. Controls meet 44 px touch targets
 - Media-query and visibility subscriptions are shared through external stores.
 - Safe, non-sticky below-fold sections use `content-visibility: auto` with intrinsic-size fallbacks; sticky and scroll-observed sections remain fully rendered. Project images are lazy-loaded with fixed dimensions.
 - Hero and rail loops stop when they cannot contribute to the current viewport.
+- Pointer-driven effects run only for fine pointers and update MotionValues or CSS variables; React state changes only when a semantic scene node changes.
+- The Engineering Inspector remains a lazy boundary with a reload/close recovery path for stale deployment chunks.
+- Bundle or visual-effect changes require before/after evidence; theoretical savings do not justify replacing established libraries or removing useful identity.
+
+## Production invariants
+
+- Each section has one dominant interaction or reading task; secondary controls remain subordinate.
+- Every public claim and project detail is owned by verified portfolio data, never invented metrics, clients, employment, traffic, or certifications.
+- Motion supports sequence, state, or spatial continuity and must never delay access to content.
+- Accessibility, responsive stability, and browser resilience may refine presentation, but Phase 1–5 identity and functionality remain intact.
+- Canonical metadata, crawl files, deployment headers, and the public URL must stay synchronized when the production domain changes.
 
 ## Breakpoints
 

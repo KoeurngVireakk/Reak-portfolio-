@@ -28,6 +28,13 @@ export function useActiveSection() {
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => Boolean(element));
 
+    const supportsIntersectionObserver = typeof globalThis.IntersectionObserver === "function";
+    if (!supportsIntersectionObserver) {
+      const hashSection = window.location.hash.slice(1);
+      if (sectionIds.includes(hashSection)) setActiveSection(hashSection);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries

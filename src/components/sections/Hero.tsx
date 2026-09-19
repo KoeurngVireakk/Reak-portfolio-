@@ -49,14 +49,14 @@ export function Hero() {
                 whileHover={reduceMotion ? undefined : interactionMotion.lift}
                 whileTap={reduceMotion ? undefined : interactionMotion.press}
               >
-                View projects <ArrowDown size={16} />
+                View projects <ArrowDown aria-hidden="true" size={16} />
               </motion.a>
             </Magnetic>
             <Magnetic>
               <motion.a
                 className="button button-secondary"
                 href={profile.github}
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
                 transition={motionTokens.springInteractive}
                 whileHover={reduceMotion ? undefined : interactionMotion.lift}
@@ -66,7 +66,7 @@ export function Hero() {
               </motion.a>
             </Magnetic>
             <a className="text-link" href={`mailto:${profile.email}`}>
-              Contact <ArrowUpRight size={15} />
+              Contact <ArrowUpRight aria-hidden="true" size={15} />
             </a>
           </motion.div>
 
@@ -92,7 +92,7 @@ export function Hero() {
           </div>
         ))}
         <a href="#about">
-          Read the profile <ArrowDown size={15} />
+          Read the profile <ArrowDown aria-hidden="true" size={15} />
         </a>
       </Container>
     </section>

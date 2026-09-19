@@ -26,6 +26,7 @@ export function HeroSpatialScene() {
   const { active: sceneActive, reducedMotion: reduceMotion } = useContinuousMotion(sceneRef, 0.08);
   const finePointer = useFinePointer();
   const [highlightedNode, setHighlightedNode] = useState<number | undefined>(undefined);
+  const highlightedNodeRef = useRef<number | undefined>(undefined);
 
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
@@ -67,13 +68,19 @@ export function HeroSpatialScene() {
 
     // Architecture-node highlight influenced by pointer horizontal sector
     const nodeIndex = Math.min(3, Math.max(0, Math.floor(relX * 4)));
-    setHighlightedNode(nodeIndex);
+    if (highlightedNodeRef.current !== nodeIndex) {
+      highlightedNodeRef.current = nodeIndex;
+      setHighlightedNode(nodeIndex);
+    }
   }
 
   function resetPointer() {
     pointerX.set(0);
     pointerY.set(0);
-    setHighlightedNode(undefined);
+    if (highlightedNodeRef.current !== undefined) {
+      highlightedNodeRef.current = undefined;
+      setHighlightedNode(undefined);
+    }
     if (sceneRef.current) {
       sceneRef.current.style.setProperty("--scene-pointer-x", "0");
       sceneRef.current.style.setProperty("--scene-pointer-y", "0");
@@ -125,7 +132,6 @@ export function HeroSpatialScene() {
                   src={profile.avatar}
                   alt="Portrait of Koeurng Vireak"
                   decoding="async"
-                  fetchPriority="high"
                   height="1600"
                   width="880"
                 />
@@ -147,8 +153,8 @@ export function HeroSpatialScene() {
         />
 
         <div className="scene-contact">
-          <span><MapPin size={13} /> {profile.location}</span>
-          <a href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}><Mail size={13} /> Email</a>
+          <span><MapPin aria-hidden="true" size={13} /> {profile.location}</span>
+          <a href={`mailto:${profile.email}`} aria-label={`Email ${profile.name}`}><Mail aria-hidden="true" size={13} /> Email</a>
         </div>
       </motion.div>
     </motion.div>

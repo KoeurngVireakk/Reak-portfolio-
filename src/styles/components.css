@@ -468,7 +468,7 @@
 
 .technology-rail-control {
   display: inline-flex;
-  min-height: 40px;
+  min-height: 44px;
   flex: 0 0 auto;
   align-items: center;
   gap: 7px;

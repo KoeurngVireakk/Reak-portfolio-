@@ -1,5 +1,6 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from "motion/react";
 import { motionTokens, revealVariants } from "../../lib/motion";
+import { canObserveViewport } from "../../lib/motionLifecycle";
 
 type RevealProps = HTMLMotionProps<"div"> & {
   delay?: number;
@@ -7,15 +8,16 @@ type RevealProps = HTMLMotionProps<"div"> & {
 
 export function Reveal({ children, className = "", delay = 0, ...props }: RevealProps) {
   const reduceMotion = useReducedMotion();
+  const canObserve = canObserveViewport();
 
   return (
     <motion.div
       className={className}
-      initial={reduceMotion ? false : "hidden"}
+      initial={reduceMotion || !canObserve ? false : "hidden"}
       transition={{ ...motionTokens.silk, delay: reduceMotion ? 0 : delay }}
       variants={revealVariants}
       viewport={{ once: true, amount: 0.16 }}
-      whileInView="visible"
+      whileInView={canObserve ? "visible" : undefined}
       {...props}
     >
       {children}

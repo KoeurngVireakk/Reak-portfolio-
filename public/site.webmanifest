@@ -1,6 +1,7 @@
 {
-  "name": "Koeurng Vireak Portfolio",
-  "short_name": "Vireak",
+  "name": "Koeurng Vireak — Information Technology & Full-Stack Systems",
+  "short_name": "Vireak Portfolio",
+  "description": "Final-year IT student portfolio featuring production-minded systems across web, backend, mobile, application security, and IT infrastructure.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020503",
@@ -9,7 +10,8 @@
     {
       "src": "/favicon.svg",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }

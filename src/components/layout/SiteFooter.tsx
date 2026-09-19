@@ -1,7 +1,7 @@
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <a className="footer-brand" href="#home" aria-label="Back to the top">
+      <a className="footer-brand" href="#home">
         <span className="brand-mark" aria-hidden="true">KV</span>
         <span>Koeurng Vireak</span>
       </a>

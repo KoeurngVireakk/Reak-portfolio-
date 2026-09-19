@@ -112,7 +112,7 @@ export function EngineeringInspector({
 
   // Store trigger element for focus restoration
   useEffect(() => {
-    if (project) {
+    if (project && !returnFocusRef.current) {
       returnFocusRef.current = triggerElement ?? (document.activeElement as HTMLElement | null);
     }
   }, [project, triggerElement]);
@@ -224,26 +224,29 @@ export function EngineeringInspector({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: reduceMotion ? 0 : 0.2 }}
     >
       {/* Backdrop overlay */}
-      <motion.div
+      <motion.button
+        aria-label={`Close Engineering Inspector for ${project.name}`}
         animate={{ opacity: 1 }}
         className="engineering-inspector-backdrop"
         exit={{ opacity: 0 }}
         initial={{ opacity: 0 }}
         onClick={handleClose}
-        transition={{ duration: 0.2 }}
+        tabIndex={-1}
+        transition={{ duration: reduceMotion ? 0 : 0.2 }}
+        type="button"
       />
 
       {/* Slide-in inspector panel */}
-      <motion.aside
-        aria-label={`Engineering Evidence Inspector for ${project.name}`}
+      <motion.div
         className="engineering-inspector-panel"
         exit={reduceMotion ? { opacity: 0 } : { x: "100%", opacity: 0.8 }}
         initial={reduceMotion ? { opacity: 0 } : { x: "100%", opacity: 1 }}
         animate={reduceMotion ? { opacity: 1 } : { x: 0, opacity: 1 }}
         ref={panelRef}
+        role="document"
         transition={{ duration: 0.26, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Panel Header */}
@@ -259,14 +262,13 @@ export function EngineeringInspector({
             </div>
 
             <button
-              aria-label={`Close Engineering Inspector for ${project.name}`}
               className="inspector-close-button"
               onClick={handleClose}
               ref={closeButtonRef}
               type="button"
             >
               <X size={18} aria-hidden="true" />
-              <span className="sr-only">Close inspector</span>
+              <span className="sr-only">Close Engineering Inspector for {project.name}</span>
             </button>
           </div>
 
@@ -289,7 +291,6 @@ export function EngineeringInspector({
                 return (
                   <button
                     aria-current={isSelected ? "true" : undefined}
-                    aria-label={`Inspect ${p.name}`}
                     className={`inspector-nav-item ${isSelected ? "is-active" : ""}`}
                     key={p.slug}
                     onClick={() => onSelectProject(p)}
@@ -297,6 +298,7 @@ export function EngineeringInspector({
                   >
                     <span className="nav-num">{String(idx + 1).padStart(2, "0")}</span>
                     <span className="nav-code">{p.shortName}</span>
+                    <span className="sr-only"> — Inspect {p.name}</span>
                   </button>
                 );
               })}
@@ -461,7 +463,7 @@ export function EngineeringInspector({
                       <a
                         className="inspector-repo-link"
                         href={project.repository}
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
                         target="_blank"
                       >
                         <Code2 size={16} aria-hidden="true" />
@@ -641,7 +643,7 @@ export function EngineeringInspector({
               <a
                 className="inspector-footer-repo"
                 href={project.repository}
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 <span>Codebase</span>
@@ -657,7 +659,7 @@ export function EngineeringInspector({
             </button>
           </div>
         </div>
-      </motion.aside>
+      </motion.div>
     </motion.div>
   );
 }

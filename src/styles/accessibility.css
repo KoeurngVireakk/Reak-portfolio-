@@ -34,6 +34,7 @@ summary:focus-visible {
   .hero-scene-exit {
     transform: none !important;
   }
+
   html {
     scroll-behavior: auto;
   }
@@ -50,6 +51,7 @@ summary:focus-visible {
   .scroll-progress {
     display: none;
   }
+
   ::view-transition-old(*),
   ::view-transition-new(*),
   ::view-transition-group(*) {
@@ -70,5 +72,30 @@ summary:focus-visible {
   .project-footer a svg,
   .contact-details a > svg:last-child {
     transform: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .cursor-spotlight,
+  .scene-grid,
+  .scene-mesh,
+  .scene-halo,
+  .scene-illumination,
+  .scene-topology,
+  .portrait-scan,
+  .scroll-progress,
+  .section-transition,
+  .contact-orbit > i {
+    display: none !important;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid Highlight;
+  }
+
+  .button {
+    border: 1px solid ButtonText;
   }
 }

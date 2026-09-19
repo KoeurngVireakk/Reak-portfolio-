@@ -7,14 +7,29 @@
     <meta name="color-scheme" content="dark light" />
     <script>
       (() => {
-        const stored = localStorage.getItem("portfolio-theme");
-        const theme = stored === "dark" || stored === "light"
-          ? stored
-          : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        let theme;
+        try {
+          const stored = localStorage.getItem("portfolio-theme");
+          if (stored === "dark" || stored === "light") theme = stored;
+        } catch (_) {}
+
+        if (!theme) {
+          try {
+            theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+          } catch (_) {
+            theme = "dark";
+          }
+        }
+
         document.documentElement.dataset.theme = theme;
         document.documentElement.style.colorScheme = theme;
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute("content", theme === "dark" ? "#020503" : "#f6f5f0");
       })();
     </script>
+    <title>Koeurng Vireak — Information Technology & Full-Stack Systems</title>
+    <link rel="canonical" href="https://reak-portfolio-brown.vercel.app/" />
     <meta
       name="description"
       content="Portfolio of Koeurng Vireak, a final-year Information Technology student at Build Bright University building practical software across full-stack engineering, backend systems, application security, and IT infrastructure."
@@ -24,17 +39,72 @@
       content="Koeurng Vireak, Information Technology, Full-Stack Developer, Backend Development, Application Security, IT Support, Spring Boot, React, Flutter, ASP.NET Core, Laravel, Battambang Cambodia, Build Bright University"
     />
     <meta name="author" content="Koeurng Vireak" />
+
+    <!-- Open Graph -->
     <meta property="og:title" content="Koeurng Vireak — Information Technology & Full-Stack Systems" />
     <meta
       property="og:description"
       content="Final-year IT student portfolio featuring production-minded systems across web, backend, mobile, application security, and IT infrastructure foundations."
     />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <title>Koeurng Vireak — Information Technology & Full-Stack Systems</title>
+    <meta property="og:url" content="https://reak-portfolio-brown.vercel.app/" />
+    <meta property="og:site_name" content="Koeurng Vireak Portfolio" />
+    <meta property="og:locale" content="en_US" />
+    <!-- Add og:image metadata only when a final 1200x630 social card exists. -->
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Koeurng Vireak — Information Technology & Full-Stack Systems" />
+    <meta name="twitter:description" content="Final-year IT student portfolio featuring production-minded systems across web, backend, mobile, application security, and IT infrastructure foundations." />
+
+    <!-- Favicon & PWA -->
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="/site.webmanifest" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Koeurng Vireak","email":"mailto:koeurngvireak@bb.bbu.edu.kh","url":"https://github.com/KoeurngVireakk","sameAs":["https://github.com/KoeurngVireakk"],"jobTitle":"Final-Year Information Technology Student","address":{"@type":"PostalAddress","addressLocality":"Battambang","addressCountry":"Cambodia"}}</script>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://reak-portfolio-brown.vercel.app/#person",
+          "name": "Koeurng Vireak",
+          "email": "mailto:koeurngvireak@bb.bbu.edu.kh",
+          "url": "https://reak-portfolio-brown.vercel.app/",
+          "sameAs": [
+            "https://github.com/KoeurngVireakk"
+          ],
+          "jobTitle": "Final-Year Information Technology Student",
+          "affiliation": {
+            "@type": "EducationalOrganization",
+            "name": "Build Bright University"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Battambang",
+            "addressCountry": "KH"
+          },
+          "knowsAbout": [
+            "Full-Stack Development",
+            "Backend Systems",
+            "Application Security",
+            "IT Infrastructure"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://reak-portfolio-brown.vercel.app/#website",
+          "url": "https://reak-portfolio-brown.vercel.app/",
+          "name": "Koeurng Vireak Portfolio",
+          "inLanguage": "en",
+          "author": {
+            "@id": "https://reak-portfolio-brown.vercel.app/#person"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
