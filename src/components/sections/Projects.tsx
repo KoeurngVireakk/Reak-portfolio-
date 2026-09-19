@@ -539,7 +539,7 @@ export function Projects() {
       setInspectingProject(project);
       setActiveInspectorTab(nextTab);
       isHistoryPushedRef.current = true;
-      updateInspectorUrl(project, nextTab, false);
+      updateInspectorUrl(project, nextTab, true);
     },
     [activeInspectorTab],
   );

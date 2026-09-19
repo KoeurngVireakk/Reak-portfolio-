@@ -47,6 +47,7 @@ export function SiteHeader({
   const reduceMotion = useReducedMotion();
   const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const lastHashRef = useRef(window.location.hash);
 
   useEffect(() => {
     if (propActiveSection !== undefined) return;
@@ -81,7 +82,11 @@ export function SiteHeader({
 
   useEffect(() => {
     function restoreSectionFromHistory() {
-      const id = window.location.hash.slice(1) || "home";
+      const nextHash = window.location.hash;
+      if (nextHash === lastHashRef.current) return;
+
+      lastHashRef.current = nextHash;
+      const id = nextHash.slice(1) || "home";
       window.requestAnimationFrame(() => navigateToSection(id, false));
     }
 
@@ -126,6 +131,7 @@ export function SiteHeader({
 
   function handleNavigation(id: string) {
     navigateToSection(id);
+    lastHashRef.current = `#${id}`;
     setMobileOpen(false);
   }
 

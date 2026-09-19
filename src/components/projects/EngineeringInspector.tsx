@@ -120,7 +120,7 @@ export function EngineeringInspector({
   const handleClose = useCallback(() => {
     onClose();
     setTimeout(() => {
-      returnFocusRef.current?.focus();
+      returnFocusRef.current?.focus({ preventScroll: true });
     }, 50);
   }, [onClose]);
 
